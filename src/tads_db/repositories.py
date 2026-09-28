@@ -13,7 +13,8 @@ class AccountRepository:
 
     def create(self, name: str) -> str:
         row = self.conn.execute(
-            "INSERT INTO accounts(tenant_id,canonical_name) VALUES (tads_tenant_id(),%s) RETURNING id", (name,)
+            "INSERT INTO accounts(tenant_id,canonical_name) VALUES (tads_tenant_id(),%s) RETURNING id",
+            (name,),
         ).fetchone()
         assert row is not None
         return str(row[0])
