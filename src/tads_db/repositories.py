@@ -13,7 +13,7 @@ class AccountRepository:
 
     def create(self, name: str) -> str:
         row = self.conn.execute(
-            "INSERT INTO accounts(canonical_name) VALUES (%s) RETURNING id", (name,)
+            "INSERT INTO accounts(tenant_id,canonical_name) VALUES (tads_tenant_id(),%s) RETURNING id", (name,)
         ).fetchone()
         assert row is not None
         return str(row[0])
@@ -40,8 +40,8 @@ class SourceRepository:
         terms_reference: str,
     ) -> str:
         row = self.conn.execute(
-            """INSERT INTO sources(provider,name,source_class,access_mechanism,terms_reference)
-               VALUES (%s,%s,%s,%s,%s) RETURNING id""",
+            """INSERT INTO sources(tenant_id,provider,name,source_class,access_mechanism,terms_reference)
+               VALUES (tads_tenant_id(),%s,%s,%s,%s,%s) RETURNING id""",
             (provider, name, source_class, access_mechanism, terms_reference),
         ).fetchone()
         assert row is not None
@@ -57,8 +57,8 @@ class SourceRepository:
     ) -> str:
         row = self.conn.execute(
             """INSERT INTO source_snapshots(
-                   source_id,captured_at,content_hash,content_type,byte_size
-               ) VALUES (%s,%s,%s,%s,%s) RETURNING id""",
+                   tenant_id,source_id,captured_at,content_hash,content_type,byte_size
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s) RETURNING id""",
             (source_id, captured_at, content_hash, content_type, byte_size),
         ).fetchone()
         assert row is not None
@@ -80,8 +80,8 @@ class ObservationRepository:
     ) -> str:
         row = self.conn.execute(
             """INSERT INTO observations(
-                   source_id,snapshot_id,observed_at,content_hash,payload,locator
-               ) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id""",
+                   tenant_id,source_id,snapshot_id,observed_at,content_hash,payload,locator
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s) RETURNING id""",
             (source_id, snapshot_id, observed_at, content_hash, payload, locator),
         ).fetchone()
         assert row is not None
@@ -104,15 +104,15 @@ class EventRepository:
             raise ValueError("canonical event requires observations")
         row = self.conn.execute(
             """INSERT INTO canonical_events(
-                   event_type,occurred_at,event_time_confidence,normalized_payload
-               ) VALUES (%s,%s,%s,%s) RETURNING id""",
+                   tenant_id,event_type,occurred_at,event_time_confidence,normalized_payload
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s) RETURNING id""",
             (event_type, occurred_at, event_time_confidence, payload or {}),
         ).fetchone()
         assert row is not None
         event_id = str(row[0])
         for observation_id in observation_ids:
             self.conn.execute(
-                "INSERT INTO event_observations(event_id,observation_id) VALUES (%s,%s)",
+                "INSERT INTO event_observations(tenant_id,event_id,observation_id) VALUES (tads_tenant_id(),%s,%s)",
                 (event_id, observation_id),
             )
         return event_id
@@ -137,9 +137,9 @@ class EvidenceRepository:
     ) -> str:
         row = self.conn.execute(
             """INSERT INTO evidence(
-                   source_id,snapshot_id,observation_id,locator,excerpt,content_hash,
+                   tenant_id,source_id,snapshot_id,observation_id,locator,excerpt,content_hash,
                    confidence,observed_at,extractor,extractor_version
-               ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
             (
                 source_id,
                 snapshot_id,
@@ -182,9 +182,9 @@ class SignalRepository:
             raise ValueError("signal requires evidence")
         row = self.conn.execute(
             """INSERT INTO signals(
-                   account_id,event_id,signal_type,signal_subtype,confidence,relevance,
+                   tenant_id,account_id,event_id,signal_type,signal_subtype,confidence,relevance,
                    freshness,reliability,business_impact,direction,first_seen_at,last_seen_at,expires_at
-               ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
             (
                 account_id,
                 event_id,
@@ -205,7 +205,7 @@ class SignalRepository:
         signal_id = str(row[0])
         for evidence_id in evidence_ids:
             self.conn.execute(
-                "INSERT INTO signal_evidence(signal_id,evidence_id) VALUES (%s,%s)",
+                "INSERT INTO signal_evidence(tenant_id,signal_id,evidence_id) VALUES (tads_tenant_id(),%s,%s)",
                 (signal_id, evidence_id),
             )
         return signal_id
