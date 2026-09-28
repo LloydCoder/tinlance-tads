@@ -33,7 +33,8 @@ class EntityResolver:
             alias_exact = normalized_name in aliases if normalized_name else False
             similarity = (
                 SequenceMatcher(None, normalized_name, canonical).ratio()
-                if normalized_name else 0.0
+                if normalized_name
+                else 0.0
             )
             confidence = min(
                 1.0,
