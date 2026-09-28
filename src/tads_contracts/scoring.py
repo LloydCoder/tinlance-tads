@@ -31,9 +31,20 @@ class ScoreContract:
     def validate(self) -> None:
         if not self.policy_version:
             raise ValueError("score policy version is required")
+        if not self.components:
+            raise ValueError("score requires at least one component")
         if not 0 <= self.score <= 1:
             raise ValueError("score must be between 0 and 1")
         if not 0 <= self.confidence <= 1:
             raise ValueError("confidence must be between 0 and 1")
         for component in self.components:
             component.validate()
+
+    def recompute(self) -> float:
+        self.validate()
+        total_weight = sum(component.weight for component in self.components)
+        if total_weight <= 0:
+            raise ValueError("score requires positive total component weight")
+        return sum(
+            component.value * component.weight for component in self.components
+        ) / total_weight
