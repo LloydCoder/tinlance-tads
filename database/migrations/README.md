@@ -1,6 +1,6 @@
 # TADS database migrations
 
-Migrations are ordered, immutable SQL files.
+Migrations are ordered, immutable SQL files. Executable migrations live in src/tads_db/migrations so packaged deployments receive the exact same migration set.
 
 M1 establishes the PostgreSQL evidence-first kernel. Every tenant-scoped relation carries tenant_id, and row-level security uses the server-side transaction setting app.tenant_id.
 
