@@ -4,8 +4,18 @@ import re
 import unicodedata
 
 _CORPORATE_SUFFIXES = {
-    "inc", "incorporated", "corp", "corporation", "ltd", "limited",
-    "llc", "plc", "gmbh", "ag", "sa", "bv",
+    "inc",
+    "incorporated",
+    "corp",
+    "corporation",
+    "ltd",
+    "limited",
+    "llc",
+    "plc",
+    "gmbh",
+    "ag",
+    "sa",
+    "bv",
 }
 
 
