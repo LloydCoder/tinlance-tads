@@ -41,7 +41,7 @@ def tenant(dsn: str) -> str:
 
 def test_migration_and_rls_isolation(dsn: str, tenant: str) -> None:
     apply_migrations(dsn)
-    with TenantConnection(dsn, tenant).transaction() as conn:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id = AccountRepository(conn).create("Acme Test")
         account = AccountRepository(conn).get(account_id)
         assert account is not None and account["canonical_name"] == "Acme Test"
@@ -54,12 +54,12 @@ def test_migration_and_rls_isolation(dsn: str, tenant: str) -> None:
         other = str(row[0])
         conn.commit()
 
-    with TenantConnection(dsn, other).transaction() as conn:
+    with TenantConnection(dsn, other, "tads_app").transaction() as conn:
         assert AccountRepository(conn).get(account_id) is None
 
 
 def test_evidence_chain_and_immutability(dsn: str, tenant: str) -> None:
-    with TenantConnection(dsn, tenant).transaction() as conn:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         source_id = SourceRepository(conn).create(
             "test", "jobs", "public_structured", "api", "terms"
         )
