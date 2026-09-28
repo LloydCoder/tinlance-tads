@@ -108,6 +108,20 @@ def test_evidence_chain_and_immutability(dsn: str, tenant: str) -> None:
                 "UPDATE evidence SET excerpt='tampered' WHERE id=%s",
                 (evidence_id,),
             )
+        with pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"):
+            conn.execute("DELETE FROM evidence WHERE id=%s", (evidence_id,))
+        lineage = conn.execute(
+            """SELECT s.id, ss.id, o.id, e.id, sig.id
+               FROM sources s
+               JOIN source_snapshots ss ON ss.source_id=s.id
+               JOIN observations o ON o.snapshot_id=ss.id
+               JOIN evidence e ON e.observation_id=o.id
+               JOIN signal_evidence se ON se.evidence_id=e.id
+               JOIN signals sig ON sig.id=se.signal_id
+               WHERE s.id=%s""",
+            (source_id,),
+        ).fetchone()
+        assert lineage is not None
 
 
 def test_migration_is_idempotent(dsn: str) -> None:
@@ -135,3 +149,30 @@ def test_cross_tenant_reference_is_rejected(dsn: str, tenant: str) -> None:
             "INSERT INTO organizations(tenant_id, account_id) VALUES (tads_tenant_id(), %s)",
             (account_id,),
         )
+
+
+def test_all_tenant_tables_have_rls(dsn: str) -> None:
+    apply_migrations(dsn)
+    expected = {
+        "accounts",
+        "organizations",
+        "domains",
+        "sources",
+        "source_snapshots",
+        "observations",
+        "canonical_events",
+        "event_observations",
+        "evidence",
+        "relationships",
+        "signals",
+        "signal_evidence",
+    }
+    with psycopg.connect(dsn) as conn:
+        rows = conn.execute(
+            """SELECT relname, relrowsecurity
+               FROM pg_class
+               WHERE relname = ANY(%s)""",
+            (list(expected),),
+        ).fetchall()
+    assert {name for name, _ in rows} == expected
+    assert all(enabled for _, enabled in rows)
