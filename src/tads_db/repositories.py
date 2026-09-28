@@ -145,7 +145,7 @@ class EvidenceRepository:
             """INSERT INTO evidence(
                    tenant_id,source_id,snapshot_id,observation_id,locator,excerpt,content_hash,
                    confidence,observed_at,extractor,extractor_version
-               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
             (
                 source_id,
                 snapshot_id,
