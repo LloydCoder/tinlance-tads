@@ -46,9 +46,10 @@ def test_enabled_source_requires_review() -> None:
         (),
         30,
         30,
-        False,
-        False,
-        True,
+        authentication_required=False,
+        legal_reviewed=False,
+        tenant_id="t-1",
+        enabled=True,
     )
     with pytest.raises(ValueError, match="review"):
         source.validate()
