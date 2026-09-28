@@ -1,37 +1,81 @@
 from datetime import UTC, datetime
+
 import pytest
-from tads_contracts import EvidenceRef, FadeReachHandoff, ProvenanceRef, ReconOSRequest
-from tads_contracts import ScoreComponent, ScoreContract, SourceContract
+
+from tads_contracts import (
+    EvidenceRef,
+    FadeReachHandoff,
+    ProvenanceRef,
+    ReconOSRequest,
+    ScoreComponent,
+    ScoreContract,
+    SourceContract,
+)
+
 
 def evidence() -> EvidenceRef:
-    return EvidenceRef("ev-1", ProvenanceRef(
-        "src-1", "snap-1", "sha256:abc", datetime.now(UTC), "test", "1"), 0.9)
+    return EvidenceRef(
+        "ev-1",
+        ProvenanceRef(
+            "src-1", "snap-1", "sha256:abc", datetime.now(UTC), "test", "1"
+        ),
+        0.9,
+    )
+
 
 def test_provenance_and_evidence() -> None:
     evidence().validate()
+
 
 def test_evidence_confidence() -> None:
     item = EvidenceRef("ev-1", evidence().provenance, 1.1)
     with pytest.raises(ValueError, match="confidence"):
         item.validate()
 
+
 def test_enabled_source_requires_review() -> None:
-    source = SourceContract("greenhouse", "Greenhouse", "Job Board", "public_structured",
-        "documented_api", "provider-policy:greenhouse", ("job_id",), (), 30, 30, False, False, True)
+    source = SourceContract(
+        "greenhouse",
+        "Greenhouse",
+        "Job Board",
+        "public_structured",
+        "documented_api",
+        "provider-policy:greenhouse",
+        ("job_id",),
+        (),
+        30,
+        30,
+        False,
+        False,
+        True,
+    )
     with pytest.raises(ValueError, match="review"):
         source.validate()
+
 
 def test_scores_are_evidence_backed() -> None:
     component = ScoreComponent("signal_strength", 0.8, 1.0, ("ev-1",))
     ScoreContract("m0.1", (component,), 0.8, 0.9).validate()
 
+
 def test_score_without_evidence_fails() -> None:
     with pytest.raises(ValueError, match="evidence"):
         ScoreComponent("fit", 0.8, 1.0, ()).validate()
 
+
 def test_fadereach_handoff_is_evidence_backed() -> None:
-    handoff = FadeReachHandoff("h-1", "t-1", "a-1", "o-1", "documented change", ("ev-1",), None, None)
+    handoff = FadeReachHandoff(
+        "h-1",
+        "t-1",
+        "a-1",
+        "o-1",
+        "documented change",
+        ("ev-1",),
+        None,
+        None,
+    )
     assert handoff.evidence_ids == ("ev-1",)
+
 
 def test_reconos_request_is_tenant_scoped() -> None:
     request = ReconOSRequest("r-1", "t-1", "a-1", ("technology",), "account_research")
