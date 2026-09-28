@@ -23,9 +23,7 @@ class AccountRepository:
             "SELECT id, canonical_name, status FROM accounts WHERE id = %s", (account_id,)
         ).fetchone()
         return (
-            None
-            if row is None
-            else {"id": str(row[0]), "canonical_name": row[1], "status": row[2]}
+            None if row is None else {"id": str(row[0]), "canonical_name": row[1], "status": row[2]}
         )
 
 
