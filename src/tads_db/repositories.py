@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from psycopg import Connection
+from psycopg.types.json import Jsonb
 
 
 class AccountRepository:
@@ -85,7 +86,7 @@ class ObservationRepository:
             """INSERT INTO observations(
                    tenant_id,source_id,snapshot_id,observed_at,content_hash,payload,locator
                ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s) RETURNING id""",
-            (source_id, snapshot_id, observed_at, content_hash, payload, locator),
+            (source_id, snapshot_id, observed_at, content_hash, Jsonb(payload), locator),
         ).fetchone()
         assert row is not None
         return str(row[0])
@@ -109,7 +110,7 @@ class EventRepository:
             """INSERT INTO canonical_events(
                    tenant_id,event_type,occurred_at,event_time_confidence,normalized_payload
                ) VALUES (tads_tenant_id(),%s,%s,%s,%s) RETURNING id""",
-            (event_type, occurred_at, event_time_confidence, payload or {}),
+            (event_type, occurred_at, event_time_confidence, Jsonb(payload or {})),
         ).fetchone()
         assert row is not None
         event_id = str(row[0])
