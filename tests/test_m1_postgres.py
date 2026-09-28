@@ -112,8 +112,8 @@ def test_evidence_chain_and_immutability(dsn: str, tenant: str) -> None:
                 (evidence_id,),
             )
         with (
-            conn.transaction(),
             pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"),
+            conn.transaction(),
         ):
             conn.execute("DELETE FROM evidence WHERE id=%s", (evidence_id,))
         lineage = conn.execute(
