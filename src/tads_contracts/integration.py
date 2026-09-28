@@ -1,6 +1,9 @@
 """Provider-neutral ReconOS and FadeReach ports."""
+
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Protocol, Sequence
+from typing import Protocol
+
 
 @dataclass(frozen=True, slots=True)
 class ReconOSRequest:
@@ -9,6 +12,7 @@ class ReconOSRequest:
     account_id: str
     requested_domains: tuple[str, ...]
     purpose: str
+
 
 @dataclass(frozen=True, slots=True)
 class FadeReachHandoff:
@@ -21,13 +25,16 @@ class FadeReachHandoff:
     recommended_angle: str | None
     expires_at: str | None
 
+
 class ReconOSPort(Protocol):
     def request_enrichment(self, request: ReconOSRequest) -> str:
         """Return an external request/reference ID."""
 
+
 class FadeReachPort(Protocol):
     def publish_handoff(self, handoff: FadeReachHandoff) -> str:
         """Publish intelligence only; never execute outreach."""
+
 
 def require_evidence(evidence_ids: Sequence[str]) -> tuple[str, ...]:
     result = tuple(evidence_ids)
