@@ -37,3 +37,84 @@ BEGIN
   EXECUTE format('CREATE POLICY %I_tenant_isolation ON %I USING (tenant_id=tads_tenant_id()) WITH CHECK (tenant_id=tads_tenant_id())',table_name,table_name);
  END LOOP;
 END $$;
+
+CREATE OR REPLACE FUNCTION tads_enforce_parent_tenant()
+RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE
+    parent_tenant uuid;
+    parent_id uuid;
+BEGIN
+    parent_id := (to_jsonb(NEW) ->> TG_ARGV[1])::uuid;
+    IF parent_id IS NULL THEN
+        RETURN NEW;
+    END IF;
+    EXECUTE format('SELECT tenant_id FROM %I WHERE id = $1', TG_ARGV[0])
+        INTO parent_tenant USING parent_id;
+    IF parent_tenant IS NULL OR parent_tenant <> NEW.tenant_id THEN
+        RAISE EXCEPTION 'cross-tenant reference rejected';
+    END IF;
+    RETURN NEW;
+END $$;
+
+CREATE TRIGGER organizations_account_tenant
+BEFORE INSERT OR UPDATE ON organizations FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('accounts','account_id');
+CREATE TRIGGER domains_account_tenant
+BEFORE INSERT OR UPDATE ON domains FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('accounts','account_id');
+CREATE TRIGGER snapshots_source_tenant
+BEFORE INSERT OR UPDATE ON source_snapshots FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('sources','source_id');
+CREATE TRIGGER observations_source_tenant
+BEFORE INSERT OR UPDATE ON observations FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('sources','source_id');
+CREATE TRIGGER observations_snapshot_tenant
+BEFORE INSERT OR UPDATE ON observations FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('source_snapshots','snapshot_id');
+CREATE TRIGGER events_observation_tenant
+BEFORE INSERT OR UPDATE ON event_observations FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('canonical_events','event_id');
+CREATE TRIGGER events_observation_source_tenant
+BEFORE INSERT OR UPDATE ON event_observations FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('observations','observation_id');
+CREATE TRIGGER evidence_source_tenant
+BEFORE INSERT OR UPDATE ON evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('sources','source_id');
+CREATE TRIGGER evidence_snapshot_tenant
+BEFORE INSERT OR UPDATE ON evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('source_snapshots','snapshot_id');
+CREATE TRIGGER evidence_observation_tenant
+BEFORE INSERT OR UPDATE ON evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('observations','observation_id');
+CREATE TRIGGER relationships_account_tenant
+BEFORE INSERT OR UPDATE ON relationships FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('accounts','from_account_id');
+CREATE TRIGGER relationships_evidence_tenant
+BEFORE INSERT OR UPDATE ON relationships FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('evidence','evidence_id');
+CREATE TRIGGER signals_account_tenant
+BEFORE INSERT OR UPDATE ON signals FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('accounts','account_id');
+CREATE TRIGGER signals_event_tenant
+BEFORE INSERT OR UPDATE ON signals FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('canonical_events','event_id');
+CREATE TRIGGER signal_evidence_signal_tenant
+BEFORE INSERT OR UPDATE ON signal_evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('signals','signal_id');
+CREATE TRIGGER signal_evidence_evidence_tenant
+BEFORE INSERT OR UPDATE ON signal_evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('evidence','evidence_id');
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'tads_app') THEN
+        CREATE ROLE tads_app NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS;
+    END IF;
+END $$;
+
+GRANT tads_app TO CURRENT_USER;
+GRANT USAGE ON SCHEMA public TO tads_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON
+    accounts, organizations, domains, sources, source_snapshots, observations,
+    canonical_events, event_observations, evidence, relationships, signals, signal_evidence
+TO tads_app;
