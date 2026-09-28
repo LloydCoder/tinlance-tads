@@ -20,7 +20,9 @@ class TenantConnection:
         with psycopg.connect(self._dsn) as connection:
             with connection.transaction():
                 if self.database_role:
-                    connection.execute(sql.SQL("SET LOCAL ROLE {}").format(sql.Identifier(self.database_role)))
+                    connection.execute(
+                        sql.SQL("SET LOCAL ROLE {}").format(sql.Identifier(self.database_role))
+                    )
                 connection.execute(
                     "SELECT set_config('app.tenant_id', %s, true)", (self.tenant_id,)
                 )
