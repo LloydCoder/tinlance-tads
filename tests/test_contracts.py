@@ -19,9 +19,7 @@ from tads_contracts import (
 def evidence() -> EvidenceRef:
     return EvidenceRef(
         "ev-1",
-        ProvenanceRef(
-            "src-1", "snap-1", "sha256:abc", datetime.now(UTC), "test", "1"
-        ),
+        ProvenanceRef("src-1", "snap-1", "sha256:abc", datetime.now(UTC), "test", "1"),
         0.9,
     )
 
