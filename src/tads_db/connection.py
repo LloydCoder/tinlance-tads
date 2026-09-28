@@ -1,7 +1,8 @@
 """Tenant-scoped PostgreSQL connection management."""
 
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Any, Iterator
+from typing import Any
 
 import psycopg
 from psycopg import sql
@@ -17,13 +18,12 @@ class TenantConnection:
 
     @contextmanager
     def transaction(self) -> Iterator[psycopg.Connection[Any]]:
-        with psycopg.connect(self._dsn) as connection:
-            with connection.transaction():
-                if self.database_role:
-                    connection.execute(
-                        sql.SQL("SET LOCAL ROLE {}").format(sql.Identifier(self.database_role))
-                    )
+        with psycopg.connect(self._dsn) as connection, connection.transaction():
+            if self.database_role:
                 connection.execute(
-                    "SELECT set_config('app.tenant_id', %s, true)", (self.tenant_id,)
+                        sql.SQL("SET LOCAL ROLE {}").format(sql.Identifier(self.database_role))
                 )
-                yield connection
+            connection.execute(
+                "SELECT set_config('app.tenant_id', %s, true)", (self.tenant_id,)
+            )
+            yield connection
