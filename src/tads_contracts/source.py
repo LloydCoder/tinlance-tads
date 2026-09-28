@@ -2,13 +2,15 @@
 
 from dataclasses import dataclass
 
+from .taxonomy import SourceClass
+
 
 @dataclass(frozen=True, slots=True)
 class SourceContract:
     source_id: str
     provider: str
     name: str
-    source_class: str
+    source_class: SourceClass
     access_mechanism: str
     terms_reference: str
     permitted_fields: tuple[str, ...]
@@ -17,6 +19,7 @@ class SourceContract:
     rate_limit_per_minute: int | None
     authentication_required: bool
     legal_reviewed: bool
+    tenant_id: str | None = None
     enabled: bool = False
 
     def validate(self) -> None:
@@ -24,7 +27,6 @@ class SourceContract:
             self.source_id,
             self.provider,
             self.name,
-            self.source_class,
             self.access_mechanism,
             self.terms_reference,
         )
