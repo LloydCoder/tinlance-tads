@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Iterable
+from collections.abc import Iterable
 
 from .models import Candidate, ResolutionResult, ResolutionState
 from .normalization import normalize_domain, normalize_name
