@@ -30,6 +30,7 @@ def dsn() -> str:
 
 @pytest.fixture()
 def tenant(dsn: str) -> str:
+    apply_migrations(dsn)
     with psycopg.connect(dsn) as conn:
         row = conn.execute(
             "INSERT INTO tenants(name) VALUES ('test-tenant') RETURNING id"
