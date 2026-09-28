@@ -5,7 +5,7 @@ from pathlib import Path
 
 import psycopg
 
-MIGRATIONS = Path(__file__).parents[2] / "database" / "migrations"
+MIGRATIONS = Path(__file__).parent / "migrations"
 
 
 def apply_migrations(dsn: str) -> list[str]:
