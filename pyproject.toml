@@ -37,3 +37,6 @@ packages = ["tads_contracts", "tads_db"]
 testpaths = ["tests"]
 addopts = "-q"
 markers = ["integration: requires PostgreSQL"]
+
+[tool.setuptools.package-data]
+tads_db = ["migrations/*.sql"]
