@@ -1,7 +1,7 @@
+import json
 from datetime import UTC, datetime
 from hashlib import sha256
 from unittest.mock import patch
-import json
 
 import pytest
 
@@ -24,9 +24,11 @@ def test_fetcher_rejects_http_and_untrusted_hosts() -> None:
 
 def test_fetcher_rejects_private_resolution() -> None:
     fetcher = SafeFetcher(FetchPolicy(frozenset({"boards-api.greenhouse.io"})))
-    with patch("tads_ingest.fetcher._host_is_public", return_value=False):
-        with pytest.raises(UnsafeDestination, match="public"):
-            fetcher.validate_url("https://boards-api.greenhouse.io/v1/boards/demo/jobs")
+    with (
+        patch("tads_ingest.fetcher._host_is_public", return_value=False),
+        pytest.raises(UnsafeDestination, match="public"),
+    ):
+        fetcher.validate_url("https://boards-api.greenhouse.io/v1/boards/demo/jobs")
 
 
 def test_fetcher_disallows_redirects() -> None:
