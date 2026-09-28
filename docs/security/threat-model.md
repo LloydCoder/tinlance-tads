@@ -76,6 +76,10 @@ Pin and audit dependencies, generate SBOMs at the productionization stage, scan 
 
 Agent capabilities must be least-privileged, bounded by policy, budget, timeout, approval, and tool scopes. Expensive or consequential actions require explicit authorization. TADS domain code never treats model output as authorization.
 
+## M2 implemented controls
+
+The ingestion boundary now enforces HTTPS, explicit provider host allowlists, no URL userinfo, standard-port restrictions, public DNS resolution, redirect rejection, response byte budgets, content-type allowlists, and request timeouts. These are application-layer defenses; production deployment must additionally enforce network egress controls because DNS rebinding and infrastructure-level routing cannot be solved solely in application code.
+
 ## Required controls before M2
 
 - strict URL parser and egress policy

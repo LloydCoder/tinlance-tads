@@ -10,7 +10,7 @@ Tinlance website activity, CRM records, customer-owned integrations, and authent
 
 ### Tier B — public structured APIs / feeds
 
-Examples include Greenhouse Job Board and Lever's public postings surface. Use documented read endpoints and respect provider terms, rate limits, and attribution requirements. Greenhouse documents its Job Board API as a public job-board interface for public jobs; Lever documents a publicly accessible Postings API for published postings. Contracts must be revalidated before production adapters are released.
+Greenhouse Job Board is a public structured source: its documented GET endpoints do not require authentication. Lever's current API documentation requires authentication; TADS therefore treats Lever as an authenticated provider integration and does not claim anonymous access. Use documented read endpoints, least-privilege credentials, provider terms, rate limits, and retention constraints. Contracts must be revalidated before each production release.
 
 ### Tier C — public web pages
 

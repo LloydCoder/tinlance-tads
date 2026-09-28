@@ -54,7 +54,22 @@ Exit evidence is reproducible: source → snapshot → observation → canonical
 
 ## M2 — Source Ingestion
 
-Start with controlled public structured sources and first-party data. Greenhouse Job Board and Lever public postings remain candidate initial hiring-signal adapters, subject to revalidation of provider contracts and terms before release. Public web fetching comes only after the hardened fetch boundary is implemented.
+Status: **IMPLEMENTED (source-ingestion boundary)**
+
+Completed in M2:
+- explicit source host allowlists and HTTPS-only fetching
+- public-address DNS validation before requests
+- redirect rejection by default
+- timeout, response-byte, content-type, and page-budget controls
+- structured normalized observation transport models
+- Greenhouse Job Board public GET adapter
+- authenticated Lever postings adapter using the current documented API surface
+- source snapshot and observation PostgreSQL sinks
+- tenant-scoped ingestion-run and fetch-attempt persistence
+- source-specific provenance/content hashing
+- security regression tests for SSRF-adjacent URL validation
+
+M2 does not introduce a universal crawler, anonymous Lever access, LinkedIn scraping, or model-driven ingestion. The remaining hiring vertical work—canonical event creation and entity resolution—moves immediately into M3/M4.
 
 ## M3 — Entity Resolution
 
