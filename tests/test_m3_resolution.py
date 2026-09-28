@@ -7,12 +7,8 @@ from tads_resolution.resolver import OrganizationRecord
 def resolver() -> EntityResolver:
     return EntityResolver(
         [
-            OrganizationRecord(
-                "org-acme", "Acme Corporation", ("acme.example",), ("Acme Corp",)
-            ),
-            OrganizationRecord(
-                "org-echo", "Acme Holdings", ("holdings.example",), ("Acme Group",)
-            ),
+            OrganizationRecord("org-acme", "Acme Corporation", ("acme.example",), ("Acme Corp",)),
+            OrganizationRecord("org-echo", "Acme Holdings", ("holdings.example",), ("Acme Group",)),
         ]
     )
 
