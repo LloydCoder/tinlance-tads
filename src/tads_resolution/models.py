@@ -39,8 +39,10 @@ class ResolutionResult:
     rationale: tuple[str, ...]
 
     def validate(self) -> None:
-        if self.state in {ResolutionState.MATCHED, ResolutionState.PROBABLE}:
-            if not self.selected_organization_id:
-                raise ValueError("selected resolution requires an organization")
+        if (
+            self.state in {ResolutionState.MATCHED, ResolutionState.PROBABLE}
+            and not self.selected_organization_id
+        ):
+            raise ValueError("selected resolution requires an organization")
         if self.state == ResolutionState.AMBIGUOUS and len(self.candidates) < 2:
             raise ValueError("ambiguous resolution requires multiple candidates")
