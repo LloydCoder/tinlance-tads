@@ -8,8 +8,8 @@ import pytest
 
 from tads_db import (
     AccountRepository,
-    EvidenceRepository,
     EventRepository,
+    EvidenceRepository,
     ObservationRepository,
     SignalRepository,
     SourceRepository,
@@ -127,9 +127,6 @@ def test_cross_tenant_reference_is_rejected(dsn: str, tenant: str) -> None:
         account_id = AccountRepository(conn).create("Local Account")
 
     with TenantConnection(dsn, foreign_tenant, "tads_app").transaction() as conn:
-        source_id = SourceRepository(conn).create(
-            "test", "foreign-jobs", "public_structured", "api", "terms"
-        )
         with pytest.raises(psycopg.errors.RaiseException, match="cross-tenant"):
             conn.execute(
                 "INSERT INTO organizations(tenant_id, account_id) VALUES (tads_tenant_id(), %s)",
