@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from typing import Iterator
 
 import psycopg
+from psycopg import sql
 
 
 class TenantConnection:
@@ -19,7 +20,7 @@ class TenantConnection:
         with psycopg.connect(self._dsn) as connection:
             with connection.transaction():
                 if self.database_role:
-                    connection.execute(f"SET LOCAL ROLE {self.database_role}")
+                    connection.execute(sql.SQL("SET LOCAL ROLE {}").format(sql.Identifier(self.database_role)))
                 connection.execute(
                     "SELECT set_config('app.tenant_id', %s, true)", (self.tenant_id,)
                 )
