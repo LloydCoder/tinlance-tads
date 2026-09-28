@@ -73,12 +73,19 @@ M2 does not introduce a universal crawler, anonymous Lever access, LinkedIn scra
 
 ## M3 — Entity Resolution
 
-- normalization
-- domain/legal-name/alias matching
-- parent/subsidiary/acquisition relationships
-- confidence and ambiguity states
-- golden resolution dataset
-- false-merge regression tests
+Status: **IMPLEMENTED (deterministic resolution kernel)**
+
+Completed:
+- conservative name/domain normalization
+- exact domain and alias evidence handling
+- deterministic similarity scoring
+- explicit MATCHED / PROBABLE / AMBIGUOUS / UNRESOLVED states
+- no-silent-merge invariant
+- persisted aliases and resolution candidates with tenant isolation
+- evidence-reference slots for high-impact identity decisions
+- regression tests for exact match, ambiguity, and unknown entities
+
+Parent/subsidiary/acquisition graph semantics and production golden datasets remain explicit hardening work before the M4 signal engine consumes resolved identities.
 
 ## M4 — Signal Detection
 
