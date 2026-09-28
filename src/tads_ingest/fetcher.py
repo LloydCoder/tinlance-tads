@@ -10,14 +10,18 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from .models import FetchResult
 
+
 class FetchError(RuntimeError):
     """Controlled fetch failure."""
+
 
 class RedirectRejected(FetchError):
     """Redirects are rejected unless a source policy explicitly permits them."""
 
+
 class UnsafeDestination(FetchError):
     """Destination is not an allowed public network endpoint."""
+
 
 @dataclass(frozen=True, slots=True)
 class FetchPolicy:
@@ -39,9 +43,11 @@ class FetchPolicy:
         if self.allow_redirects:
             raise ValueError("redirects require source-specific revalidation")
 
+
 class _RejectRedirects(HTTPRedirectHandler):
     def redirect_request(self, *args: object, **kwargs: object) -> None:
         raise RedirectRejected("redirects are disabled by TADS source policy")
+
 
 def _host_is_public(host: str) -> bool:
     try:
@@ -51,6 +57,7 @@ def _host_is_public(host: str) -> bool:
     if not addresses:
         raise UnsafeDestination("destination has no address")
     return all(ip_address(address).is_global for address in addresses)
+
 
 class SafeFetcher:
     def __init__(self, policy: FetchPolicy):
