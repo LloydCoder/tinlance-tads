@@ -1,11 +1,14 @@
 """Stable M0 enumerations. Values are API/storage identifiers."""
+
 from enum import StrEnum
+
 
 class SourceClass(StrEnum):
     FIRST_PARTY = "first_party"
     PUBLIC_STRUCTURED = "public_structured"
     PUBLIC_WEB = "public_web"
     LICENSED = "licensed"
+
 
 class SignalType(StrEnum):
     COMPANY = "company"
