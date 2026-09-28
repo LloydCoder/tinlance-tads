@@ -190,7 +190,7 @@ class SignalRepository:
             """INSERT INTO signals(
                    tenant_id,account_id,event_id,signal_type,signal_subtype,confidence,relevance,
                    freshness,reliability,business_impact,direction,first_seen_at,last_seen_at,expires_at
-               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""",
             (
                 account_id,
                 event_id,
