@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tinlance-tads"
+version = "0.1.0"
+description = "Tinlance Target Account Demand Signal Intelligence contracts"
+requires-python = ">=3.12"
+license = { text = "Proprietary" }
+authors = [{ name = "Tinlance" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["mypy>=1.13,<2", "pytest>=8.3,<9", "ruff>=0.8,<1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = ["build", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_ignores = true
+no_implicit_optional = true
+packages = ["tads_contracts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
