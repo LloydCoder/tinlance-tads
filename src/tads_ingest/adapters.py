@@ -9,9 +9,11 @@ from urllib.parse import quote
 from .fetcher import SafeFetcher
 from .models import FetchResult, NormalizedObservation
 
+
 def _record_hash(payload: dict[str, Any]) -> str:
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return "sha256:" + sha256(canonical).hexdigest()
+
 
 @dataclass(frozen=True, slots=True)
 class GreenhouseAdapter:
@@ -30,16 +32,28 @@ class GreenhouseAdapter:
     def _normalize(job: dict[str, Any], result: FetchResult) -> NormalizedObservation:
         external_id = str(job["id"])
         payload = {
-            "provider": "greenhouse", "job_id": external_id,
-            "internal_job_id": job.get("internal_job_id"), "title": job.get("title"),
-            "updated_at": job.get("updated_at"), "first_published": job.get("first_published"),
-            "company_name": job.get("company_name"), "location": job.get("location"),
-            "absolute_url": job.get("absolute_url"), "content": job.get("content"),
-            "departments": job.get("departments"), "offices": job.get("offices"),
+            "provider": "greenhouse",
+            "job_id": external_id,
+            "internal_job_id": job.get("internal_job_id"),
+            "title": job.get("title"),
+            "updated_at": job.get("updated_at"),
+            "first_published": job.get("first_published"),
+            "company_name": job.get("company_name"),
+            "location": job.get("location"),
+            "absolute_url": job.get("absolute_url"),
+            "content": job.get("content"),
+            "departments": job.get("departments"),
+            "offices": job.get("offices"),
         }
         return NormalizedObservation(
-            external_id, "greenhouse_job_board", result.url, result.captured_at, payload, _record_hash(payload)
+            external_id,
+            "greenhouse_job_board",
+            result.url,
+            result.captured_at,
+            payload,
+            _record_hash(payload),
         )
+
 
 @dataclass(frozen=True, slots=True)
 class LeverAdapter:
@@ -54,21 +68,36 @@ class LeverAdapter:
             raise ValueError("Lever account_id is required")
         if not self.authorization_header.startswith("Bearer "):
             raise ValueError("Lever authorization must be a Bearer token")
-        url = "https://api.lever.co/v1/postings?state=published&distributionChannel=public&limit=100"
+        url = (
+            "https://api.lever.co/v1/postings"
+            "?state=published&distributionChannel=public&limit=100"
+        )
         result = self.fetcher.fetch(url, {"Authorization": self.authorization_header})
         document = json.loads(result.body)
-        observations = tuple(self._normalize(posting, result) for posting in document.get("data", []))
+        observations = tuple(
+            self._normalize(posting, result) for posting in document.get("data", [])
+        )
         return result, observations
 
     @staticmethod
     def _normalize(posting: dict[str, Any], result: FetchResult) -> NormalizedObservation:
         external_id = str(posting["id"])
         payload = {
-            "provider": "lever", "posting_id": external_id, "text": posting.get("text"),
-            "created_at": posting.get("createdAt"), "updated_at": posting.get("updatedAt"),
-            "categories": posting.get("categories"), "description_plain": posting.get("descriptionPlain"),
-            "hosted_url": posting.get("hostedUrl"), "apply_url": posting.get("applyUrl"),
+            "provider": "lever",
+            "posting_id": external_id,
+            "text": posting.get("text"),
+            "created_at": posting.get("createdAt"),
+            "updated_at": posting.get("updatedAt"),
+            "categories": posting.get("categories"),
+            "description_plain": posting.get("descriptionPlain"),
+            "hosted_url": posting.get("hostedUrl"),
+            "apply_url": posting.get("applyUrl"),
         }
         return NormalizedObservation(
-            external_id, "lever_postings", result.url, result.captured_at, payload, _record_hash(payload)
+            external_id,
+            "lever_postings",
+            result.url,
+            result.captured_at,
+            payload,
+            _record_hash(payload),
         )
