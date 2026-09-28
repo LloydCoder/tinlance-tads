@@ -1,5 +1,7 @@
 """Source registry contract."""
+
 from dataclasses import dataclass
+
 
 @dataclass(frozen=True, slots=True)
 class SourceContract:
@@ -18,8 +20,14 @@ class SourceContract:
     enabled: bool = False
 
     def validate(self) -> None:
-        required = (self.source_id, self.provider, self.name, self.source_class,
-                    self.access_mechanism, self.terms_reference)
+        required = (
+            self.source_id,
+            self.provider,
+            self.name,
+            self.source_class,
+            self.access_mechanism,
+            self.terms_reference,
+        )
         if any(not value for value in required):
             raise ValueError("source contract has missing required identity/policy fields")
         if self.retention_days is not None and self.retention_days < 0:
