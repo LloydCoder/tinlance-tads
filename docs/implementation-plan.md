@@ -44,6 +44,14 @@ Build the first real runtime domain layer:
 
 M1 exit condition: a real permitted source can be represented as source → snapshot → observation → event → account/entity → signal → evidence with reconstructable lineage.
 
+## M1 — Evidence-First Intelligence Kernel
+
+Status: **IMPLEMENTED**
+
+The repository now contains the first executable PostgreSQL kernel: ordered migration, tenant-scoped tables, PostgreSQL row-level security, transaction-local tenant context, immutable evidence enforcement, source snapshots, observations, canonical events, evidence, signals, and persistence repositories. CI runs the kernel against PostgreSQL 17.
+
+Exit evidence is reproducible: source → snapshot → observation → canonical event → account → evidence → signal, with tenant isolation and evidence immutability tested against a real database.
+
 ## M2 — Source Ingestion
 
 Start with controlled public structured sources and first-party data. Greenhouse Job Board and Lever public postings remain candidate initial hiring-signal adapters, subject to revalidation of provider contracts and terms before release. Public web fetching comes only after the hardened fetch boundary is implemented.
