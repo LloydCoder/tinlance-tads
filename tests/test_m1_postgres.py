@@ -112,3 +112,26 @@ def test_evidence_chain_and_immutability(dsn: str, tenant: str) -> None:
 def test_migration_is_idempotent(dsn: str) -> None:
     apply_migrations(dsn)
     assert apply_migrations(dsn) == []
+
+
+def test_cross_tenant_reference_is_rejected(dsn: str, tenant: str) -> None:
+    with psycopg.connect(dsn) as conn:
+        row = conn.execute(
+            "INSERT INTO tenants(name) VALUES ('foreign-tenant') RETURNING id"
+        ).fetchone()
+        assert row is not None
+        foreign_tenant = str(row[0])
+        conn.commit()
+
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        account_id = AccountRepository(conn).create("Local Account")
+
+    with TenantConnection(dsn, foreign_tenant, "tads_app").transaction() as conn:
+        source_id = SourceRepository(conn).create(
+            "test", "foreign-jobs", "public_structured", "api", "terms"
+        )
+        with pytest.raises(psycopg.errors.RaiseException, match="cross-tenant"):
+            conn.execute(
+                "INSERT INTO organizations(account_id) VALUES (%s)",
+                (account_id,),
+            )
