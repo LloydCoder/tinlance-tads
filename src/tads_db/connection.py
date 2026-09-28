@@ -23,7 +23,5 @@ class TenantConnection:
                 connection.execute(
                     sql.SQL("SET LOCAL ROLE {}").format(sql.Identifier(self.database_role))
                 )
-            connection.execute(
-                "SELECT set_config('app.tenant_id', %s, true)", (self.tenant_id,)
-            )
+            connection.execute("SELECT set_config('app.tenant_id', %s, true)", (self.tenant_id,))
             yield connection
