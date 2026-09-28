@@ -5,7 +5,7 @@ from .integration import FadeReachHandoff, ReconOSRequest
 from .provenance import EvidenceRef, ProvenanceRef
 from .scoring import ScoreComponent, ScoreContract
 from .source import SourceContract
-from .taxonomy import SignalType, SourceClass
+from .taxonomy import RecommendationAction, ResolutionState, SignalType, SourceClass
 
 __all__ = [
     "CanonicalEventRef",
@@ -17,6 +17,8 @@ __all__ = [
     "ScoreComponent",
     "ScoreContract",
     "SignalRef",
+    "RecommendationAction",
+    "ResolutionState",
     "SignalType",
     "SourceClass",
     "SourceContract",
