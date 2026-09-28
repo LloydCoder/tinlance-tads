@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+
 @dataclass(frozen=True, slots=True)
 class FetchResult:
     url: str
@@ -13,6 +14,7 @@ class FetchResult:
     captured_at: datetime
     headers: dict[str, str]
 
+
 @dataclass(frozen=True, slots=True)
 class NormalizedObservation:
     external_id: str
@@ -21,6 +23,7 @@ class NormalizedObservation:
     observed_at: datetime
     payload: dict[str, Any]
     content_hash: str
+
 
 @dataclass(frozen=True, slots=True)
 class IngestionRecord:
