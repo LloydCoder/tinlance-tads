@@ -1,5 +1,7 @@
 """Deterministic, explainable scoring contract."""
+
 from dataclasses import dataclass
+
 
 @dataclass(frozen=True, slots=True)
 class ScoreComponent:
@@ -17,6 +19,7 @@ class ScoreComponent:
             raise ValueError("score component weight cannot be negative")
         if not self.evidence_ids:
             raise ValueError("every score component must reference evidence")
+
 
 @dataclass(frozen=True, slots=True)
 class ScoreContract:
