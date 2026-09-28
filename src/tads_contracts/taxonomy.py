@@ -20,3 +20,22 @@ class SignalType(StrEnum):
     REGULATORY = "regulatory"
     DIGITAL = "digital"
     COMMERCIAL = "commercial"
+
+
+class RecommendationAction(StrEnum):
+    IGNORE = "ignore"
+    MONITOR = "monitor"
+    RESEARCH = "research"
+    ENRICH = "enrich"
+    QUEUE_FOR_FADEREACH = "queue_for_fadereach"
+    REQUEST_HUMAN_REVIEW = "request_human_review"
+    CREATE_OPPORTUNITY = "create_opportunity"
+    EXPAND_RESEARCH = "expand_research"
+
+
+class ResolutionState(StrEnum):
+    MATCHED = "matched"
+    PROBABLE = "probable"
+    AMBIGUOUS = "ambiguous"
+    UNRESOLVED = "unresolved"
+    REJECTED = "rejected"
