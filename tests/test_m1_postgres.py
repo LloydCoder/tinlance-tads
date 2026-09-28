@@ -103,13 +103,15 @@ def test_evidence_chain_and_immutability(dsn: str, tenant: str) -> None:
             [evidence_id],
         )
         assert signal_id
-        with pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"):
-            conn.execute(
-                "UPDATE evidence SET excerpt='tampered' WHERE id=%s",
-                (evidence_id,),
-            )
-        with pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"):
-            conn.execute("DELETE FROM evidence WHERE id=%s", (evidence_id,))
+        with conn.transaction():
+            with pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"):
+                conn.execute(
+                    "UPDATE evidence SET excerpt='tampered' WHERE id=%s",
+                    (evidence_id,),
+                )
+        with conn.transaction():
+            with pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"):
+                conn.execute("DELETE FROM evidence WHERE id=%s", (evidence_id,))
         lineage = conn.execute(
             """SELECT s.id, ss.id, o.id, e.id, sig.id
                FROM sources s
@@ -174,5 +176,6 @@ def test_all_tenant_tables_have_rls(dsn: str) -> None:
                WHERE relname = ANY(%s)""",
             (list(expected),),
         ).fetchall()
-    assert {name for name, _ in rows} == expected
-    assert all(enabled for _, enabled in rows)
+    states = dict(rows)
+    assert set(states) == expected
+    assert states == {name: True for name in expected}
