@@ -104,8 +104,8 @@ def test_evidence_chain_and_immutability(dsn: str, tenant: str) -> None:
         )
         assert signal_id
         with (
-            conn.transaction(),
             pytest.raises(psycopg.errors.RaiseException, match="evidence is immutable"),
+            conn.transaction(),
         ):
             conn.execute(
                 "UPDATE evidence SET excerpt='tampered' WHERE id=%s",
@@ -177,7 +177,7 @@ def test_all_tenant_tables_have_rls(dsn: str) -> None:
         rows = conn.execute(
             """SELECT relname, relrowsecurity
                FROM pg_class
-               WHERE relname = ANY(%s)""",
+               WHERE relname = ANY(%s) AND relnamespace = 'public'::regnamespace""",
             (list(expected),),
         ).fetchall()
     states = dict(rows)
