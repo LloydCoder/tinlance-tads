@@ -1,7 +1,7 @@
 """Tenant-scoped PostgreSQL connection management."""
 
 from contextlib import contextmanager
-from typing import Iterator
+from typing import Any, Iterator
 
 import psycopg
 from psycopg import sql
@@ -16,7 +16,7 @@ class TenantConnection:
         self.database_role = database_role
 
     @contextmanager
-    def transaction(self) -> Iterator[psycopg.Connection]:
+    def transaction(self) -> Iterator[psycopg.Connection[Any]]:
         with psycopg.connect(self._dsn) as connection:
             with connection.transaction():
                 if self.database_role:
