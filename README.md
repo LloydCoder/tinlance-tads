@@ -59,3 +59,8 @@ The current Agent Platform repository is itself at M0 foundation stage and curre
 ## Roadmap
 
 M0 Architecture → M1 Core Intelligence → M2 Ingestion → M3 Entity Resolution → M4 Signal Engine → M5 Account Intelligence → M6 Opportunity Engine → M7 Agent Intelligence → M8 ReconOS → M9 FadeReach handoff → M10 Feedback → M11 Console → M12 Production Hardening → M13 E2E Validation.
+
+
+## M0 verification
+
+M0 includes typed provider-neutral contracts, architecture boundary tests, persistence/migration invariants, and a repository CI gate. Production intelligence capabilities begin in M1.
