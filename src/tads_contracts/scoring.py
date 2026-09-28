@@ -45,6 +45,6 @@ class ScoreContract:
         total_weight = sum(component.weight for component in self.components)
         if total_weight <= 0:
             raise ValueError("score requires positive total component weight")
-        return sum(
-            component.value * component.weight for component in self.components
-        ) / total_weight
+        return (
+            sum(component.value * component.weight for component in self.components) / total_weight
+        )
