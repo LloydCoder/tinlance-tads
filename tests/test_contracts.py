@@ -9,6 +9,7 @@ from tads_contracts import (
     ReconOSRequest,
     ScoreComponent,
     ScoreContract,
+    SourceClass,
     SourceContract,
 )
 
@@ -38,7 +39,7 @@ def test_enabled_source_requires_review() -> None:
         "greenhouse",
         "Greenhouse",
         "Job Board",
-        "public_structured",
+        SourceClass.PUBLIC_STRUCTURED,
         "documented_api",
         "provider-policy:greenhouse",
         ("job_id",),
