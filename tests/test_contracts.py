@@ -8,6 +8,8 @@ from tads_contracts import (
     ProvenanceRef,
     ReconOSRequest,
     ScoreComponent,
+    RecommendationAction,
+    ResolutionState,
     ScoreContract,
     SourceClass,
     SourceContract,
@@ -95,3 +97,8 @@ def test_score_recomputation_is_deterministic() -> None:
         0.9,
     )
     assert contract.recompute() == pytest.approx(2 / 3)
+
+
+def test_taxonomy_values_are_stable() -> None:
+    assert RecommendationAction.QUEUE_FOR_FADEREACH.value == "queue_for_fadereach"
+    assert ResolutionState.AMBIGUOUS.value == "ambiguous"
