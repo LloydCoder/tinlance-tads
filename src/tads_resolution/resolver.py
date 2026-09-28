@@ -40,7 +40,7 @@ class EntityResolver:
                 1.0,
                 (0.7 if domain_exact else 0.0) + (0.2 if alias_exact else 0.0) + 0.1 * similarity,
             )
-            if confidence >= 0.35:
+            if domain_exact or alias_exact or similarity >= 0.35:
                 candidates.append(
                     Candidate(
                         organization.organization_id,
