@@ -62,6 +62,12 @@ The Agent Platform integration remains disabled until a versioned, tested runtim
 - Personal data is minimized and governed by purpose, provenance, retention, access, and deletion policy.
 - TADS never sends outreach.
 
+## M2 status
+
+**Source Ingestion — implementation in progress on the M2 branch.** The controlled fetch boundary now enforces HTTPS, explicit host allowlists, public-address resolution, byte/time/content-type budgets, and redirect rejection. Greenhouse is supported through its documented public Job Board GET API; Lever is supported only through authenticated API access. No universal crawler or LinkedIn automation is introduced.
+
+M2 preserves the M1 evidence chain: source → snapshot → observation. Canonical event creation, entity resolution, signal detection, correlation, and opportunity scoring remain downstream milestones.
+
 ## Roadmap
 
 M0 Architecture → M1 Evidence-First Intelligence Kernel → M2 Source Ingestion → M3 Entity Resolution → M4 Signal Detection → M5 Temporal/Correlation Intelligence → M6 Account Intelligence → M7 ICP/Opportunity/Recommendation → M8 Agent Intelligence → M9 ReconOS → M10 FadeReach → M11 Feedback/Outcomes → M12 Console → M13 Productionization → M14 Security/Privacy/Trust → M15 Reliability/Scale → M16 Enterprise Governance → M17 E2E/Adversarial Validation → M18 Enterprise GA/Continuous Assurance.
