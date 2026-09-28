@@ -68,7 +68,9 @@ class LeverAdapter:
             raise ValueError("Lever account_id is required")
         if not self.authorization_header.startswith("Bearer "):
             raise ValueError("Lever authorization must be a Bearer token")
-        url = "https://api.lever.co/v1/postings?state=published&distributionChannel=public&limit=100"
+        url = (
+            "https://api.lever.co/v1/postings?state=published&distributionChannel=public&limit=100"
+        )
         result = self.fetcher.fetch(url, {"Authorization": self.authorization_header})
         document = json.loads(result.body)
         observations = tuple(
