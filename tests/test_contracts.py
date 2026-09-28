@@ -81,3 +81,14 @@ def test_fadereach_handoff_is_evidence_backed() -> None:
 def test_reconos_request_is_tenant_scoped() -> None:
     request = ReconOSRequest("r-1", "t-1", "a-1", ("technology",), "account_research")
     assert request.tenant_id == "t-1"
+\n\ndef test_score_recomputation_is_deterministic() -> None:
+    contract = ScoreContract(
+        "m0.1",
+        (
+            ScoreComponent("fit", 0.8, 2.0, ("ev-1",)),
+            ScoreComponent("freshness", 0.4, 1.0, ("ev-2",)),
+        ),
+        0.6666666667,
+        0.9,
+    )
+    assert contract.recompute() == pytest.approx(2 / 3)
