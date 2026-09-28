@@ -9,10 +9,10 @@ description = "Tinlance Target Account Demand Signal Intelligence contracts"
 requires-python = ">=3.12"
 license = { text = "Proprietary" }
 authors = [{ name = "Tinlance" }]
-dependencies = []
+dependencies = ["psycopg[binary]>=3.2,<4"]
 
 [project.optional-dependencies]
-dev = ["mypy>=1.13,<2", "pytest>=8.3,<9", "ruff>=0.8,<1"]
+dev = ["mypy>=1.13,<2", "pytest>=8.3,<9", "ruff>=0.8,<1", "psycopg[binary]>=3.2,<4"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -30,8 +30,13 @@ python_version = "3.12"
 strict = true
 warn_unused_ignores = true
 no_implicit_optional = true
-packages = ["tads_contracts"]
+packages = ["tads_contracts", "tads_db"]
+
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+markers = ["integration: requires PostgreSQL"]
+
+[tool.setuptools.package-data]
+tads_db = ["migrations/*.sql"]
