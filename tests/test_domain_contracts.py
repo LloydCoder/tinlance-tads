@@ -2,8 +2,13 @@ from datetime import UTC, datetime
 
 import pytest
 
-from tads_contracts import CanonicalEventRef, EvidenceRef, ObservationRef, ProvenanceRef
-from tads_contracts import SignalRef
+from tads_contracts import (
+    CanonicalEventRef,
+    EvidenceRef,
+    ObservationRef,
+    ProvenanceRef,
+    SignalRef,
+)
 
 
 def evidence() -> EvidenceRef:
