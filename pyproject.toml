@@ -20,6 +20,7 @@ where = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = ["build", ".venv"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
