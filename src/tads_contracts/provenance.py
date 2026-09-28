@@ -1,6 +1,8 @@
 """Evidence and lineage contracts."""
+
 from dataclasses import dataclass
 from datetime import datetime
+
 
 @dataclass(frozen=True, slots=True)
 class ProvenanceRef:
@@ -17,6 +19,7 @@ class ProvenanceRef:
             raise ValueError("provenance requires source, snapshot and content hash")
         if not self.extractor or not self.extractor_version:
             raise ValueError("provenance requires extractor identity and version")
+
 
 @dataclass(frozen=True, slots=True)
 class EvidenceRef:
