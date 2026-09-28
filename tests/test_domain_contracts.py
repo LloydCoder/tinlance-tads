@@ -9,17 +9,13 @@ from tads_contracts import SignalRef
 def evidence() -> EvidenceRef:
     return EvidenceRef(
         "ev-1",
-        ProvenanceRef(
-            "src-1", "snap-1", "sha256:abc", datetime.now(UTC), "test", "1"
-        ),
+        ProvenanceRef("src-1", "snap-1", "sha256:abc", datetime.now(UTC), "test", "1"),
         0.9,
     )
 
 
 def test_observation_is_distinct_from_signal() -> None:
-    observation = ObservationRef(
-        "obs-1", "src-1", "snap-1", datetime.now(UTC), "sha256:abc"
-    )
+    observation = ObservationRef("obs-1", "src-1", "snap-1", datetime.now(UTC), "sha256:abc")
     observation.validate()
     assert not isinstance(observation, SignalRef)
 
