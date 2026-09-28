@@ -13,7 +13,8 @@ class AccountRepository:
 
     def create(self, name: str) -> str:
         row = self.conn.execute(
-            "INSERT INTO accounts(tenant_id,canonical_name) VALUES (tads_tenant_id(),%s) RETURNING id",
+            "INSERT INTO accounts(tenant_id,canonical_name) "
+            "VALUES (tads_tenant_id(),%s) RETURNING id",
             (name,),
         ).fetchone()
         assert row is not None
@@ -41,8 +42,9 @@ class SourceRepository:
         terms_reference: str,
     ) -> str:
         row = self.conn.execute(
-            """INSERT INTO sources(tenant_id,provider,name,source_class,access_mechanism,terms_reference)
-               VALUES (tads_tenant_id(),%s,%s,%s,%s,%s) RETURNING id""",
+            """INSERT INTO sources(
+                   tenant_id,provider,name,source_class,access_mechanism,terms_reference
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s) RETURNING id""",
             (provider, name, source_class, access_mechanism, terms_reference),
         ).fetchone()
         assert row is not None
@@ -113,7 +115,9 @@ class EventRepository:
         event_id = str(row[0])
         for observation_id in observation_ids:
             self.conn.execute(
-                "INSERT INTO event_observations(tenant_id,event_id,observation_id) VALUES (tads_tenant_id(),%s,%s)",
+                "INSERT INTO event_observations("
+                "tenant_id,event_id,observation_id"
+                ") VALUES (tads_tenant_id(),%s,%s)",
                 (event_id, observation_id),
             )
         return event_id
@@ -206,7 +210,9 @@ class SignalRepository:
         signal_id = str(row[0])
         for evidence_id in evidence_ids:
             self.conn.execute(
-                "INSERT INTO signal_evidence(tenant_id,signal_id,evidence_id) VALUES (tads_tenant_id(),%s,%s)",
+                "INSERT INTO signal_evidence("
+                "tenant_id,signal_id,evidence_id"
+                ") VALUES (tads_tenant_id(),%s,%s)",
                 (signal_id, evidence_id),
             )
         return signal_id
