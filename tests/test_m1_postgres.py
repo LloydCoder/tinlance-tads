@@ -126,7 +126,10 @@ def test_cross_tenant_reference_is_rejected(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id = AccountRepository(conn).create("Local Account")
 
-    with TenantConnection(dsn, foreign_tenant, "tads_app").transaction() as conn, pytest.raises(psycopg.errors.RaiseException, match="cross-tenant"):
+    with (
+        TenantConnection(dsn, foreign_tenant, "tads_app").transaction() as conn,
+        pytest.raises(psycopg.errors.RaiseException, match="cross-tenant"),
+    ):
         conn.execute(
             "INSERT INTO organizations(tenant_id, account_id) VALUES (tads_tenant_id(), %s)",
             (account_id,),
