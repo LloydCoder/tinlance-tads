@@ -17,9 +17,7 @@ class ObservationRef:
     content_hash: str
 
     def validate(self) -> None:
-        if not all(
-            (self.observation_id, self.source_id, self.snapshot_id, self.content_hash)
-        ):
+        if not all((self.observation_id, self.source_id, self.snapshot_id, self.content_hash)):
             raise ValueError("observation requires stable identity and source lineage")
 
 
