@@ -85,7 +85,7 @@ Completed:
 - evidence-reference slots for high-impact identity decisions
 - regression tests for exact match, ambiguity, and unknown entities
 
-Parent/subsidiary/acquisition graph semantics and production golden datasets remain explicit hardening work before the M4 signal engine consumes resolved identities.
+Parent/subsidiary/acquisition graph semantics and production golden datasets remain explicit hardening work before the M4 signal engine consumes resolved identities. The M3 kernel deliberately returns ambiguity rather than manufacturing a canonical identity.
 
 ## M4 — Signal Detection
 
