@@ -121,7 +121,7 @@ ML/LLM layers, when eventually introduced, are advisory unless a separate author
 
 All tenant-scoped tables carry a tenant key and RLS policy. Application connections must use a trusted tenant context; client/model free text cannot directly set tenant identity.
 
-PostgreSQL explicitly documents that RLS can be bypassed by table owners, superusers and BYPASSRLS roles, and that foreign-key/referential-integrity checks bypass row security. citeturn0search2
+PostgreSQL explicitly documents that RLS can be bypassed by table owners, superusers and BYPASSRLS roles, and that foreign-key/referential-integrity checks bypass row security. https://www.postgresql.org/docs/18/ddl-rowsecurity.html
 
 Therefore the architecture uses:
 
