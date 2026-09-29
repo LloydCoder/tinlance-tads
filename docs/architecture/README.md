@@ -105,6 +105,10 @@ PostgreSQL / object storage
 
 OWASP recommends allowlisting where feasible, redirect controls and network-layer egress restrictions for SSRF defense; TADS therefore treats application URL validation as necessary but not sufficient. https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 
+## Evidence invariant
+
+Every material intelligence claim must be reconstructable to one or more immutable evidence records. Derived signals, scores, hypotheses and recommendations must preserve their source/evidence references and the policy/version used to derive them.
+
 ## 6. Data architecture
 
 PostgreSQL is the system of record. Relational relationship tables provide graph behavior initially. A graph database requires measured evidence that PostgreSQL is insufficient.
