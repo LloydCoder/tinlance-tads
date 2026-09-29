@@ -20,9 +20,14 @@ class SignalDetector:
         signals: list[DetectedSignal] = []
 
         if provider in {"greenhouse", "lever"}:
-            strength = 0.75 if any(
-                token in haystack for token in ("security", "application security", "devsecops")
-            ) else 0.55
+            strength = (
+                0.75
+                if any(
+                    token in haystack
+                    for token in ("security", "application security", "devsecops")
+                )
+                else 0.55
+            )
             signals.append(
                 DetectedSignal(
                     SignalKind.HIRING,
