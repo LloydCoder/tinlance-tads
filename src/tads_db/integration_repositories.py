@@ -1,6 +1,6 @@
 """Tenant-scoped persistence for M9/M10 integration contracts."""
 
-from collections.abc import Sequence
+from collections.abc import Sequence\nfrom datetime import datetime
 from typing import Any
 
 from psycopg import Connection
@@ -76,7 +76,7 @@ class OpportunityHandoffRepository:
         recommended_persona: str | None,
         recommended_angle: str | None,
         timing: str | None,
-        expires_at: str | None,
+        expires_at: datetime | None,
         idempotency_key: str,
     ) -> str:
         if not evidence_ids:
