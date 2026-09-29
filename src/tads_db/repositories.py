@@ -313,3 +313,43 @@ class CorrelationRepository:
         ).fetchone()
         assert row is not None
         return str(row[0])
+
+
+class AccountStateRepository:
+    """Tenant-scoped persistence for versioned account intelligence."""
+
+    def __init__(self, conn: Connection[Any]):
+        self.conn = conn
+
+    def create(
+        self,
+        account_id: str,
+        signal_strength: float,
+        signal_diversity: float,
+        momentum: float,
+        negative_evidence: float,
+        data_confidence: float,
+        active_signal_count: int,
+        state_version: str,
+        drivers: Sequence[str],
+    ) -> str:
+        row = self.conn.execute(
+            """INSERT INTO account_states(
+                   tenant_id,account_id,signal_strength,signal_diversity,momentum,
+                   negative_evidence,data_confidence,active_signal_count,state_version,drivers
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s)
+               RETURNING id""",
+            (
+                account_id,
+                signal_strength,
+                signal_diversity,
+                momentum,
+                negative_evidence,
+                data_confidence,
+                active_signal_count,
+                state_version,
+                Jsonb(list(drivers)),
+            ),
+        ).fetchone()
+        assert row is not None
+        return str(row[0])
