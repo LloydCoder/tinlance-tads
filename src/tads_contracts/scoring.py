@@ -51,4 +51,7 @@ class ScoreContract:
     def recompute(self) -> float:
         self.validate()
         total_weight = sum(component.weight for component in self.components)
-        return sum(component.value * component.weight for component in self.components) / total_weight
+        return (
+            sum(component.value * component.weight for component in self.components)
+            / total_weight
+        )
