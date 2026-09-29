@@ -82,13 +82,21 @@ def test_fadereach_handoff_is_evidence_backed() -> None:
         None,
         None,
         None,
+        datetime(2026, 12, 31, tzinfo=UTC),
+        "handoff-1",
     )
     assert handoff.evidence_ids == ("ev-1",)
 
 
 def test_reconos_request_is_server_scoped() -> None:
-    request = ReconOSRequest("a-1", "account_research", ("technology",))
-    assert request.account_id == "a-1"\n    assert request.request_id == "req-1"
+    request = ReconOSRequest(
+        "a-1",
+        "account_research",
+        ("technology",),
+        request_id="req-1",
+    )
+    assert request.account_id == "a-1"
+    assert request.request_id == "req-1"
 
 
 def test_score_recomputation_is_deterministic() -> None:
