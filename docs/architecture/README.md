@@ -150,6 +150,6 @@ Recommended components:
 - containerized API/worker
 - managed secret store
 
-## 10. Architectural non-goals
+## 10. Persistence integrity\n\nHistorical intelligence is append-only. Evidence is immutable, and M9/M10 integration records retain both a portable JSON evidence snapshot and authoritative normalized evidence-link rows. Deferred PostgreSQL constraint triggers require those two representations to agree at transaction commit; a mismatch fails closed. Application roles do not receive update/delete privileges for historical artifacts.\n\nScores are also structurally bound to their declared weighted components, and opportunity, account-state and temporal derivations propagate evidence identifiers rather than treating aggregate values as self-authenticating.\n\n## 11. Architectural non-goals
 
 No universal crawler, LinkedIn scraper, generic lead database, CRM, outreach engine, premature graph database, or ML-only intent predictor.
