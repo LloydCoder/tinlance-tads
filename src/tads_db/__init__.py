@@ -4,8 +4,8 @@ from .connection import TenantConnection
 from .migrate import apply_migrations
 from .repositories import (
     AccountRepository,
-    AgentSpecRepository,
     AccountStateRepository,
+    AgentSpecRepository,
     CorrelationRepository,
     EventRepository,
     EvidenceRepository,
