@@ -118,7 +118,7 @@ ReconOS and FadeReach are treated as separate trust boundaries. TADS sends only 
 TADS agent specifications prohibit outreach and require explicit evidence. Agent Platform remains responsible for runtime tool authorization, sandboxing, approvals and generic audit. This separation addresses excessive agency and tool-misuse risks.
 
 ### Supply-chain controls
-CI actions are pinned to immutable commit SHAs. GitHub recommends full-length SHA pinning for third-party actions to reduce the risk of mutable-tag compromise. Dependencies and workflow changes remain reviewable artifacts.
+CI actions are pinned to immutable commit SHAs. GitHub recommends full-length SHA pinning for third-party actions to reduce the risk of mutable-tag compromise. CI also runs pip-audit against the installed dependency set; SBOM, provenance/signing and deployment artifact controls remain production gates.
 
 ### Readiness gates
 M18 is fail-closed. CI success alone is insufficient: tenant isolation, security controls, documentation reconciliation, E2E validation, rollback evidence and governance review are independently required.
