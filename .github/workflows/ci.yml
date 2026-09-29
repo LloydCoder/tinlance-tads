@@ -44,17 +44,21 @@ jobs:
           cache: pip
       - run: python -m pip install --upgrade pip
       - run: python -m pip install ".[dev]"
-      - name: Diagnose Ruff formatting
+      - name: Apply Ruff formatting
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set +e
-          python -m ruff format --diff src tests > /tmp/ruff-format.diff
-          status=$?
-          if [ -s /tmp/ruff-format.diff ]; then
-            gh pr comment "${{ github.event.pull_request.number }}" --body-file /tmp/ruff-format.diff
+          python -m ruff format src tests
+          if git diff --quiet -- src tests; then
+            exit 0
           fi
-          exit $status
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src tests
+          git commit -m "style: apply Ruff formatter [skip ci]"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
+          exit 1
       - run: python -m ruff check src tests
       - run: python -m mypy
       - run: python -m pytest
