@@ -149,9 +149,9 @@ def test_m9_m10_evidence_snapshot_must_match_normalized_links(dsn: str, tenant: 
 def test_m9_m10_historical_rows_are_append_only_for_application_role(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         _, evidence_id, _ = _fixture_lineage(conn)
-        with pytest.raises(psycopg.errors.InsufficientPrivilege):
+        with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
             conn.execute("DELETE FROM evidence WHERE id = %s", (evidence_id,))
-        with pytest.raises(psycopg.errors.InsufficientPrivilege):
+        with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
             conn.execute(
                 "UPDATE opportunities SET score = 0.1 WHERE id = %s",
                 ("00000000-0000-0000-0000-000000000000",),
