@@ -19,9 +19,7 @@ def test_temporal_features_measure_diversity_independence_and_contradiction() ->
         SignalPoint("s2", "a1", "security", start + timedelta(days=3), 0.9, "press", 1),
         SignalPoint("s3", "a1", "security", start + timedelta(days=5), 0.7, "press", -1),
     ]
-    result = CorrelationEngine().features(
-        signals, start=start, end=start + timedelta(days=7)
-    )
+    result = CorrelationEngine().features(signals, start=start, end=start + timedelta(days=7))
     assert result.count == 3
     assert result.diversity == pytest.approx(2 / 3)
     assert result.independence == pytest.approx(2 / 3)
