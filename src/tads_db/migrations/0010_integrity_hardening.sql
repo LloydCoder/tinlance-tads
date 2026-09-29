@@ -36,7 +36,7 @@ BEGIN
     END IF;
 
     IF snapshot IS NULL THEN
-        RETURN COALESCE(NEW, OLD);
+        RETURN NULL;
     END IF;
 
     SELECT count(*) INTO expected_count
@@ -60,7 +60,7 @@ BEGIN
     ) THEN
         RAISE EXCEPTION 'enrichment evidence snapshot does not match normalized lineage';
     END IF;
-    RETURN COALESCE(NEW, OLD);
+    RETURN NULL;
 END $$;
 
 CREATE OR REPLACE FUNCTION tads_validate_handoff_evidence_snapshot()
