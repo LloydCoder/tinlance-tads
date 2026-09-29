@@ -1,6 +1,7 @@
 """Tenant-scoped persistence for M9/M10 integration contracts."""
 
-from collections.abc import Sequence\nfrom datetime import datetime
+from collections.abc import Sequence
+from datetime import datetime
 from typing import Any
 
 from psycopg import Connection
