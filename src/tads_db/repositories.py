@@ -429,6 +429,8 @@ class OpportunityRepository:
                 (opportunity_id, evidence_id),
             )
         return opportunity_id
+
+
 class AgentSpecRepository:
     """Tenant-scoped persistence for governed TADS agent specifications."""
 
@@ -469,4 +471,3 @@ class AgentSpecRepository:
         ).fetchone()
         assert row is not None
         return str(row[0])
-
