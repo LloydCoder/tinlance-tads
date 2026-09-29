@@ -4,17 +4,17 @@ from tads_integrations import EnrichmentRequest, EnrichmentResult, OpportunityHa
 
 
 def test_recon_request_and_result_are_evidence_bounded() -> None:
-    request = EnrichmentRequest("a1", "validate technology need", ("technology",))
+    request = EnrichmentRequest("a1", "validate technology need", ("technology",), request_id="req-1")
     result = EnrichmentResult(
         "reconos", "contract-v1", "a1", ("ev-1",), (("technology", "postgres"),), ()
     )
     assert request.evidence_required is True
-    assert result.evidence_ids == ("ev-1",)
+    assert result.evidence_ids == ("ev-1",)\n    assert request.request_id == "req-1"\n    assert result.response_id == "resp-1"
 
 
 def test_fadereach_handoff_validates_bounds_and_evidence() -> None:
     handoff = OpportunityHandoff(
-        "o1", "a1", 0.8, 0.7, "evidence-backed hypothesis", ("ev-1",), None, None, "now"
+        "o1", "a1", 0.8, 0.7, "evidence-backed hypothesis", ("ev-1",), None, None, "now", "2026-12-31T00:00:00Z", "handoff-1"
     )
     assert handoff.score == 0.8
 
