@@ -30,6 +30,7 @@ class DetectedSignal:
     freshness: float
     reliability: float
     evidence_observation_id: str
+    evidence_ids: tuple[str, ...]
     rationale: tuple[str, ...]
 
     @property
