@@ -8,8 +8,8 @@ import pytest
 
 from tads_db import (
     AccountRepository,
-    AgentSpecRepository,
     AccountStateRepository,
+    AgentSpecRepository,
     CorrelationRepository,
     EventRepository,
     EvidenceRepository,
