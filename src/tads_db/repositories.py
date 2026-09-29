@@ -399,3 +399,45 @@ class OpportunityRepository:
         ).fetchone()
         assert row is not None
         return str(row[0])
+
+
+class AgentSpecRepository:
+    """Tenant-scoped persistence for governed TADS agent specifications."""
+
+    def __init__(self, conn: Connection[Any]):
+        self.conn = conn
+
+    def create(
+        self,
+        name: str,
+        purpose: str,
+        risk: str,
+        required_evidence: bool,
+        max_steps: int,
+        requires_human_approval: bool,
+        tools: Sequence[dict[str, Any]],
+        prohibited_actions: Sequence[str],
+        failure_modes: Sequence[str],
+        eval_criteria: Sequence[str],
+    ) -> str:
+        row = self.conn.execute(
+            """INSERT INTO agent_specs(
+                   tenant_id,name,purpose,risk,required_evidence,max_steps,
+                   requires_human_approval,tools,prohibited_actions,failure_modes,eval_criteria
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+               RETURNING id""",
+            (
+                name,
+                purpose,
+                risk,
+                required_evidence,
+                max_steps,
+                requires_human_approval,
+                Jsonb(list(tools)),
+                Jsonb(list(prohibited_actions)),
+                Jsonb(list(failure_modes)),
+                Jsonb(list(eval_criteria)),
+            ),
+        ).fetchone()
+        assert row is not None
+        return str(row[0])
