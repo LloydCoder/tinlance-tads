@@ -12,6 +12,7 @@ from tads_db import (
     EvidenceRepository,
     ObservationRepository,
     SignalRepository,
+    SignalDetectionRepository,
     SourceRepository,
     TenantConnection,
     apply_migrations,
@@ -183,3 +184,61 @@ def test_all_tenant_tables_have_rls(dsn: str) -> None:
     states = dict(rows)
     assert set(states) == expected
     assert states == {name: True for name in expected}
+
+
+def test_signal_detection_is_idempotent_and_tenant_scoped(dsn: str, tenant: str) -> None:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        source_id = SourceRepository(conn).create(
+            "test", "signal-source", "public_structured", "api", "terms"
+        )
+        snapshot_id = SourceRepository(conn).create_snapshot(
+            source_id, datetime.now(UTC), "sha256:m4-snapshot"
+        )
+        observation_id = ObservationRepository(conn).create(
+            source_id,
+            snapshot_id,
+            datetime.now(UTC),
+            "sha256:m4-observation",
+            {"provider": "greenhouse", "title": "Security Engineer"},
+        )
+        repo = SignalDetectionRepository(conn)
+        first = repo.create(
+            observation_id,
+            "hiring",
+            "job_posting",
+            "m4-v1",
+            "validated",
+            0.8,
+            1.0,
+            0.9,
+            ("structured hiring source",),
+        )
+        second = repo.create(
+            observation_id,
+            "hiring",
+            "job_posting",
+            "m4-v1",
+            "validated",
+            0.8,
+            1.0,
+            0.9,
+            ("structured hiring source",),
+        )
+        assert first is not None
+        assert second is None
+        row = conn.execute(
+            "SELECT quality FROM signal_detections WHERE id=%s", (first,)
+        ).fetchone()
+        assert row is not None
+        assert float(row[0]) == pytest.approx(0.72)
+
+
+def test_m4_signal_detection_has_rls(dsn: str) -> None:
+    apply_migrations(dsn)
+    with psycopg.connect(dsn) as conn:
+        row = conn.execute(
+            """SELECT relrowsecurity FROM pg_class
+               WHERE relname='signal_detections'
+                 AND relnamespace='public'::regnamespace"""
+        ).fetchone()
+    assert row == (True,)
