@@ -10,7 +10,10 @@ def spec() -> AgentSpec:
         AgentRisk.MEDIUM,
         (
             AgentTool(
-                "source_reader", "Read permitted source evidence.", True, frozenset({"public"})
+                "source_reader",
+                "Read permitted source evidence.",
+                True,
+                frozenset({"public"}),
             ),
         ),
         True,
@@ -44,7 +47,6 @@ def test_agent_without_outreach_prohibition_is_rejected() -> None:
     )
     with pytest.raises(ValueError):
         invalid.validate()
-
 
 
 def test_high_risk_agent_requires_approval() -> None:
