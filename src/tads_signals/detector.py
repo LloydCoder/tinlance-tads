@@ -12,7 +12,14 @@ class SignalDetector:
 
     taxonomy_version: str = "m4-v1"
 
-    def detect(self, observation_id: str, payload: dict[str, Any]) -> tuple[DetectedSignal, ...]:
+    def detect(
+        self,
+        observation_id: str,
+        payload: dict[str, Any],
+        evidence_ids: tuple[str, ...],
+    ) -> tuple[DetectedSignal, ...]:
+        if not evidence_ids:
+            raise ValueError("signal detection requires evidence")
         provider = str(payload.get("provider", ""))
         title = str(payload.get("title") or payload.get("text") or "")
         text = str(payload.get("content") or payload.get("description_plain") or "")
@@ -37,6 +44,7 @@ class SignalDetector:
                     1.0,
                     0.9,
                     observation_id,
+                    evidence_ids,
                     ("structured hiring source", "observed job posting"),
                 )
             )
@@ -50,6 +58,7 @@ class SignalDetector:
                         1.0,
                         0.9,
                         observation_id,
+                        evidence_ids,
                         ("security-related hiring language observed",),
                     )
                 )
