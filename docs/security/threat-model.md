@@ -1,103 +1,109 @@
-# TADS M0 Threat Model
+# TADS Threat Model
 
-TADS treats all external content, source metadata, retrieved documents, model output, and third-party tool responses as untrusted.
+## Security posture
 
-## Security framework alignment
+TADS assumes external content is hostile and treats model output as untrusted unless a separate policy layer authorizes it.
 
-M0 uses defense-in-depth principles consistent with NIST AI RMF 1.0: Govern, Map, Measure, and Manage are lifecycle functions, with governance cross-cutting the other functions. M0 freezes ownership, trust boundaries, evidence requirements, and risk controls before ingestion and agent execution are introduced. The AI RMF is a risk-management framework rather than a product checklist.
-
-Where TADS later uses LLMs or agents, the threat model also tracks the OWASP 2025 GenAI risks relevant to TADS: prompt injection, sensitive information disclosure, supply-chain risk, data/model poisoning, improper output handling, excessive agency, system prompt leakage, vector/embedding weaknesses, misinformation, and unbounded consumption. These risks do not grant models authority; platform policy and explicit authorization remain authoritative.
+The security lifecycle follows defense-in-depth and can be mapped to NIST AI RMF's Govern, Map, Measure and Manage functions. OWASP guidance is used for application and GenAI-specific threat classes.
 
 ## Assets
 
-Provider credentials; tenant/account intelligence; source snapshots and evidence; personal data and contact metadata; entity-resolution decisions; scoring policies/models; agent trajectories and research artifacts; integration credentials.
+- tenant and account intelligence
+- source snapshots/evidence
+- provider credentials
+- personal data
+- entity-resolution decisions
+- scoring/taxonomy policies
+- agent trajectories and research artifacts
+- integration credentials
+- audit records
 
 ## Trust boundaries
 
-```
-Internet / third-party source
-        │ hostile/untrusted
-        ▼
-Fetcher sandbox
-        │ validated content
-        ▼
-Parser / extractor
-        │ normalized candidate
-        ▼
-TADS domain
-        │ authenticated tenant context
-        ▼
-PostgreSQL / object storage
-        │ governed integration
-        ├── Agent Platform
-        ├── ReconOS
-        └── FadeReach
-```
+1. Internet/provider → fetcher
+2. fetcher → parser/normalizer
+3. normalized data → TADS domain
+4. TADS → PostgreSQL/object storage
+5. TADS → Agent Platform
+6. TADS → ReconOS
+7. TADS → FadeReach
 
-## Primary threats and controls
+## Threats and required controls
 
-### SSRF / egress abuse
+### SSRF and egress abuse
 
-Attacker-controlled URLs, redirects and DNS may target internal services. Use scheme allowlists, public-IP validation, redirect revalidation, DNS rebinding defenses, timeout/byte/page budgets, and isolated fetchers. Egress authorization belongs to the fetch boundary, not an LLM.
+Threats include internal IP targeting, DNS rebinding, unsafe redirects, alternate URL schemes and metadata-service access.
+
+Controls:
+
+- HTTPS-only
+- explicit source host allowlists
+- strict URL parser
+- reject URL userinfo
+- standard-port policy
+- resolve and validate public addresses
+- redirect rejection/revalidation
+- response timeout and byte budgets
+- network-layer egress restrictions
+- no arbitrary URL fetches from model output
+
+OWASP specifically recommends allowlists where feasible and warns that redirect handling can bypass validation; it also recommends network-layer controls. https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 
 ### Parser/resource exhaustion
 
-Compressed bombs, giant HTML, deep nesting, infinite pagination, and pathological documents can exhaust resources. Enforce byte, depth, time, concurrency, and page-count budgets.
+Controls: response limits, compression policy, parser depth limits, page budgets, concurrency limits, worker timeouts, cancellation and quarantine.
 
 ### Prompt injection
 
-Public pages may contain instructions designed to manipulate research agents. Extracted content is data, never authority. Agent Platform policy, tool authorization, and human approval remain authoritative.
+Retrieved content is data, never instructions. Agents receive content through typed evidence channels; tool authorization is independent of page text.
 
-### Poisoned intelligence
+### Data poisoning
 
-False articles, copied job postings, stale data, spoofed domains, and contradictory sources can create false signals. Preserve provenance, reliability, temporal metadata, and conflict state. Never convert contradiction into certainty.
+Keep source provenance, timestamps, source reliability, contradictions and hashes. Never collapse contradictory evidence into certainty.
 
-### Entity poisoning / false merge
+### False entity merge
 
-Require multi-feature matching, confidence thresholds, evidence, and review for ambiguous or high-impact merges. Never silently overwrite canonical identity.
+Use deterministic candidate generation, confidence thresholds, ambiguity states and evidence-backed review. Never silently merge on a weak name match.
 
-### Tenant isolation
+### Tenant escape
 
-Every tenant-scoped query and mutation must enforce server-side tenant context. Cross-tenant reads are security failures and require regression tests.
+All tenant records are scoped and RLS-protected. Application roles must be least privileged and must not expose arbitrary SQL. PostgreSQL notes that table owners/superusers/BYPASSRLS roles bypass RLS and that referential-integrity checks bypass row security; this is why RLS is one layer, not the entire trust boundary. https://www.postgresql.org/docs/18/ddl-rowsecurity.html and https://www.postgresql.org/docs/17/role-attributes.html
 
-### Credential leakage
+### Secret leakage
 
-Provider credentials must never enter logs, evidence excerpts, model context, or client responses. Secrets belong in the platform/deployment secret boundary.
+Credentials never enter logs, evidence, prompts, fixtures or client responses. Secrets remain in the deployment/platform secret boundary.
 
-### Personal-data overcollection
+### Privacy overcollection
 
-Prefer company/account-level evidence. Person data is collected only when necessary for an explicitly defined purpose and under applicable legal/provider constraints.
+Prefer organization-level intelligence. Person-level data requires explicit purpose, minimization, lawful basis, retention and deletion controls.
 
-### Supply-chain compromise
+### Supply-chain risk
 
-Pin and audit dependencies, generate SBOMs at the productionization stage, scan dependencies, and isolate source parsers because they process hostile content.
+Pin and audit dependencies; later productionization adds SBOM, provenance/signing and vulnerability gates.
 
-### Excessive agency and unbounded consumption
+### Excessive agency
 
-Agent capabilities must be least-privileged, bounded by policy, budget, timeout, approval, and tool scopes. Expensive or consequential actions require explicit authorization. TADS domain code never treats model output as authorization.
+Agent actions require explicit tool scopes, budgets, timeouts, approvals and policy. Model output never becomes authorization.
 
-## M2 implemented controls
+## Current implemented controls
 
-The ingestion boundary now enforces HTTPS, explicit provider host allowlists, no URL userinfo, standard-port restrictions, public DNS resolution, redirect rejection, response byte budgets, content-type allowlists, and request timeouts. These are application-layer defenses; production deployment must additionally enforce network egress controls because DNS rebinding and infrastructure-level routing cannot be solved solely in application code.
+M1: PostgreSQL migrations/checksums, tenant RLS, cross-tenant parent checks, immutable evidence and integration tests.
 
-## Required controls before M2
+M2: controlled fetch policy, public-address validation, HTTPS/host restrictions, redirect rejection, content-type/size/time budgets, source adapters and ingestion provenance.
 
-- strict URL parser and egress policy
-- fetch budgets
-- content-type and size validation
-- sandbox/isolation strategy
-- SSRF regression suite
-- prompt-injection regression fixtures
-- secret redaction
-- tenant context contract
-- provenance schema
-- retention/deletion policy
-- source terms registry
+M3: ambiguity-preserving deterministic entity resolution and tenant-scoped resolution candidates.
 
-Security heuristics may flag, quarantine, redact, or request review. They must not silently become authorization; authorization belongs to the platform/control boundary.
+M4: typed signal taxonomy/detection, quality dimensions and tenant-scoped signal persistence.
 
-## M0 authoritative references
+## Security gates before GA
 
-- NIST AI RMF 1.0: https://www.nist.gov/itl/ai-risk-management-framework
-- OWASP GenAI Security Project / Top 10 for LLM Applications: https://genai.owasp.org/llm-top-10/
-- OWASP Top 10 Web Application Security Risks: https://owasp.org/Top10/
+- trusted tenant-context mechanism
+- network-layer egress enforcement
+- comprehensive SSRF regression corpus
+- parser fuzz/resource exhaustion tests
+- prompt-injection fixtures
+- secret-redaction tests
+- dependency/SBOM/provenance controls
+- privacy/retention/deletion automation
+- authorization and audit verification
+- full adversarial E2E tests
