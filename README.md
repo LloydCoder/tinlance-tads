@@ -88,8 +88,8 @@ M11 Feedback → M12 Console → M13–M18 production, trust, scale and assuranc
 | M1 | ✅ Complete | PostgreSQL kernel, migrations, RLS, tenant context, immutable evidence, repositories and integration tests |
 | M2 | ✅ Complete | Controlled source ingestion boundary, Greenhouse public adapter, authenticated Lever adapter, snapshots/observations and SSRF-adjacent regression tests |
 | M3 | ✅ Complete | Conservative identity normalization, domain/alias evidence, deterministic candidate scoring, ambiguity-preserving resolution and tenant-scoped resolution records |
-| M4 | 🚧 In progress | Deterministic signal taxonomy/detection, signal-quality dimensions, deduplication and tenant-scoped persistence |
-| M5–M18 | ⏳ Planned | Each milestone remains gated by executable implementation, tests, documentation and green CI; no future milestone is represented as shipped |
+| M4 | ✅ Complete | Deterministic signal taxonomy/detection, explicit evidence requirements, signal-quality dimensions, detection/evidence lineage, idempotent persistence and regression coverage |
+| M5 | 🚧 In progress | Deterministic temporal/correlation feature kernel and tenant-scoped persistence |\n| M6–M18 | ⏳ Planned | Each milestone remains gated by executable implementation, tests, documentation and green CI; no future milestone is represented as shipped |
 
 **The repository intentionally does not claim that a milestone is complete merely because its architecture has been designed.**
 
