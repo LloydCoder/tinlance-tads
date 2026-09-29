@@ -4,6 +4,7 @@ from .connection import TenantConnection
 from .migrate import apply_migrations
 from .repositories import (
     AccountRepository,
+    CorrelationRepository,
     EventRepository,
     EvidenceRepository,
     ObservationRepository,
@@ -14,6 +15,7 @@ from .repositories import (
 
 __all__ = [
     "AccountRepository",
+    "CorrelationRepository",
     "EvidenceRepository",
     "EventRepository",
     "ObservationRepository",

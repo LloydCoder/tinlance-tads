@@ -270,3 +270,46 @@ class SignalDetectionRepository:
                     (detection_id, evidence_id),
                 )
         return detection_id
+
+
+class CorrelationRepository:
+    """Tenant-scoped persistence for deterministic correlation features."""
+
+    def __init__(self, conn: Connection[Any]):
+        self.conn = conn
+
+    def create(
+        self,
+        account_id: str,
+        window_start: datetime,
+        window_end: datetime,
+        count: int,
+        density: float,
+        diversity: float,
+        independence: float,
+        momentum: float,
+        contradiction: float,
+        rule_version: str,
+    ) -> str:
+        row = self.conn.execute(
+            """INSERT INTO signal_correlations(
+                   tenant_id,account_id,window_start,window_end,count,density,diversity,
+                   independence,momentum,contradiction,rule_version
+               ) VALUES (
+                   tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+               ) RETURNING id""",
+            (
+                account_id,
+                window_start,
+                window_end,
+                count,
+                density,
+                diversity,
+                independence,
+                momentum,
+                contradiction,
+                rule_version,
+            ),
+        ).fetchone()
+        assert row is not None
+        return str(row[0])
