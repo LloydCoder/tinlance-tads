@@ -308,9 +308,7 @@ def test_m5_correlation_persistence_is_tenant_scoped(dsn: str, tenant: str) -> N
 def test_m6_account_state_persistence(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id = AccountRepository(conn).create("State Account")
-        source_id = SourceRepository(conn).create(
-            "test", "m6", "public_structured", "api", "terms"
-        )
+        source_id = SourceRepository(conn).create("test", "m6", "public_structured", "api", "terms")
         snapshot_id = SourceRepository(conn).create_snapshot(
             source_id, datetime.now(UTC), "sha256:m6"
         )
