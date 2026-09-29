@@ -47,7 +47,7 @@ Controls:
 - network-layer egress restrictions
 - no arbitrary URL fetches from model output
 
-OWASP specifically recommends allowlists where feasible and warns that redirect handling can bypass validation; it also recommends network-layer controls. citeturn0search0
+OWASP specifically recommends allowlists where feasible and warns that redirect handling can bypass validation; it also recommends network-layer controls. https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 
 ### Parser/resource exhaustion
 
