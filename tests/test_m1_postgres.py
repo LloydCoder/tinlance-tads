@@ -8,6 +8,7 @@ import pytest
 
 from tads_db import (
     AccountRepository,
+    CorrelationRepository,
     EventRepository,
     EvidenceRepository,
     ObservationRepository,
@@ -259,3 +260,25 @@ def test_m4_signal_detection_has_rls(dsn: str) -> None:
                  AND relnamespace='public'::regnamespace"""
         ).fetchone()
     assert row == (True,)
+
+
+def test_m5_correlation_persistence_is_tenant_scoped(dsn: str, tenant: str) -> None:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        account_id = AccountRepository(conn).create("Correlation Account")
+        correlation_id = CorrelationRepository(conn).create(
+            account_id,
+            datetime(2026, 1, 1, tzinfo=UTC),
+            datetime(2026, 1, 8, tzinfo=UTC),
+            3,
+            0.4,
+            0.66,
+            0.66,
+            0.8,
+            0.33,
+            "m5-v1",
+        )
+        row = conn.execute(
+            "SELECT count, rule_version FROM signal_correlations WHERE id=%s",
+            (correlation_id,),
+        ).fetchone()
+        assert row == (3, "m5-v1")
