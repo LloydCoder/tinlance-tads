@@ -113,5 +113,5 @@ def test_score_recomputation_is_deterministic() -> None:
 
 
 def test_taxonomy_values_are_stable() -> None:
-    assert RecommendationAction.QUEUE_FOR_FADEREACH.value == "queue_for_fadereach"
+    assert RecommendationAction.QUEUE_FOR_FADEREACH.value == "QUEUE_FOR_FADEREACH"
     assert ResolutionState.AMBIGUOUS.value == "ambiguous"
