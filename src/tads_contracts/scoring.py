@@ -17,8 +17,10 @@ class ScoreComponent:
             raise ValueError("score component value must be between 0 and 1")
         if self.weight < 0:
             raise ValueError("score component weight cannot be negative")
-        if not self.evidence_ids:
+        if not self.evidence_ids or any(not item for item in self.evidence_ids):
             raise ValueError("every score component must reference evidence")
+        if len(set(self.evidence_ids)) != len(self.evidence_ids):
+            raise ValueError("score component evidence identifiers must be unique")
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,12 +41,14 @@ class ScoreContract:
             raise ValueError("confidence must be between 0 and 1")
         for component in self.components:
             component.validate()
+        total_weight = sum(component.weight for component in self.components)
+        if total_weight <= 0:
+            raise ValueError("score requires positive total component weight")
+        computed = sum(c.value * c.weight for c in self.components) / total_weight
+        if abs(self.score - computed) > 1e-6:
+            raise ValueError("score does not match its declared components")
 
     def recompute(self) -> float:
         self.validate()
         total_weight = sum(component.weight for component in self.components)
-        if total_weight <= 0:
-            raise ValueError("score requires positive total component weight")
-        return (
-            sum(component.value * component.weight for component in self.components) / total_weight
-        )
+        return sum(component.value * component.weight for component in self.components) / total_weight
