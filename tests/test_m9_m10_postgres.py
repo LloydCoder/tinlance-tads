@@ -123,22 +123,20 @@ def test_m9_m10_persist_evidence_and_tenant_lineage(dsn: str, tenant: str) -> No
 def test_m9_m10_evidence_snapshot_must_match_normalized_links(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id, evidence_id, _ = _fixture_lineage(conn)
-        run_id = EnrichmentRunRepository(conn).create(
-            account_id,
-            "reconos-contract",
-            "v1",
-            "lineage check",
-            ("technology",),
-            (evidence_id,),
-            (),
-            (),
-        )
+        row = conn.execute(
+            """INSERT INTO enrichment_runs(
+                   tenant_id, account_id, provider, provider_version, purpose,
+                   requested_fields, evidence_ids, facts, unknowns
+               ) VALUES (
+                   tads_tenant_id(), %s, 'reconos-contract', 'v1', 'lineage check',
+                   '["technology"]'::jsonb, %s::jsonb, '[]'::jsonb, '[]'::jsonb
+               )
+               RETURNING id""",
+            (account_id, str([evidence_id]).replace("'", '"')),
+        ).fetchone()
+        assert row is not None
         with pytest.raises(psycopg.errors.RaiseException, match="snapshot does not match"):
-            conn.execute(
-                "DELETE FROM enrichment_run_evidence WHERE enrichment_run_id = %s",
-                (run_id,),
-            )
-
+            conn.execute("SET CONSTRAINTS enrichment_evidence_snapshot_consistent IMMEDIATE")
 
 def test_m9_m10_historical_rows_are_append_only_for_application_role(
     dsn: str, tenant: str
