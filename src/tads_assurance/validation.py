@@ -32,7 +32,10 @@ class E2EValidation:
     def validate(self) -> None:
         missing = set(E2EStage) - set(self.completed)
         if missing:
-            raise ValueError("E2E validation is incomplete: " + ",".join(sorted(stage.value for stage in missing)))
+            raise ValueError(
+                "E2E validation is incomplete: "
+                + ",".join(sorted(stage.value for stage in missing))
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,17 +50,21 @@ class EnterpriseGate:
 
     @property
     def readiness(self) -> Readiness:
-        return Readiness.READY if all(
-            (
-                self.ci_green,
-                self.security_green,
-                self.tenant_isolation_green,
-                self.documentation_reconciled,
-                self.e2e_validated,
-                self.rollback_tested,
-                self.governance_reviewed,
+        return (
+            Readiness.READY
+            if all(
+                (
+                    self.ci_green,
+                    self.security_green,
+                    self.tenant_isolation_green,
+                    self.documentation_reconciled,
+                    self.e2e_validated,
+                    self.rollback_tested,
+                    self.governance_reviewed,
+                )
             )
-        ) else Readiness.BLOCKED
+            else Readiness.BLOCKED
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,4 +76,8 @@ class RuntimeHealth:
 
     @property
     def readiness(self) -> Readiness:
-        return Readiness.READY if all((self.database, self.migrations, self.source_ingestion, self.integrations)) else Readiness.BLOCKED
+        return (
+            Readiness.READY
+            if all((self.database, self.migrations, self.source_ingestion, self.integrations))
+            else Readiness.BLOCKED
+        )
