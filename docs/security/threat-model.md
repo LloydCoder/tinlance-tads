@@ -69,7 +69,7 @@ Use deterministic candidate generation, confidence thresholds, ambiguity states 
 
 All tenant records are scoped and RLS-protected. Application roles must be least privileged and must not expose arbitrary SQL. PostgreSQL notes that table owners/superusers/BYPASSRLS roles bypass RLS and that referential-integrity checks bypass row security; this is why RLS is one layer, not the entire trust boundary. https://www.postgresql.org/docs/18/ddl-rowsecurity.html and https://www.postgresql.org/docs/17/role-attributes.html
 
-### Secret leakage
+### Historical integrity and lineage tampering\n\nThreats include rewriting a previously observed fact, deleting evidence, changing a score without changing its declared inputs, or making a portable evidence snapshot disagree with normalized lineage.\n\nControls:\n\n- immutable evidence trigger;\n- append-only historical tables for the application role;\n- migration-level revocation of update/delete privileges;\n- exact score/component validation;\n- evidence propagation through account, temporal and opportunity contracts;\n- deferred PostgreSQL constraint triggers for M9/M10 evidence-snapshot equality.\n\n### Secret leakage
 
 Credentials never enter logs, evidence, prompts, fixtures or client responses. Secrets remain in the deployment/platform secret boundary.
 
@@ -87,7 +87,7 @@ Agent actions require explicit tool scopes, budgets, timeouts, approvals and pol
 
 ## Current implemented controls
 
-M1: PostgreSQL migrations/checksums, tenant RLS, cross-tenant parent checks, immutable evidence and integration tests.
+M1: PostgreSQL migrations/checksums, tenant RLS, cross-tenant parent checks, immutable evidence and integration tests.\n\nPost-audit hardening: historical intelligence is append-only for the application role, M9/M10 evidence snapshots are transactionally reconciled with normalized lineage, and derived score/account/temporal/opportunity contracts preserve evidence references.
 
 M2: controlled fetch policy, public-address validation, HTTPS/host restrictions, redirect rejection, content-type/size/time budgets, source adapters and ingestion provenance.
 
