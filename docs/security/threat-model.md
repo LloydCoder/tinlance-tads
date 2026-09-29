@@ -67,7 +67,7 @@ Use deterministic candidate generation, confidence thresholds, ambiguity states 
 
 ### Tenant escape
 
-All tenant records are scoped and RLS-protected. Application roles must be least privileged and must not expose arbitrary SQL. PostgreSQL notes that table owners/superusers/BYPASSRLS roles bypass RLS and that referential-integrity checks bypass row security; this is why RLS is one layer, not the entire trust boundary. citeturn0search2turn0search8
+All tenant records are scoped and RLS-protected. Application roles must be least privileged and must not expose arbitrary SQL. PostgreSQL notes that table owners/superusers/BYPASSRLS roles bypass RLS and that referential-integrity checks bypass row security; this is why RLS is one layer, not the entire trust boundary. https://www.postgresql.org/docs/18/ddl-rowsecurity.html and https://www.postgresql.org/docs/17/role-attributes.html
 
 ### Secret leakage
 
