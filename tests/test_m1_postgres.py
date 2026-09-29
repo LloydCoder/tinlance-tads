@@ -8,6 +8,7 @@ import pytest
 
 from tads_db import (
     AccountRepository,
+    AccountStateRepository,
     CorrelationRepository,
     EventRepository,
     EvidenceRepository,
@@ -282,3 +283,16 @@ def test_m5_correlation_persistence_is_tenant_scoped(dsn: str, tenant: str) -> N
             (correlation_id,),
         ).fetchone()
         assert row == (3, "m5-v1")
+
+
+def test_m6_account_state_persistence(dsn: str, tenant: str) -> None:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        account_id = AccountRepository(conn).create("State Account")
+        state_id = AccountStateRepository(conn).create(
+            account_id, 0.7, 0.6, 0.8, 0.1, 0.9, 4, "m6-v1", ("hiring:quality=0.90",)
+        )
+        row = conn.execute(
+            "SELECT active_signal_count, state_version FROM account_states WHERE id=%s",
+            (state_id,),
+        ).fetchone()
+        assert row == (4, "m6-v1")

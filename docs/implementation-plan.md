@@ -103,13 +103,18 @@ M5 exit requirements still include explicit decay policy, sequence-pattern rules
 
 ## M6 — Account Intelligence
 
-- account timeline
-- materialized account state
-- ICP context
-- technical/business context
+**Status: IN PROGRESS**
+
+Current implementation:
+- deterministic account state derivation
+- signal strength/diversity
+- momentum input
 - negative evidence
-- historical versions
+- data confidence
 - explainable drivers
+- versioned tenant-scoped account-state persistence
+
+Exit requirements still include historical timeline reconstruction, negative-evidence provenance, state replay from signal inputs, ICP integration and adversarial state-calculation fixtures.
 
 ## M7 — ICP + Opportunity Engine
 
