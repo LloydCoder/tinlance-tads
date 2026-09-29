@@ -1,6 +1,7 @@
 """Provider-neutral, validated integration contracts."""
 
-from dataclasses import dataclass\nfrom datetime import datetime
+from dataclasses import dataclass
+from datetime import datetime
 
 
 def _bounded(value: float, name: str) -> float:
