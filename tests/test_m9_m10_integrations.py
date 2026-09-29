@@ -1,4 +1,4 @@
-import pytest
+from datetime import UTC, datetime\n\nimport pytest
 
 from tads_integrations import EnrichmentRequest, EnrichmentResult, OpportunityHandoff
 
@@ -14,7 +14,7 @@ def test_recon_request_and_result_are_evidence_bounded() -> None:
 
 def test_fadereach_handoff_validates_bounds_and_evidence() -> None:
     handoff = OpportunityHandoff(
-        "o1", "a1", 0.8, 0.7, "evidence-backed hypothesis", ("ev-1",), None, None, "now", "2026-12-31T00:00:00Z", "handoff-1"
+        "o1", "a1", 0.8, 0.7, "evidence-backed hypothesis", ("ev-1",), None, None, "now", datetime(2026, 12, 31, tzinfo=UTC), "handoff-1"
     )
     assert handoff.score == 0.8
 
