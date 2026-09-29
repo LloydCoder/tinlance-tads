@@ -9,66 +9,117 @@ END $$;
 CREATE OR REPLACE FUNCTION tads_validate_enrichment_evidence_snapshot()
 RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE
+    row_id uuid;
+    row_tenant uuid;
+    snapshot jsonb;
     expected_count integer;
     actual_count integer;
 BEGIN
+    IF TG_OP = 'DELETE' THEN
+        row_id := OLD.enrichment_run_id;
+        row_tenant := OLD.tenant_id;
+        SELECT evidence_ids INTO snapshot
+        FROM enrichment_runs
+        WHERE id = row_id;
+    ELSE
+        IF TG_TABLE_NAME = 'enrichment_runs' THEN
+            row_id := NEW.id;
+            row_tenant := NEW.tenant_id;
+            snapshot := NEW.evidence_ids;
+        ELSE
+            row_id := NEW.enrichment_run_id;
+            row_tenant := NEW.tenant_id;
+            SELECT evidence_ids INTO snapshot
+            FROM enrichment_runs
+            WHERE id = row_id;
+        END IF;
+    END IF;
+
+    IF snapshot IS NULL THEN
+        RETURN COALESCE(NEW, OLD);
+    END IF;
+
     SELECT count(*) INTO expected_count
-    FROM jsonb_array_elements_text(NEW.evidence_ids);
+    FROM jsonb_array_elements_text(snapshot);
 
     SELECT count(*) INTO actual_count
     FROM enrichment_run_evidence
-    WHERE tenant_id = NEW.tenant_id
-      AND enrichment_run_id = NEW.id;
+    WHERE tenant_id = row_tenant
+      AND enrichment_run_id = row_id;
 
     IF expected_count <> actual_count OR EXISTS (
         SELECT 1
-        FROM jsonb_array_elements_text(NEW.evidence_ids) item
+        FROM jsonb_array_elements_text(snapshot) item
         WHERE NOT EXISTS (
             SELECT 1
             FROM enrichment_run_evidence link
-            WHERE link.tenant_id = NEW.tenant_id
-              AND link.enrichment_run_id = NEW.id
+            WHERE link.tenant_id = row_tenant
+              AND link.enrichment_run_id = row_id
               AND link.evidence_id = item.value::uuid
         )
     ) THEN
         RAISE EXCEPTION 'enrichment evidence snapshot does not match normalized lineage';
     END IF;
-    RETURN NEW;
+    RETURN COALESCE(NEW, OLD);
 END $$;
 
 CREATE OR REPLACE FUNCTION tads_validate_handoff_evidence_snapshot()
 RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE
+    row_id uuid;
+    row_tenant uuid;
+    snapshot jsonb;
     expected_count integer;
     actual_count integer;
 BEGIN
+    IF TG_OP = 'DELETE' THEN
+        row_id := OLD.handoff_id;
+        row_tenant := OLD.tenant_id;
+        SELECT evidence_ids INTO snapshot
+        FROM opportunity_handoffs
+        WHERE id = row_id;
+    ELSE
+        IF TG_TABLE_NAME = 'opportunity_handoffs' THEN
+            row_id := NEW.id;
+            row_tenant := NEW.tenant_id;
+            snapshot := NEW.evidence_ids;
+        ELSE
+            row_id := NEW.handoff_id;
+            row_tenant := NEW.tenant_id;
+            SELECT evidence_ids INTO snapshot
+            FROM opportunity_handoffs
+            WHERE id = row_id;
+        END IF;
+    END IF;
+
+    IF snapshot IS NULL THEN
+        RETURN COALESCE(NEW, OLD);
+    END IF;
+
     SELECT count(*) INTO expected_count
-    FROM jsonb_array_elements_text(NEW.evidence_ids);
+    FROM jsonb_array_elements_text(snapshot);
 
     SELECT count(*) INTO actual_count
     FROM opportunity_handoff_evidence
-    WHERE tenant_id = NEW.tenant_id
-      AND handoff_id = NEW.id;
+    WHERE tenant_id = row_tenant
+      AND handoff_id = row_id;
 
     IF expected_count <> actual_count OR EXISTS (
         SELECT 1
-        FROM jsonb_array_elements_text(NEW.evidence_ids) item
+        FROM jsonb_array_elements_text(snapshot) item
         WHERE NOT EXISTS (
             SELECT 1
             FROM opportunity_handoff_evidence link
-            WHERE link.tenant_id = NEW.tenant_id
-              AND link.handoff_id = NEW.id
+            WHERE link.tenant_id = row_tenant
+              AND link.handoff_id = row_id
               AND link.evidence_id = item.value::uuid
         )
     ) THEN
         RAISE EXCEPTION 'handoff evidence snapshot does not match normalized lineage';
     END IF;
-    RETURN NEW;
+    RETURN COALESCE(NEW, OLD);
 END $$;
 
--- The JSON evidence identifiers are a portable snapshot only. The normalized
--- link tables are authoritative, and deferred triggers require exact equality
--- at transaction commit.
 CREATE CONSTRAINT TRIGGER enrichment_evidence_snapshot_consistent
 AFTER INSERT OR UPDATE ON enrichment_runs
 DEFERRABLE INITIALLY DEFERRED
@@ -89,8 +140,6 @@ AFTER INSERT OR UPDATE OR DELETE ON opportunity_handoff_evidence
 DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION tads_validate_handoff_evidence_snapshot();
 
--- Historical artifacts cannot be rewritten or deleted through the application
--- role. This is defense in depth in addition to RLS and repository discipline.
 DO $$
 DECLARE
     table_name text;
@@ -131,6 +180,5 @@ BEGIN
     END LOOP;
 END $$;
 
--- These lifecycle tables legitimately change state.
 GRANT UPDATE, DELETE ON source_ingestion_runs, source_fetch_attempts, signal_detections
 TO tads_app;
