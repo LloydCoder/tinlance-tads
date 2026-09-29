@@ -1,4 +1,4 @@
-"""Stable M0 enumerations. Values are API/storage identifiers."""
+"""Stable TADS enumerations. Values are API/storage identifiers."""
 
 from enum import StrEnum
 
