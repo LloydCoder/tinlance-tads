@@ -135,6 +135,12 @@ The enterprise gate is fail-closed and requires CI, security, tenant isolation, 
 
 **M18 is not declared deployed GA until those environment-dependent gates have real evidence.**
 
-## Persistence hardening after M9/M10\n\nMigration 0010 hardens the integration boundary and historical intelligence model. It makes historical artifacts append-only for the application role, enforces exact equality between portable JSON evidence snapshots and normalized evidence-link tables with deferred PostgreSQL constraint triggers, and keeps lifecycle tables explicitly mutable.\n\nThis hardening is part of the contract layer; production still requires adversarial validation of role ownership, deployment privileges and operational backup/restore behavior.\n\n## Cross-cutting controls
+## Persistence hardening after M9/M10
+
+Migration 0010 hardens the integration boundary and historical intelligence model. It makes historical artifacts append-only for the application role, enforces exact equality between portable JSON evidence snapshots and normalized evidence-link tables with deferred PostgreSQL constraint triggers, and keeps lifecycle tables explicitly mutable.
+
+This hardening is part of the contract layer; production still requires adversarial validation of role ownership, deployment privileges and operational backup/restore behavior.
+
+## Cross-cutting controls
 
 Security, privacy, provenance, data quality, observability, testing, evaluation, cost controls, documentation and governance remain active at every milestone.
