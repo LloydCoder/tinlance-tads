@@ -7,8 +7,8 @@ from .repositories import (
     EventRepository,
     EvidenceRepository,
     ObservationRepository,
-    SignalRepository,
     SignalDetectionRepository,
+    SignalRepository,
     SourceRepository,
 )
 
