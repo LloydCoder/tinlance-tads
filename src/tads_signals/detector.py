@@ -30,8 +30,7 @@ class SignalDetector:
             strength = (
                 0.75
                 if any(
-                    token in haystack
-                    for token in ("security", "application security", "devsecops")
+                    token in haystack for token in ("security", "application security", "devsecops")
                 )
                 else 0.55
             )
