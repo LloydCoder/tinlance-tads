@@ -118,7 +118,7 @@ Every adapter is subject to source policy, provenance, retention, rate, geograph
 
 The ingestion boundary treats URLs and retrieved content as hostile. Controls include HTTPS-only fetching, explicit host allowlists, public-address validation, redirect rejection, timeout/byte/content-type budgets, parser constraints and tenant isolation. Application controls are defense in depth; production egress restrictions remain mandatory.
 
-PostgreSQL RLS is not treated as an absolute boundary by itself: PostgreSQL documents that table owners/superusers/BYPASSRLS roles can bypass RLS and that referential-integrity checks bypass row security. TADS therefore requires a trusted application connection boundary and additional cross-tenant integrity checks. citeturn0search2
+PostgreSQL RLS is not treated as an absolute boundary by itself: PostgreSQL documents that table owners/superusers/BYPASSRLS roles can bypass RLS and that referential-integrity checks bypass row security. TADS therefore requires a trusted application connection boundary and additional cross-tenant integrity checks. https://www.postgresql.org/docs/18/ddl-rowsecurity.html
 
 ## Architecture
 
