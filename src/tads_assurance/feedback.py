@@ -30,7 +30,10 @@ class PrecisionRecall:
     true_negative: int
 
     def __post_init__(self) -> None:
-        if min(self.true_positive, self.false_positive, self.false_negative, self.true_negative) < 0:
+        if (
+            min(self.true_positive, self.false_positive, self.false_negative, self.true_negative)
+            < 0
+        ):
             raise ValueError("confusion-matrix counts cannot be negative")
 
     @property
