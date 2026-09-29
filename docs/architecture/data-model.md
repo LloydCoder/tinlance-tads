@@ -131,3 +131,22 @@ Outcome data follows:
 `signal → score → recommendation → action → response → meeting → proposal → won/lost → value/retention`
 
 Outcome data must not retroactively alter what TADS knew at the time of the decision.
+
+
+## Integration and feedback entities
+
+**EnrichmentRun** records a purpose-limited request/result boundary to ReconOS. It carries provider/version, requested fields, evidence references, facts and unknowns. It is append-only and tenant-scoped.
+
+**OpportunityHandoff** records the exact opportunity, account, score, confidence, bounded hypothesis, evidence and recommended engagement context sent toward FadeReach. It is not an outreach instruction and TADS never executes outreach.
+
+Normalized evidence-link tables are authoritative for lineage; JSON evidence identifiers are retained as a portable snapshot of the handoff/enrichment payload.
+
+## Outcome and governance contracts
+
+M11 outcomes are appended after the decision. They never mutate historical signals, scores or recommendations. Evaluation joins outcomes to the frozen decision-time policy/version.
+
+M16 governance records bind a control to an owner, review state, review time and evidence reference. Retention policies are explicit and fail closed on invalid periods.
+
+## Assurance
+
+M13 readiness, M17 E2E validation and M18 enterprise readiness are derived states. A readiness result is **blocked** when any required control is absent; no partial readiness is promoted to production status.

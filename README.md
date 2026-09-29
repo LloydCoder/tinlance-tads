@@ -2,155 +2,136 @@
 
 **Target / Account / Demand Signal Intelligence**
 
-TADS is Tinlance's evidence-first intelligence engine for answering five questions:
+TADS is Tinlance's evidence-first account-intelligence substrate. It converts permitted observations into traceable signals, temporal context, account state, bounded opportunity hypotheses and explainable recommendations.
 
-> **Who matters? What changed? Why does it matter? Why now? What should we do next?**
+> **Who matters? What changed? Why does it matter? Why now? What evidence supports that conclusion? What is still unknown?**
 
-TADS does **not** equate a signal with buying intent. It turns permitted observations into traceable account intelligence, bounded opportunity hypotheses, and explainable recommendations.
-
-## Product boundary
-
-```
-PERMITTED EXTERNAL / FIRST-PARTY SOURCES
-                │
-                ▼
-M2  Source Registry → Fetch Policy → Fetcher → Snapshot → Observation
-                │
-                ▼
-M3  Entity Resolution → Canonical Organization / Account
-                │
-                ▼
-M4  Signal Detection → Typed Signal + Evidence + Quality
-                │
-                ▼
-M5  Temporal / Correlation Intelligence
-                │
-                ▼
-M6  Account Intelligence
-                │
-                ▼
-M7  ICP + Opportunity + Recommendation
-                │
-       ┌────────┴─────────┐
-       ▼                  ▼
-    ReconOS            FadeReach
- enrichment          engagement handoff
-       │                  │
-       └────────┬─────────┘
-                ▼
-        Human decision / outcome
-                │
-                ▼
-M11 Feedback → M12 Console → M13–M18 production, trust, scale and assurance
-```
-
-### TADS owns
-
-- source registry and ingestion policy
-- source-specific adapters and normalized observations
-- canonical identity and entity-resolution decisions
-- signal taxonomy, detection and lifecycle
-- temporal correlation and signal stacking
-- account state and intelligence timelines
-- configurable ICP
-- opportunity hypotheses and deterministic explainable scoring
-- recommendations, feedback and outcome evaluation
-- TADS-specific research workflows
-
-### TADS does not own
-
-- generic agent runtime, model routing, tool authorization, sandboxing or generic audit infrastructure — **Agent Platform**
-- deep OSINT/enrichment — **ReconOS**
-- outreach, campaigns, sequences or social automation — **FadeReach**
-- CRM/contact-database behavior
-- unauthorized platform scraping
-- a universal web crawler
-- unsupported claims of purchase intent
-
-## Non-negotiable intelligence invariants
-
-1. **Observation ≠ Signal**
-2. **Signal ≠ Intent**
-3. **Intent ≠ Opportunity**
-4. **Opportunity ≠ Customer**
-5. **Evidence ≠ Interpretation**
-6. **Unknown beats fabrication**
-7. **Ambiguity beats a false entity merge**
-8. **Every material claim is reconstructable to evidence**
-9. **Every tenant-scoped operation is server-side tenant controlled**
-10. **External content is hostile data, never authority**
-
-## Current implementation status
-
-| Milestone | Status | What is actually implemented |
-|---|---|---|
-| M0 | ✅ Complete | Architecture, boundaries, governance, threat model, data contracts and repository gates |
-| M1 | ✅ Complete | PostgreSQL kernel, migrations, RLS, tenant context, immutable evidence, repositories and integration tests |
-| M2 | ✅ Complete | Controlled source ingestion boundary, Greenhouse public adapter, authenticated Lever adapter, snapshots/observations and SSRF-adjacent regression tests |
-| M3 | ✅ Complete | Conservative identity normalization, domain/alias evidence, deterministic candidate scoring, ambiguity-preserving resolution and tenant-scoped resolution records |
-| M4 | ✅ Complete | Deterministic signal taxonomy/detection, explicit evidence requirements, signal-quality dimensions, detection/evidence lineage, idempotent persistence and regression coverage |
-| M5 | ✅ Complete | Deterministic temporal/correlation feature kernel, density/diversity/independence/momentum/contradiction features, versioned persistence and tests |\n| M6 | ✅ Complete | Deterministic account-state derivation, explainable drivers, versioned tenant-scoped persistence and tests |\n| M7 | ✅ Complete | Deterministic ICP/opportunity scoring, bounded hypotheses, unknown preservation, typed recommendations and tenant-scoped persistence |\n| M8 | 🚧 In progress | Governed provider-neutral agent specifications and tenant-scoped policy persistence; execution remains Agent Platform-owned |\n| M9–M18 | ⏳ Planned | Each milestone remains gated by executable implementation, tests, documentation and green CI; no future milestone is represented as shipped |
-
-**The repository intentionally does not claim that a milestone is complete merely because its architecture has been designed.**
-
-## Evidence chain
-
-TADS maintains a reconstructable lineage:
-
-`source → snapshot → observation → canonical event → entity/account → signal → evidence → correlation → account state → opportunity → recommendation`
-
-Derived intelligence must preserve the inputs and policy/version used to create it. Re-running a deterministic policy against the same frozen inputs must produce the same result.
-
-## Source governance
-
-TADS uses legitimate, documented, licensed or otherwise permitted access. It does not build its acquisition strategy around unauthorized scraping.
-
-Initial sources:
-
-- **Greenhouse** public Job Board GET API
-- **Lever** authenticated API access
-- permitted company pages and structured public sources through the controlled fetch boundary
-- licensed providers through explicit source adapters
-
-Every adapter is subject to source policy, provenance, retention, rate, geographic and privacy controls.
-
-## Security posture
-
-The ingestion boundary treats URLs and retrieved content as hostile. Controls include HTTPS-only fetching, explicit host allowlists, public-address validation, redirect rejection, timeout/byte/content-type budgets, parser constraints and tenant isolation. Application controls are defense in depth; production egress restrictions remain mandatory.
-
-PostgreSQL RLS is not treated as an absolute boundary by itself: PostgreSQL documents that table owners/superusers/BYPASSRLS roles can bypass RLS and that referential-integrity checks bypass row security. TADS therefore requires a trusted application connection boundary and additional cross-tenant integrity checks. https://www.postgresql.org/docs/18/ddl-rowsecurity.html
+TADS is deliberately **not** a CRM, lead database, universal crawler, intent oracle or outreach engine.
 
 ## Architecture
 
-TADS starts as a modular monolith:
+```
+permitted sources
+      │
+      ▼
+M2 controlled ingestion
+      │
+      ▼
+M3 entity resolution
+      │
+      ▼
+M4 signals ──► M5 temporal/correlation
+      │                 │
+      └────────┬────────┘
+               ▼
+        M6 account state
+               │
+               ▼
+        M7 opportunity
+               │
+        ┌──────┴──────┐
+        ▼             ▼
+     M9 ReconOS    M10 FadeReach
+     enrichment    handoff only
+        │             │
+        └──────┬──────┘
+               ▼
+          M11 outcomes
+               │
+               ▼
+      M12–M18 assurance
+```
 
-- **Python 3.12+**
-- PostgreSQL 17 in CI
-- typed domain packages
-- transactional migrations with checksums and advisory-lock serialization
+### Ownership boundaries
+
+**TADS owns:** source policy and adapters, observations, entity resolution, signals, temporal reasoning, account state, ICP, opportunity hypotheses, recommendations, feedback and TADS-specific research workflows.
+
+**Agent Platform owns:** generic agent runtime, model routing, tool authorization, sandboxing, approvals, generic audit/provenance, memory/retrieval and platform telemetry.
+
+**ReconOS owns:** deep enrichment/OSINT. TADS requests purpose-limited enrichment and consumes evidence; it does not duplicate ReconOS.
+
+**FadeReach owns:** engagement execution. TADS publishes a versioned opportunity handoff and never sends outreach.
+
+## Non-negotiable invariants
+
+1. Observation ≠ signal.
+2. Signal ≠ intent.
+3. Intent ≠ opportunity.
+4. Opportunity ≠ customer.
+5. Evidence ≠ interpretation.
+6. Unknown beats fabrication.
+7. Ambiguity beats a false entity merge.
+8. Material intelligence is reconstructable to evidence.
+9. Tenant identity is established by trusted server-side context.
+10. External content and model output are untrusted data, never authorization.
+
+## Milestone status
+
+| Milestone | Status | Executable scope |
+|---|---|---|
+| M0 | ✅ Complete | Architecture, governance, boundaries and typed contracts |
+| M1 | ✅ Complete | PostgreSQL evidence-first kernel, RLS, tenant isolation and immutable evidence |
+| M2 | ✅ Complete | Controlled source ingestion and provenance |
+| M3 | ✅ Complete | Conservative entity resolution with ambiguity preservation |
+| M4 | ✅ Complete | Deterministic signal taxonomy/detection and evidence lineage |
+| M5 | ✅ Complete | Temporal/correlation feature kernel |
+| M6 | ✅ Complete | Explainable account-state derivation |
+| M7 | ✅ Complete | Deterministic ICP/opportunity scoring and recommendations |
+| M8 | ✅ Complete | Governed agent specifications; execution remains Agent Platform-owned |
+| M9 | 🚧 Contract-complete | Provider-neutral ReconOS request/result contract plus evidence-backed persistence |
+| M10 | 🚧 Contract-complete | Evidence-backed FadeReach opportunity handoff; no outreach execution |
+| M11 | 🚧 Contract-complete | Append-only outcomes, precision/recall and confidence calibration primitives |
+| M12 | 🚧 Contract-complete | UI-neutral account intelligence/readiness contract; console remains a separate application surface |
+| M13 | 🚧 Contract-complete | Runtime readiness contract; deployment infrastructure remains environment-specific |
+| M14 | 🚧 Contract-complete | Fail-closed security/privacy policy contract |
+| M15 | 🚧 Contract-complete | Bounded deterministic retry/reliability policy |
+| M16 | 🚧 Contract-complete | Governance ownership, review and retention contracts |
+| M17 | 🚧 Contract-complete | Closed canonical E2E stage validation contract |
+| M18 | 🚧 Contract-complete | Fail-closed enterprise GA gate |
+
+**Contract-complete does not mean production-deployed.** External provider adapters, cloud infrastructure, legal review, load tests, disaster recovery evidence and operational controls are release gates and are intentionally not fabricated.
+
+## Evidence chain
+
+`source → snapshot → observation → canonical event → entity/account → signal → correlation → account state → opportunity → integration handoff → outcome → feedback`
+
+Every derived artifact must retain the policy/taxonomy/version and input references needed for deterministic replay.
+
+## Data-source policy
+
+Public reachability is not authorization. TADS permits documented, licensed, customer-authorized or otherwise lawful access and explicitly prohibits bypassing authentication, CAPTCHAs, rate limits or technical barriers.
+
+Initial adapters include documented Greenhouse public Job Board access and authenticated Lever access. Source activation remains subject to terms, purpose, geography, retention, privacy and rate-limit review.
+
+## Security
+
+The ingestion boundary treats URLs and retrieved content as hostile. Application controls include HTTPS/host restrictions, public-address validation, redirect rejection, size/time/content-type budgets and tenant isolation. Production egress controls remain mandatory.
+
+PostgreSQL RLS is defense in depth, not the sole tenant boundary: owners and BYPASSRLS roles can bypass RLS, and referential-integrity checks bypass row security. The application therefore uses a least-privileged role plus explicit tenant-parent integrity checks.
+
+The security program is aligned with OWASP Top 10:2025 and agentic-AI guidance, especially access control, supply-chain integrity, injection, insecure design, data integrity, logging and excessive agency.
+
+## Technology
+
+- Python 3.12+
+- PostgreSQL 17+ (CI currently uses PostgreSQL 17)
+- typed modular-monolith architecture
+- transactional, checksummed migrations
 - object storage for large immutable source material
-- strict HTTP egress policy
-- API/worker boundaries introduced only when justified by measured load
-
-A graph database, message broker, universal crawler, ML intent predictor or generic agent layer is **not** introduced simply because it is fashionable.
-
-## Roadmap
-
-**M0** Architecture & Governance → **M1** Intelligence Kernel → **M2** Source Ingestion → **M3** Entity Resolution → **M4** Signal Engine → **M5** Temporal & Correlation → **M6** Account Intelligence → **M7** ICP + Opportunity Engine → **M8** Agent Intelligence → **M9** ReconOS → **M10** FadeReach → **M11** Feedback & Learning → **M12** Console → **M13** Productionization → **M14** Security & Privacy → **M15** Reliability & Scale → **M16** Governance & Compliance → **M17** E2E + Adversarial Validation → **M18** Enterprise GA.
-
-Security, privacy, observability, data quality, testing, evaluation, cost controls and governance are cross-cutting from M0 onward.
+- strict network egress policy
+- API/worker separation only when measured load requires it
 
 ## Quality gate
 
-A milestone is not closed until:
+A milestone is closed only when:
 
-- implementation exists on the repository
-- domain invariants have executable tests
-- migrations are tested against PostgreSQL where applicable
-- security and tenant-boundary regressions are covered
-- documentation matches the implementation
+- implementation exists
+- invariants have executable tests
+- PostgreSQL behavior is tested where applicable
+- tenant/security regressions are covered
+- documentation matches code
 - CI is green
-- the pull request is merged
-- the main branch remains green after merge
+- the change is merged
+- main is green after merge
 
-See `docs/implementation-plan.md`, `docs/architecture/README.md`, `docs/architecture/data-model.md`, `docs/security/threat-model.md`, and `docs/data-source-policy.md`.
+See `docs/implementation-plan.md`, `docs/remaining-phases.md`, `docs/architecture/README.md`, `docs/architecture/data-model.md`, `docs/security/threat-model.md` and `docs/data-source-policy.md`.

@@ -1,191 +1,140 @@
 # TADS Implementation Plan
 
-## Delivery rule
+## Completion rule
 
-A milestone is **complete only when implementation, tests, security gates, documentation, CI and post-merge main validation all agree**. Architecture alone is not completion.
+A milestone is complete only when implementation, tests, security controls, documentation, CI and post-merge main validation agree. A contract is not represented as a deployed capability.
 
-## M0 — Architecture & Governance
+## M0–M8 — Intelligence foundation
 
-**Status: COMPLETE**
+**Status: COMPLETE.** The repository contains the architecture/governance foundation, evidence-first PostgreSQL kernel, controlled ingestion, deterministic entity resolution, signal engine, temporal correlation, account intelligence, ICP/opportunity scoring and governed agent specifications.
 
-Delivered: product/domain boundaries, Agent Platform/ReconOS/FadeReach ownership, evidence invariant, temporal semantics, source governance, threat model, typed contracts, migration/persistence invariants, architecture tests, proprietary license and CI.
+## M9 — ReconOS integration
 
-## M1 — Intelligence Kernel
-
-**Status: COMPLETE**
-
-Delivered: PostgreSQL 17 integration, checksummed ordered migrations, tenant-scoped persistence, RLS, tenant context, cross-tenant parent-reference guards, immutable evidence, source snapshots, observations, canonical events, evidence, signals, repositories and integration tests.
-
-Exit chain: source → snapshot → observation → canonical event → account → evidence → signal.
-
-## M2 — Source Ingestion
-
-**Status: COMPLETE**
+**Status: CONTRACT-COMPLETE.**
 
 Delivered:
+- purpose-limited `EnrichmentRequest`
+- evidence-required `EnrichmentResult`
+- provider/version attribution
+- tenant-scoped enrichment persistence
+- normalized evidence-link table
+- cross-tenant parent checks
+- no assumed external ReconOS API
 
-- source registry/fetch boundary
-- HTTPS and host policy
-- public-address validation
-- redirect rejection
-- request timeout/byte/content-type budgets
-- normalized observation transport
-- Greenhouse public Job Board adapter
-- authenticated Lever postings adapter
-- source snapshot/observation persistence
-- ingestion-run/fetch-attempt persistence
-- content hashing and provenance
-- SSRF-adjacent regression coverage
+Remaining environment gate: implement and verify the actual ReconOS adapter only after its authenticated capability contract, scopes, rate limits, provenance and failure semantics are documented.
 
-Explicitly excluded: universal crawler, anonymous Lever access, LinkedIn scraping, model-driven fetching.
+## M10 — FadeReach integration
 
-## M3 — Entity Resolution
-
-**Status: COMPLETE**
+**Status: CONTRACT-COMPLETE.**
 
 Delivered:
+- bounded `OpportunityHandoff`
+- evidence-required handoff
+- tenant-scoped immutable persistence boundary
+- normalized evidence-link table
+- explicit no-outreach invariant
+- provider-neutral port
 
-- conservative name/domain normalization
-- exact-domain and alias evidence
-- deterministic candidate scoring
-- MATCHED / PROBABLE / AMBIGUOUS / UNRESOLVED states
-- no-silent-merge invariant
-- tenant-scoped aliases and resolution candidates
-- evidence-reference slots
-- regression tests for exact, ambiguous and unknown cases
-
-Remaining hardening that must be completed before M3 is considered enterprise-grade: parent/subsidiary/acquisition relationship semantics, golden resolution corpus, precision/recall metrics and adversarial false-merge tests.
-
-## M4 — Signal Engine
-
-**Status: IN PROGRESS**
-
-Current implementation:
-
-- versioned signal taxonomy
-- deterministic source-aware detection
-- hiring/security signal classification
-- strength/freshness/reliability quality dimensions
-- composite quality
-- signal lifecycle state
-- tenant-scoped signal persistence
-- deterministic deduplication constraint
-- regression tests
-
-M4 exit requirements:
-
-1. canonical-event input contract rather than provider-specific-only detection
-2. observation/evidence linkage for every signal
-3. explicit negative/contradictory signal handling
-4. taxonomy registry and versioning
-5. persistence repository and idempotent writes
-6. signal quality tests and boundary cases
-7. signal provenance and replay fixtures
-8. M4 documentation reconciled with code
-9. green CI and merged PR
-
-## M5 — Temporal & Correlation
-
-**Status: IN PROGRESS**
-
-Current implementation:
-- deterministic event-window filtering
-- frequency/density features
-- signal diversity
-- source independence
-- temporal momentum
-- contradiction ratio
-- versioned correlation rules
-- tenant-scoped PostgreSQL correlation persistence
-- replayable unit fixtures
-
-M5 exit requirements still include explicit decay policy, sequence-pattern rules, persisted signal membership/lineage, contradiction evidence semantics, repository idempotency where required, and adversarial temporal fixtures.
-
-## M6 — Account Intelligence
-
-**Status: IN PROGRESS**
-
-Current implementation:
-- deterministic account state derivation
-- signal strength/diversity
-- momentum input
-- negative evidence
-- data confidence
-- explainable drivers
-- versioned tenant-scoped account-state persistence
-
-Exit requirements still include historical timeline reconstruction, negative-evidence provenance, state replay from signal inputs, ICP integration and adversarial state-calculation fixtures.
-
-## M7 — ICP + Opportunity Engine
-
-- configurable ICP profiles
-- deterministic opportunity score
-- confidence/calibration
-- evidence-backed hypotheses
-- negative factors and unknowns
-- recommendation policy
-- human-review thresholds
-
-## M8 — Agent Intelligence
-
-**Status: IN PROGRESS**
-
-Current implementation:
-- provider-neutral governed agent specifications
-- least-privilege tool declarations
-- evidence-required contract
-- max-step budget
-- explicit human-approval flag
-- prohibited-action invariant including outreach prohibition
-- failure-mode and evaluation criteria registry
-- tenant-scoped agent-spec persistence
-
-Execution remains Agent Platform-owned. M8 exit requires a tested versioned Agent Platform capability contract, tool authorization integration, trajectory/audit linkage, prompt-injection fixtures and agent evaluation harnesses.
-
-## M9 — ReconOS
-
-Versioned authenticated enrichment adapter. Do not duplicate OSINT capability.
-
-## M10 — FadeReach
-
-Versioned opportunity handoff. No outreach execution in TADS.
+Remaining environment gate: verify the actual FadeReach capability contract before connecting a provider.
 
 ## M11 — Feedback & Learning
 
-Capture outcomes without leaking future outcomes into historical scoring inputs. Add calibration, precision/recall and decision-quality evaluation.
+**Status: CONTRACT-COMPLETE.**
+
+Delivered:
+- append-only outcome model
+- precision/recall primitive
+- confidence calibration primitive
+- explicit separation of decision-time state from later outcome data
+
+Production gate: outcome ingestion, calibration corpus, temporal leakage tests and monitored evaluation.
 
 ## M12 — Console
 
-Account intelligence, timeline, why-now, evidence, hypothesis, score decomposition, recommendations and audit history.
+**Status: CONTRACT-COMPLETE.**
+
+The domain contract is ready for a separate console surface exposing evidence, timeline, why-now, score decomposition, recommendation rationale and audit history. UI implementation is intentionally separate from the intelligence kernel.
 
 ## M13 — Productionization
 
-API/worker runtime, object storage, health/readiness, observability, deployment, migrations, rollback, backup/restore, quotas, rate limits and cost controls.
+**Status: CONTRACT-COMPLETE.**
+
+Delivered:
+- explicit runtime readiness model
+- independent database, migration, ingestion and integration health dimensions
+
+Production gate:
+- API/worker runtime
+- object storage
+- telemetry
+- deployment manifests
+- secret manager
+- backup/restore
+- migration rollback
+- quotas/rate limits
+- resource budgets
 
 ## M14 — Security & Privacy
 
-Trusted tenant boundary, encryption, secrets, audit, privacy workflows, lawful-source enforcement, network egress, SSRF, poisoning, prompt-injection, supply-chain and resource-limit controls.
+**Status: CONTRACT-COMPLETE.**
+
+Delivered fail-closed security policy covering trusted tenant context, hostile external content, untrusted model output, restricted egress, secret redaction, personal-data minimization and auditability.
+
+Production gate:
+- network enforcement
+- authorization verification
+- privacy/legal review
+- deletion/retention automation
+- SSRF/resource-exhaustion corpus
+- prompt-injection fixtures
+- supply-chain/SBOM/provenance controls
 
 ## M15 — Reliability & Scale
 
-Retries, idempotency, replay, dead-letter handling, checkpointing, backpressure, circuit breakers, graceful degradation, capacity/load tests, RPO/RTO and disaster recovery.
+**Status: CONTRACT-COMPLETE.**
+
+Delivered bounded exponential retry policy.
+
+Production gate:
+- idempotency keys at every retryable boundary
+- queue/DLQ semantics
+- backpressure
+- circuit breakers
+- load/capacity tests
+- RPO/RTO and disaster-recovery exercises
 
 ## M16 — Governance & Compliance
 
-Security/privacy policies, vendor governance, data residency, retention, access reviews, change management, incidents, continuity, risk and audit evidence.
+**Status: CONTRACT-COMPLETE.**
 
-## M17 — E2E + Adversarial Validation
+Delivered governance record and retention contracts.
 
-Prove and attack:
+Production gate:
+- control owners and review cadence
+- vendor/source governance
+- access reviews
+- incident/change management
+- data residency decisions
+- documented legal/privacy assessments
 
-`source → observation → event → entity → account → signal → temporal context → account state → ICP → opportunity → ReconOS → FadeReach → outcome → feedback`
+## M17 — End-to-end adversarial validation
 
-Completion requires runtime evidence, adversarial fixtures and reproducible CI.
+**Status: CONTRACT-COMPLETE.**
+
+The canonical chain is a closed validation set:
+
+`source → observation → event → entity → account → signal → temporal → account state → opportunity → ReconOS → FadeReach → outcome → feedback`
+
+Production gate: executable E2E fixtures, poisoning/prompt-injection/tenant-escape tests, failure injection and reproducible audit artifacts.
 
 ## M18 — Enterprise GA
 
-Continuous source-health, data-quality, security, model/signal evaluation, entity-resolution accuracy, opportunity calibration, SLO/cost monitoring, incident response, DR tests, access reviews, regression and red-team assurance.
+**Status: CONTRACT-COMPLETE.**
+
+The enterprise gate is fail-closed and requires CI, security, tenant isolation, documentation, E2E validation, rollback testing and governance review.
+
+**M18 is not declared deployed GA until those environment-dependent gates have real evidence.**
 
 ## Cross-cutting controls
 
-Security, privacy, provenance, observability, data quality, testing, evaluation, cost controls, documentation and governance are active at every milestone.
+Security, privacy, provenance, data quality, observability, testing, evaluation, cost controls, documentation and governance remain active at every milestone.
