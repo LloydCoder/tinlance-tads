@@ -22,12 +22,19 @@ class OpportunityEngine:
         negative_evidence: float,
         data_confidence: float,
         profile: ICPProfile,
+        evidence_ids: tuple[str, ...],
     ) -> OpportunityResult:
         if not account_id:
             raise ValueError("account_id is required")
+        if not evidence_ids or any(not item for item in evidence_ids):
+            raise ValueError("opportunity evaluation requires evidence")
+        if len(set(evidence_ids)) != len(evidence_ids):
+            raise ValueError("opportunity evidence identifiers must be unique")
         values = (signal_strength, momentum, negative_evidence, data_confidence)
         if any(value < 0 or value > 1 for value in values):
             raise ValueError("score inputs must be between 0 and 1")
+        if employees is not None and employees < 0:
+            raise ValueError("employee count cannot be negative")
         fit_parts = [
             bool(industry and industry.casefold() in {x.casefold() for x in profile.industries}),
             bool(geography and geography.casefold() in {x.casefold() for x in profile.geographies}),
@@ -92,4 +99,5 @@ class OpportunityEngine:
             recommendation,
             reasons,
             unknowns,
+            tuple(evidence_ids),
         )
