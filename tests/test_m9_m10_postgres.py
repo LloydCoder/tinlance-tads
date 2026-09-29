@@ -142,12 +142,8 @@ def test_m9_m10_evidence_snapshot_must_match_normalized_links(dsn: str, tenant: 
             (account_id, str([evidence_id]).replace("'", '"')),
         ).fetchone()
         assert row is not None
-        with pytest.raises(
-            psycopg.errors.RaiseException, match="snapshot does not match"
-        ):
-            conn.execute(
-                "SET CONSTRAINTS enrichment_evidence_snapshot_consistent IMMEDIATE"
-            )
+        with pytest.raises(psycopg.errors.RaiseException, match="snapshot does not match"):
+            conn.execute("SET CONSTRAINTS enrichment_evidence_snapshot_consistent IMMEDIATE")
 
 
 def test_m9_m10_historical_rows_are_append_only_for_application_role(
