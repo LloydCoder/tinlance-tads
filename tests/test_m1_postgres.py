@@ -8,6 +8,7 @@ import pytest
 
 from tads_db import (
     AccountRepository,
+    AgentSpecRepository,
     AccountStateRepository,
     CorrelationRepository,
     EventRepository,
@@ -321,3 +322,24 @@ def test_m7_opportunity_persistence(dsn: str, tenant: str) -> None:
             (opportunity_id,),
         ).fetchone()
         assert row == ("CREATE_OPPORTUNITY", "m7-v1")
+
+
+def test_m8_agent_spec_persistence(dsn: str, tenant: str) -> None:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        spec_id = AgentSpecRepository(conn).create(
+            "signal_researcher",
+            "Verify evidence.",
+            "medium",
+            True,
+            12,
+            True,
+            [{"name": "source_reader", "read_only": True}],
+            ["send_outreach", "expose_secrets"],
+            ["prompt injection"],
+            ["evidence precision"],
+        )
+        row = conn.execute(
+            "SELECT required_evidence, max_steps FROM agent_specs WHERE id=%s",
+            (spec_id,),
+        ).fetchone()
+        assert row == (True, 12)
