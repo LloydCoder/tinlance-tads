@@ -86,15 +86,20 @@ M4 exit requirements:
 
 ## M5 — Temporal & Correlation
 
-- event-time model
-- recency/decay
-- frequency/density
-- sequence detection
-- diversity/independence
-- momentum
-- contradiction handling
-- deterministic correlation rules
-- replayable fixtures
+**Status: IN PROGRESS**
+
+Current implementation:
+- deterministic event-window filtering
+- frequency/density features
+- signal diversity
+- source independence
+- temporal momentum
+- contradiction ratio
+- versioned correlation rules
+- tenant-scoped PostgreSQL correlation persistence
+- replayable unit fixtures
+
+M5 exit requirements still include explicit decay policy, sequence-pattern rules, persisted signal membership/lineage, contradiction evidence semantics, repository idempotency where required, and adversarial temporal fixtures.
 
 ## M6 — Account Intelligence
 
