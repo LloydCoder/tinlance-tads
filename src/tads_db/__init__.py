@@ -1,6 +1,7 @@
-"""PostgreSQL persistence primitives for TADS M1."""
+"""PostgreSQL persistence primitives for TADS."""
 
 from .connection import TenantConnection
+from .integration_repositories import EnrichmentRunRepository, OpportunityHandoffRepository
 from .migrate import apply_migrations
 from .repositories import (
     AccountRepository,
@@ -18,12 +19,14 @@ from .repositories import (
 
 __all__ = [
     "AccountRepository",
-    "AgentSpecRepository",
     "AccountStateRepository",
+    "AgentSpecRepository",
     "CorrelationRepository",
+    "EnrichmentRunRepository",
     "EvidenceRepository",
     "EventRepository",
     "ObservationRepository",
+    "OpportunityHandoffRepository",
     "OpportunityRepository",
     "SignalRepository",
     "SignalDetectionRepository",
