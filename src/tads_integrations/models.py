@@ -1,6 +1,6 @@
 """Provider-neutral, validated integration contracts."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass\nfrom datetime import datetime
 
 
 def _bounded(value: float, name: str) -> float:
@@ -68,7 +68,7 @@ class OpportunityHandoff:
     recommended_persona: str | None
     recommended_angle: str | None
     timing: str | None
-    expires_at: str | None = None
+    expires_at: datetime | None = None
     idempotency_key: str | None = None
 
     def __post_init__(self) -> None:
