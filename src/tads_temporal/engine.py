@@ -41,6 +41,9 @@ class CorrelationEngine:
         independence = len(sources) / len(points)
         momentum = min(1.0, max(0.0, late - early + 0.5))
         contradiction = negatives / max(1, positives + negatives)
+        evidence_ids = tuple(
+            sorted({evidence_id for point in points for evidence_id in point.evidence_ids})
+        )
         return TemporalFeatures(
             len(points),
             round(density, 6),
@@ -50,4 +53,5 @@ class CorrelationEngine:
             round(contradiction, 6),
             window,
             self.rule_version,
+            evidence_ids,
         )
