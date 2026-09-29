@@ -27,4 +27,23 @@ CREATE TRIGGER signal_detections_observation_tenant
 BEFORE INSERT OR UPDATE ON signal_detections FOR EACH ROW
 EXECUTE FUNCTION tads_enforce_parent_tenant('observations','observation_id');
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON signal_detections TO tads_app;
+CREATE TABLE signal_detection_evidence (
+    tenant_id uuid NOT NULL REFERENCES tenants(id),
+    detection_id uuid NOT NULL REFERENCES signal_detections(id),
+    evidence_id uuid NOT NULL REFERENCES evidence(id),
+    PRIMARY KEY (tenant_id, detection_id, evidence_id)
+);
+
+ALTER TABLE signal_detection_evidence ENABLE ROW LEVEL SECURITY;
+CREATE POLICY signal_detection_evidence_tenant_isolation ON signal_detection_evidence
+    USING (tenant_id = tads_tenant_id()) WITH CHECK (tenant_id = tads_tenant_id());
+
+CREATE TRIGGER signal_detection_evidence_detection_tenant
+BEFORE INSERT OR UPDATE ON signal_detection_evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('signal_detections','detection_id');
+
+CREATE TRIGGER signal_detection_evidence_evidence_tenant
+BEFORE INSERT OR UPDATE ON signal_detection_evidence FOR EACH ROW
+EXECUTE FUNCTION tads_enforce_parent_tenant('evidence','evidence_id');
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON signal_detections, signal_detection_evidence TO tads_app;
