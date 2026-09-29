@@ -430,5 +430,3 @@ class OpportunityRepository:
             )
         return opportunity_id
 
-
-
