@@ -33,7 +33,9 @@ def dsn() -> str:
 def tenant(dsn: str) -> str:
     apply_migrations(dsn)
     with psycopg.connect(dsn) as conn:
-        row = conn.execute("INSERT INTO tenants(name) VALUES ('m9-m10-tenant') RETURNING id").fetchone()
+        row = conn.execute(
+            "INSERT INTO tenants(name) VALUES ('m9-m10-tenant') RETURNING id"
+        ).fetchone()
         assert row is not None
         conn.commit()
         return str(row[0])
