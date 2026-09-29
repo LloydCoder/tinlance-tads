@@ -1,42 +1,60 @@
-# TADS Data Source Policy — M0
+# TADS Data Source Policy
 
-TADS is designed around legitimate, documented, licensed, or otherwise permitted data access. Source availability is not equivalent to authorization to collect or reuse data.
+## Principle
+
+A source being publicly reachable does **not** automatically mean it is authorized for automated collection, reuse or redistribution.
+
+TADS uses legitimate, documented, licensed or otherwise permitted access and records the governing constraints before activating an adapter.
 
 ## Source classes
 
-### Tier A — first-party / authenticated
+### Tier A — first-party/authenticated
 
-Tinlance website activity, CRM records, customer-owned integrations, and authenticated provider APIs. These are tenant-scoped and purpose-limited.
+Customer-authorized systems, Tinlance-owned properties and authenticated provider APIs. Access is tenant-scoped and purpose-limited.
 
-### Tier B — public structured APIs / feeds
+### Tier B — documented structured APIs
 
-Greenhouse Job Board is a public structured source: its documented GET endpoints do not require authentication. Lever's current API documentation requires authentication; TADS therefore treats Lever as an authenticated provider integration and does not claim anonymous access. Use documented read endpoints, least-privilege credentials, provider terms, rate limits, and retention constraints. Contracts must be revalidated before each production release.
+**Greenhouse:** use documented public Job Board GET endpoints for public job-board data.
 
-### Tier C — public web pages
+**Lever:** use the documented authenticated API surface; TADS does not claim anonymous Lever API access. Credentials must be least privileged and protected.
 
-Company sites, press releases, public documentation, public changelogs, investor pages, public status pages, and other pages that are legally and technically permitted to access. Fetch through the controlled crawler boundary and preserve source metadata.
+Provider API behavior, terms and limits are revalidated before production releases.
 
-### Tier D — licensed / paid providers
+### Tier C — permitted public pages
 
-External company, technographic, news, intent, or market datasets may be integrated through adapters. Contracts, permitted uses, retention, redistribution, and geographic restrictions must be recorded in the source registry before activation.
+Company career pages, public press releases, public documentation, public changelogs, public status pages and similar sources where automated access and reuse are permitted.
 
-### Prohibited / restricted by default
+### Tier D — licensed providers
 
-- Unauthorized automated access to restricted platforms
-- Credential-gated data without an authorized integration
-- Circumventing access controls, rate limits, robots restrictions, CAPTCHAs, or technical barriers
+Commercial technographic, market, news or intent data. Contract metadata must include permitted use, redistribution, retention, geography, fields and deletion obligations.
+
+## Prohibited by default
+
+- unauthorized automated access
+- bypassing authentication/access controls
+- circumventing rate limits, CAPTCHAs or technical barriers
 - LinkedIn scraping or automated activity without explicit authorized access
-- Data obtained from leaked, stolen, or unlawfully disclosed sources
-- Collection of sensitive personal data without a documented lawful purpose and control
+- leaked/stolen/unlawfully disclosed datasets
+- sensitive personal-data collection without documented lawful purpose and controls
 
-## Source registry requirements
+## Source registry contract
 
-Every source adapter records provider/source name, source class, access mechanism, terms/policy reference, permitted fields, geographic constraints, retention requirements, rate limits, authentication method, reliability profile, legal/privacy review status, and adapter version.
+Every adapter records:
+
+`provider, source_kind, access_method, terms_reference, allowed_fields, geography, retention, rate_limit, authentication, reliability, privacy_review, adapter_version`
+
+A disabled or expired source cannot be fetched.
+
+## Evidence and provenance
+
+Every source snapshot carries source identity, retrieval time, URL/provider reference, content hash, parser/extraction version and integrity metadata.
+
+Conflicting sources remain conflicting. A model can summarize evidence but cannot invent absent facts.
 
 ## Personal data
 
-Account intelligence should prefer organization-level evidence. Where person-level data is necessary, apply purpose limitation, data minimization, accuracy, retention limits, access controls, and deletion/objection workflows. Applicable GDPR principles require these controls. A legitimate-interest basis may apply in some direct-marketing contexts, but it requires a balancing assessment and does not automatically authorize upstream collection or override ePrivacy requirements.
+Prefer account/company evidence. Where person-level data is necessary, apply purpose limitation, minimization, accuracy, storage limitation, access control and deletion/objection mechanisms. Legal basis and provider terms must be evaluated for the particular processing context.
 
-## Evidence policy
+## Operational rule
 
-Source content is evidence only after provenance and extraction validation. Conflicting sources remain conflicting. A model may summarize or interpret evidence but may not invent missing facts.
+When source legality or authorization is uncertain, **do not fetch**. Quarantine the source configuration for human/legal review rather than turning uncertainty into an ingestion decision.

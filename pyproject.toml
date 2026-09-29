@@ -30,7 +30,7 @@ python_version = "3.12"
 strict = true
 warn_unused_ignores = true
 no_implicit_optional = true
-packages = ["tads_contracts", "tads_db", "tads_ingest", "tads_resolution"]
+packages = ["tads_contracts", "tads_db", "tads_ingest", "tads_resolution", "tads_signals"]
 
 
 [tool.pytest.ini_options]

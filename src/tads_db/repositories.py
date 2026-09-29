@@ -217,3 +217,56 @@ class SignalRepository:
                 (signal_id, evidence_id),
             )
         return signal_id
+
+
+class SignalDetectionRepository:
+    """Idempotent persistence for M4 signal detections."""
+
+    def __init__(self, conn: Connection[Any]):
+        self.conn = conn
+
+    def create(
+        self,
+        observation_id: str,
+        signal_kind: str,
+        signal_subtype: str,
+        taxonomy_version: str,
+        state: str,
+        strength: float,
+        freshness: float,
+        reliability: float,
+        rationale: Sequence[str],
+        evidence_ids: Sequence[str] = (),
+    ) -> str | None:
+        row = self.conn.execute(
+            """INSERT INTO signal_detections(
+                   tenant_id,observation_id,signal_kind,signal_subtype,taxonomy_version,
+                   state,strength,freshness,reliability,rationale
+               ) VALUES (
+                   tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s
+               )
+               ON CONFLICT (
+                   tenant_id,observation_id,signal_kind,signal_subtype,taxonomy_version
+               ) DO NOTHING
+               RETURNING id""",
+            (
+                observation_id,
+                signal_kind,
+                signal_subtype,
+                taxonomy_version,
+                state,
+                strength,
+                freshness,
+                reliability,
+                Jsonb(list(rationale)),
+            ),
+        ).fetchone()
+        detection_id = None if row is None else str(row[0])
+        if detection_id is not None:
+            for evidence_id in evidence_ids:
+                self.conn.execute(
+                    "INSERT INTO signal_detection_evidence(tenant_id,detection_id,evidence_id) "
+                    "VALUES (tads_tenant_id(),%s,%s)",
+                    (detection_id, evidence_id),
+                )
+        return detection_id

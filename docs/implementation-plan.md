@@ -1,111 +1,100 @@
 # TADS Implementation Plan
 
-## M0 — Architecture Foundation
+## Delivery rule
 
-Status: **COMPLETE**
+A milestone is **complete only when implementation, tests, security gates, documentation, CI and post-merge main validation all agree**. Architecture alone is not completion.
 
-M0 is complete when the repository contains explicit, reviewable contracts for the TADS domain boundary and the controls required before production intelligence code.
+## M0 — Architecture & Governance
 
-Completed:
-- repository and product boundary
-- Agent Platform ownership boundary
-- ReconOS enrichment boundary
-- FadeReach intelligence-handoff boundary
-- canonical intelligence processing contract
-- canonical data model and evidence invariant
-- temporal semantics
-- source governance and permitted-access policy
-- security threat model and AI/security framework alignment
-- persistence and migration invariants
-- typed source, taxonomy, provenance, observation, event, signal, scoring, and integration contracts
-- deterministic score recomputation contract
-- architecture boundary tests
-- evidence-first domain tests
-- typed-package marker
-- proprietary license declaration
-- CI with formatting, linting, type checking, and contract tests
+**Status: COMPLETE**
 
-M0 deliberately does not claim implementation of the production database, ingestion runtime, entity resolver, signal engine, opportunity engine, agents, ReconOS adapter, FadeReach adapter, console, or production deployment.
+Delivered: product/domain boundaries, Agent Platform/ReconOS/FadeReach ownership, evidence invariant, temporal semantics, source governance, threat model, typed contracts, migration/persistence invariants, architecture tests, proprietary license and CI.
 
-## M1 — Evidence-First Intelligence Kernel
+## M1 — Intelligence Kernel
 
-Build the first real runtime domain layer:
-- PostgreSQL schema and immutable migrations
-- tenant/account/entity repositories
-- source and source-snapshot persistence
-- observation and canonical-event persistence
-- evidence/provenance persistence
-- signal persistence
-- relationship persistence
-- deterministic API schemas
-- tenant-isolation tests
-- migration tests against PostgreSQL
-- one reproducible evidence chain from source to signal
+**Status: COMPLETE**
 
-M1 exit condition: a real permitted source can be represented as source → snapshot → observation → event → account/entity → signal → evidence with reconstructable lineage.
+Delivered: PostgreSQL 17 integration, checksummed ordered migrations, tenant-scoped persistence, RLS, tenant context, cross-tenant parent-reference guards, immutable evidence, source snapshots, observations, canonical events, evidence, signals, repositories and integration tests.
 
-## M1 — Evidence-First Intelligence Kernel
-
-Status: **IMPLEMENTED**
-
-The repository now contains the first executable PostgreSQL kernel: ordered migration, tenant-scoped tables, PostgreSQL row-level security, transaction-local tenant context, immutable evidence enforcement, source snapshots, observations, canonical events, evidence, signals, and persistence repositories. CI runs the kernel against PostgreSQL 17.
-
-Exit evidence is reproducible: source → snapshot → observation → canonical event → account → evidence → signal, with tenant isolation and evidence immutability tested against a real database.
+Exit chain: source → snapshot → observation → canonical event → account → evidence → signal.
 
 ## M2 — Source Ingestion
 
-Status: **IMPLEMENTED (source-ingestion boundary)**
+**Status: COMPLETE**
 
-Completed in M2:
-- explicit source host allowlists and HTTPS-only fetching
-- public-address DNS validation before requests
-- redirect rejection by default
-- timeout, response-byte, content-type, and page-budget controls
-- structured normalized observation transport models
-- Greenhouse Job Board public GET adapter
-- authenticated Lever postings adapter using the current documented API surface
-- source snapshot and observation PostgreSQL sinks
-- tenant-scoped ingestion-run and fetch-attempt persistence
-- source-specific provenance/content hashing
-- security regression tests for SSRF-adjacent URL validation
+Delivered:
 
-M2 does not introduce a universal crawler, anonymous Lever access, LinkedIn scraping, or model-driven ingestion. The remaining hiring vertical work—canonical event creation and entity resolution—moves immediately into M3/M4.
+- source registry/fetch boundary
+- HTTPS and host policy
+- public-address validation
+- redirect rejection
+- request timeout/byte/content-type budgets
+- normalized observation transport
+- Greenhouse public Job Board adapter
+- authenticated Lever postings adapter
+- source snapshot/observation persistence
+- ingestion-run/fetch-attempt persistence
+- content hashing and provenance
+- SSRF-adjacent regression coverage
+
+Explicitly excluded: universal crawler, anonymous Lever access, LinkedIn scraping, model-driven fetching.
 
 ## M3 — Entity Resolution
 
-Status: **IMPLEMENTED (deterministic resolution kernel)**
+**Status: COMPLETE**
 
-Completed:
+Delivered:
+
 - conservative name/domain normalization
-- exact domain and alias evidence handling
-- deterministic similarity scoring
-- explicit MATCHED / PROBABLE / AMBIGUOUS / UNRESOLVED states
+- exact-domain and alias evidence
+- deterministic candidate scoring
+- MATCHED / PROBABLE / AMBIGUOUS / UNRESOLVED states
 - no-silent-merge invariant
-- persisted aliases and resolution candidates with tenant isolation
-- evidence-reference slots for high-impact identity decisions
-- regression tests for exact match, ambiguity, and unknown entities
+- tenant-scoped aliases and resolution candidates
+- evidence-reference slots
+- regression tests for exact, ambiguous and unknown cases
 
-Parent/subsidiary/acquisition graph semantics and production golden datasets remain explicit hardening work before the M4 signal engine consumes resolved identities. The M3 kernel deliberately returns ambiguity rather than manufacturing a canonical identity.
+Remaining hardening that must be completed before M3 is considered enterprise-grade: parent/subsidiary/acquisition relationship semantics, golden resolution corpus, precision/recall metrics and adversarial false-merge tests.
 
-## M4 — Signal Detection
+## M4 — Signal Engine
 
-- versioned taxonomy
-- event canonicalization
-- deduplication
-- signal-quality dimensions
-- temporal decay
-- signal lifecycle
+**Status: IN PROGRESS**
 
-## M5 — Temporal and Correlation Intelligence
+Current implementation:
 
-- event-time semantics
-- recency and decay
-- frequency and density
+- versioned signal taxonomy
+- deterministic source-aware detection
+- hiring/security signal classification
+- strength/freshness/reliability quality dimensions
+- composite quality
+- signal lifecycle state
+- tenant-scoped signal persistence
+- deterministic deduplication constraint
+- regression tests
+
+M4 exit requirements:
+
+1. canonical-event input contract rather than provider-specific-only detection
+2. observation/evidence linkage for every signal
+3. explicit negative/contradictory signal handling
+4. taxonomy registry and versioning
+5. persistence repository and idempotent writes
+6. signal quality tests and boundary cases
+7. signal provenance and replay fixtures
+8. M4 documentation reconciled with code
+9. green CI and merged PR
+
+## M5 — Temporal & Correlation
+
+- event-time model
+- recency/decay
+- frequency/density
 - sequence detection
-- diversity and independence
+- diversity/independence
 - momentum
 - contradiction handling
-- reproducible correlation rules
+- deterministic correlation rules
+- replayable fixtures
 
 ## M6 — Account Intelligence
 
@@ -114,14 +103,14 @@ Parent/subsidiary/acquisition graph semantics and production golden datasets rem
 - ICP context
 - technical/business context
 - negative evidence
-- historical state versions
+- historical versions
 - explainable drivers
 
-## M7 — ICP, Opportunity, and Recommendation
+## M7 — ICP + Opportunity Engine
 
 - configurable ICP profiles
 - deterministic opportunity score
-- confidence and calibration hooks
+- confidence/calibration
 - evidence-backed hypotheses
 - negative factors and unknowns
 - recommendation policy
@@ -129,52 +118,52 @@ Parent/subsidiary/acquisition graph semantics and production golden datasets rem
 
 ## M8 — Agent Intelligence
 
-Agents are introduced only where deterministic code is insufficient. Agent Platform remains the execution and control substrate. TADS owns domain tools, agent specifications, evidence requirements, and evaluations.
+Only introduce agents where deterministic code is insufficient. Agent Platform remains the execution/control substrate. TADS owns domain tools, evidence contracts and evaluations.
 
 ## M9 — ReconOS
 
-Request enrichment and consume returned evidence through a versioned, authenticated adapter. Do not duplicate OSINT capability.
+Versioned authenticated enrichment adapter. Do not duplicate OSINT capability.
 
 ## M10 — FadeReach
 
-Publish a versioned opportunity handoff. TADS does not execute outreach, sequences, social automation, or follow-up.
+Versioned opportunity handoff. No outreach execution in TADS.
 
-## M11 — Feedback and Outcomes
+## M11 — Feedback & Learning
 
-Capture recommendation → action → response → meeting → proposal → won/lost → value/retention outcomes. Prevent outcome leakage into historical intelligence and evaluate score calibration.
+Capture outcomes without leaking future outcomes into historical scoring inputs. Add calibration, precision/recall and decision-quality evaluation.
 
 ## M12 — Console
 
-Account intelligence, signal timeline, why-now explanation, evidence, hypotheses, score decomposition, recommendations, and audit history.
+Account intelligence, timeline, why-now, evidence, hypothesis, score decomposition, recommendations and audit history.
 
 ## M13 — Productionization
 
-API/worker runtime, PostgreSQL, object storage, queue/eventing only where justified, observability, health/readiness, migrations, deployment automation, rollback, backup/restore, rate limits, quotas, and cost controls.
+API/worker runtime, object storage, health/readiness, observability, deployment, migrations, rollback, backup/restore, quotas, rate limits and cost controls.
 
-## M14 — Security, Privacy, and Trust
+## M14 — Security & Privacy
 
-Authentication, authorization, tenant isolation, encryption, secrets, audit, PII minimization, retention/deletion, lawful source controls, egress policy, SSRF defenses, prompt-injection defenses, poisoning defenses, supply-chain controls, output validation, agent permissions, and resource limits.
+Trusted tenant boundary, encryption, secrets, audit, privacy workflows, lawful-source enforcement, network egress, SSRF, poisoning, prompt-injection, supply-chain and resource-limit controls.
 
-## M15 — Reliability and Scale
+## M15 — Reliability & Scale
 
-Retries, idempotency, dead-letter handling, checkpointing, replay, backpressure, circuit breakers, timeouts, graceful degradation, backup/restore, disaster recovery, RPO/RTO, capacity and load testing.
+Retries, idempotency, replay, dead-letter handling, checkpointing, backpressure, circuit breakers, graceful degradation, capacity/load tests, RPO/RTO and disaster recovery.
 
-## M16 — Enterprise Governance
+## M16 — Governance & Compliance
 
-Security/privacy policies, vendor/subprocessor governance, data residency, retention, access reviews, change management, incident management, continuity, risk management, and audit evidence.
+Security/privacy policies, vendor governance, data residency, retention, access reviews, change management, incidents, continuity, risk and audit evidence.
 
-## M17 — Full-System E2E and Adversarial Validation
+## M17 — E2E + Adversarial Validation
 
-Prove and attack the full path:
+Prove and attack:
 
-source → observation → event → entity → account → signal → evidence → temporal correlation → account state → ICP → opportunity → ReconOS → FadeReach → outcome → feedback.
+`source → observation → event → entity → account → signal → temporal context → account state → ICP → opportunity → ReconOS → FadeReach → outcome → feedback`
 
-Completion requires runtime evidence, adversarial tests, and reproducible fixtures.
+Completion requires runtime evidence, adversarial fixtures and reproducible CI.
 
-## M18 — Enterprise GA and Continuous Assurance
+## M18 — Enterprise GA
 
-Continuous dependency/source health, data quality, security monitoring, model evaluation, signal precision, entity-resolution accuracy, opportunity calibration, cost/SLO monitoring, incident response, DR tests, access reviews, regression, and red-team assurance.
+Continuous source-health, data-quality, security, model/signal evaluation, entity-resolution accuracy, opportunity calibration, SLO/cost monitoring, incident response, DR tests, access reviews, regression and red-team assurance.
 
 ## Cross-cutting controls
 
-Security, privacy, provenance, observability, data quality, testing, evaluation, cost controls, documentation, and governance start at M0 and evolve continuously. Milestone numbering is a delivery sequence, not permission to postpone those controls until the later hardening milestones.
+Security, privacy, provenance, observability, data quality, testing, evaluation, cost controls, documentation and governance are active at every milestone.

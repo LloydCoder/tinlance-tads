@@ -7,6 +7,7 @@ from .repositories import (
     EventRepository,
     EvidenceRepository,
     ObservationRepository,
+    SignalDetectionRepository,
     SignalRepository,
     SourceRepository,
 )
@@ -17,6 +18,7 @@ __all__ = [
     "EventRepository",
     "ObservationRepository",
     "SignalRepository",
+    "SignalDetectionRepository",
     "SourceRepository",
     "TenantConnection",
     "apply_migrations",
