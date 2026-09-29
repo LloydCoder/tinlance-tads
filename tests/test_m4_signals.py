@@ -24,9 +24,7 @@ def test_security_signal_requires_observed_security_language() -> None:
 
 def test_unknown_provider_produces_no_signal() -> None:
     assert (
-        SignalDetector().detect(
-            "obs-3", {"provider": "unknown", "title": "Engineer"}, ("ev-3",)
-        )
+        SignalDetector().detect("obs-3", {"provider": "unknown", "title": "Engineer"}, ("ev-3",))
         == ()
     )
 
