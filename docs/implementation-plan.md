@@ -144,11 +144,15 @@ Execution remains Agent Platform-owned. M8 exit requires a tested versioned Agen
 
 ## M9 — ReconOS
 
-Versioned authenticated enrichment adapter. Do not duplicate OSINT capability.
+**Status: IN PROGRESS**
+
+Implemented the provider-neutral authenticated enrichment contract, purpose-limited request model, evidence-bearing result model and tenant-scoped enrichment-run persistence. A real ReconOS API adapter remains gated on a verified ReconOS capability contract.
 
 ## M10 — FadeReach
 
-Versioned opportunity handoff. No outreach execution in TADS.
+**Status: IN PROGRESS**
+
+Implemented a versioned opportunity-handoff contract and tenant-scoped persistence requiring evidence. TADS does not execute outreach. A real FadeReach adapter remains gated on a verified FadeReach capability contract.
 
 ## M11 — Feedback & Learning
 
