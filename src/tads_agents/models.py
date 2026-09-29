@@ -38,5 +38,9 @@ class AgentSpec:
             raise ValueError("agent max_steps must be positive")
         if any(not tool.name or not tool.purpose for tool in self.tools):
             raise ValueError("every agent tool requires a name and purpose")
+        if not self.required_evidence:
+            raise ValueError("TADS agents require evidence")
+        if self.risk is AgentRisk.HIGH and not self.requires_human_approval:
+            raise ValueError("high-risk agents require human approval")
         if "send_outreach" not in self.prohibited_actions:
             raise ValueError("TADS agents must prohibit outreach")
