@@ -11,9 +11,11 @@ from tads_db import (
     AccountStateRepository,
     AgentSpecRepository,
     CorrelationRepository,
+    EnrichmentRunRepository,
     EventRepository,
     EvidenceRepository,
     ObservationRepository,
+    OpportunityHandoffRepository,
     OpportunityRepository,
     SignalDetectionRepository,
     SignalRepository,
@@ -343,3 +345,44 @@ def test_m8_agent_spec_persistence(dsn: str, tenant: str) -> None:
             (spec_id,),
         ).fetchone()
         assert row == (True, 12)
+
+
+def test_m9_m10_integration_persistence(dsn: str, tenant: str) -> None:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        account_id = AccountRepository(conn).create("Integration Account")
+        enrichment_id = EnrichmentRunRepository(conn).create(
+            account_id,
+            "reconos-adapter",
+            "contract-v1",
+            "validate technology need",
+            ("technology",),
+            ("ev-1",),
+            ({"technology": "postgres"},),
+            ("unknown ownership",),
+        )
+        opportunity_id = OpportunityRepository(conn).create(
+            account_id,
+            0.8,
+            0.7,
+            1.0,
+            0.9,
+            0.8,
+            0.0,
+            "m7-v1",
+            "Evidence-backed attention hypothesis.",
+            "CREATE_OPPORTUNITY",
+            ("ICP industry match",),
+            (),
+        )
+        handoff_id = OpportunityHandoffRepository(conn).create(
+            opportunity_id,
+            account_id,
+            0.8,
+            0.7,
+            "Evidence-backed attention hypothesis.",
+            ("ev-1",),
+            "security leader",
+            "security engineering evidence",
+            "now",
+        )
+        assert enrichment_id and handoff_id
