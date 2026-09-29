@@ -347,9 +347,7 @@ def test_m6_account_state_persistence(dsn: str, tenant: str) -> None:
 def test_m7_opportunity_persistence(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id = AccountRepository(conn).create("Opportunity Account")
-        source_id = SourceRepository(conn).create(
-            "test", "m7", "public_structured", "api", "terms"
-        )
+        source_id = SourceRepository(conn).create("test", "m7", "public_structured", "api", "terms")
         snapshot_id = SourceRepository(conn).create_snapshot(
             source_id, datetime.now(UTC), "sha256:m7"
         )
