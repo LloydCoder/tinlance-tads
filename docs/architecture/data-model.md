@@ -99,6 +99,10 @@ A disappearance is absence evidence, not proof of the opposite event.
 
 Account state is a materialized, versioned view of evidence and context. It may include ICP fit, signal strength/diversity, momentum, technical need, timing, negative evidence, data confidence, opportunity state and top drivers.
 
+## OpportunityHypothesis
+
+`OpportunityHypothesis` is the bounded, evidence-backed interpretation attached to an opportunity.
+
 ## Opportunity hypothesis
 
 Every hypothesis separates:
