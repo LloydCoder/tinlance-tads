@@ -127,9 +127,7 @@ def test_m9_m10_persist_evidence_and_tenant_lineage(dsn: str, tenant: str) -> No
         ).fetchone() == (1,)
 
 
-def test_m9_m10_evidence_snapshot_must_match_normalized_links(
-    dsn: str, tenant: str
-) -> None:
+def test_m9_m10_evidence_snapshot_must_match_normalized_links(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id, evidence_id, _ = _fixture_lineage(conn)
         row = conn.execute(
