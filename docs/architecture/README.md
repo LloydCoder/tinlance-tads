@@ -103,7 +103,7 @@ PostgreSQL / object storage
       └── FadeReach
 ```
 
-OWASP recommends allowlisting where feasible, redirect controls and network-layer egress restrictions for SSRF defense; TADS therefore treats application URL validation as necessary but not sufficient. citeturn0search0
+OWASP recommends allowlisting where feasible, redirect controls and network-layer egress restrictions for SSRF defense; TADS therefore treats application URL validation as necessary but not sufficient. https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 
 ## 6. Data architecture
 
