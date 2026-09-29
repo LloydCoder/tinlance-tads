@@ -107,3 +107,20 @@ M4: typed signal taxonomy/detection, quality dimensions and tenant-scoped signal
 - privacy/retention/deletion automation
 - authorization and audit verification
 - full adversarial E2E tests
+
+
+## M9–M18 assurance additions
+
+### Integration boundary
+ReconOS and FadeReach are treated as separate trust boundaries. TADS sends only typed, purpose-limited contracts and requires evidence on returned enrichment and opportunity handoffs. No provider response is treated as authority without provenance.
+
+### Agentic risks
+TADS agent specifications prohibit outreach and require explicit evidence. Agent Platform remains responsible for runtime tool authorization, sandboxing, approvals and generic audit. This separation addresses excessive agency and tool-misuse risks.
+
+### Supply-chain controls
+CI actions are pinned to immutable commit SHAs. GitHub recommends full-length SHA pinning for third-party actions to reduce the risk of mutable-tag compromise. Dependencies and workflow changes remain reviewable artifacts.
+
+### Readiness gates
+M18 is fail-closed. CI success alone is insufficient: tenant isolation, security controls, documentation reconciliation, E2E validation, rollback evidence and governance review are independently required.
+
+The security posture is aligned to OWASP Top 10:2025, whose current categories include broken access control, security misconfiguration, software supply-chain failures, injection, insecure design, authentication failures, software/data integrity, logging/alerting failures and exceptional-condition handling.
