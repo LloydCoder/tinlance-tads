@@ -44,3 +44,40 @@ def test_agent_without_outreach_prohibition_is_rejected() -> None:
     )
     with pytest.raises(ValueError):
         invalid.validate()
+
+
+
+def test_high_risk_agent_requires_approval() -> None:
+    value = spec()
+    invalid = AgentSpec(
+        value.name,
+        value.purpose,
+        AgentRisk.HIGH,
+        value.tools,
+        True,
+        value.max_steps,
+        False,
+        value.prohibited_actions,
+        value.failure_modes,
+        value.eval_criteria,
+    )
+    with pytest.raises(ValueError, match="human approval"):
+        invalid.validate()
+
+
+def test_agent_requires_evidence() -> None:
+    value = spec()
+    invalid = AgentSpec(
+        value.name,
+        value.purpose,
+        value.risk,
+        value.tools,
+        False,
+        value.max_steps,
+        value.requires_human_approval,
+        value.prohibited_actions,
+        value.failure_modes,
+        value.eval_criteria,
+    )
+    with pytest.raises(ValueError, match="require evidence"):
+        invalid.validate()
