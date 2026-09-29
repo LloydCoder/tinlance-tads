@@ -32,7 +32,8 @@ class OpportunityEngine:
             bool(industry and industry.casefold() in {x.casefold() for x in profile.industries}),
             bool(geography and geography.casefold() in {x.casefold() for x in profile.geographies}),
             employees is not None and employees >= profile.min_employees,
-            profile.max_employees is None or (employees is not None and employees <= profile.max_employees),
+            profile.max_employees is None
+            or (employees is not None and employees <= profile.max_employees),
             profile.required_capabilities.issubset(capabilities),
         ]
         icp_fit = sum(fit_parts) / len(fit_parts)
