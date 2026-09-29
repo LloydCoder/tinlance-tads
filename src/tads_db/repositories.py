@@ -236,6 +236,7 @@ class SignalDetectionRepository:
         freshness: float,
         reliability: float,
         rationale: Sequence[str],
+        evidence_ids: Sequence[str] = (),
     ) -> str | None:
         row = self.conn.execute(
             """INSERT INTO signal_detections(
@@ -260,4 +261,12 @@ class SignalDetectionRepository:
                 Jsonb(list(rationale)),
             ),
         ).fetchone()
-        return None if row is None else str(row[0])
+        detection_id = None if row is None else str(row[0])
+        if detection_id is not None:
+            for evidence_id in evidence_ids:
+                self.conn.execute(
+                    "INSERT INTO signal_detection_evidence(tenant_id,detection_id,evidence_id) "
+                    "VALUES (tads_tenant_id(),%s,%s)",
+                    (detection_id, evidence_id),
+                )
+        return detection_id
