@@ -20,7 +20,7 @@ def test_feedback_metrics_and_outcome_are_deterministic() -> None:
     assert outcome.opportunity_id == "opp-1"
     assert metrics.precision == 0.8
     assert metrics.recall == 8 / 9
-    assert calibration.absolute_error == 0.05
+    assert calibration.absolute_error == pytest.approx(0.05)
 
 
 def test_reliability_security_and_governance_contracts() -> None:
