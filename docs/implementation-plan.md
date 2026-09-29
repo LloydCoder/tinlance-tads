@@ -128,7 +128,19 @@ Exit requirements still include historical timeline reconstruction, negative-evi
 
 ## M8 — Agent Intelligence
 
-Only introduce agents where deterministic code is insufficient. Agent Platform remains the execution/control substrate. TADS owns domain tools, evidence contracts and evaluations.
+**Status: IN PROGRESS**
+
+Current implementation:
+- provider-neutral governed agent specifications
+- least-privilege tool declarations
+- evidence-required contract
+- max-step budget
+- explicit human-approval flag
+- prohibited-action invariant including outreach prohibition
+- failure-mode and evaluation criteria registry
+- tenant-scoped agent-spec persistence
+
+Execution remains Agent Platform-owned. M8 exit requires a tested versioned Agent Platform capability contract, tool authorization integration, trajectory/audit linkage, prompt-injection fixtures and agent evaluation harnesses.
 
 ## M9 — ReconOS
 

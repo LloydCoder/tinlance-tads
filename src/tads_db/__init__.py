@@ -5,6 +5,7 @@ from .migrate import apply_migrations
 from .repositories import (
     AccountRepository,
     AccountStateRepository,
+    AgentSpecRepository,
     CorrelationRepository,
     EventRepository,
     EvidenceRepository,
@@ -17,6 +18,7 @@ from .repositories import (
 
 __all__ = [
     "AccountRepository",
+    "AgentSpecRepository",
     "AccountStateRepository",
     "CorrelationRepository",
     "EvidenceRepository",
