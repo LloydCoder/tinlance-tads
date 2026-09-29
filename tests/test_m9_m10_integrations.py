@@ -1,4 +1,6 @@
-from datetime import UTC, datetime\n\nimport pytest
+from datetime import UTC, datetime
+
+import pytest
 
 from tads_integrations import EnrichmentRequest, EnrichmentResult, OpportunityHandoff
 
@@ -9,7 +11,9 @@ def test_recon_request_and_result_are_evidence_bounded() -> None:
         "reconos", "contract-v1", "a1", ("ev-1",), (("technology", "postgres"),), ()
     )
     assert request.evidence_required is True
-    assert result.evidence_ids == ("ev-1",)\n    assert request.request_id == "req-1"\n    assert result.response_id == "resp-1"
+    assert result.evidence_ids == ("ev-1",)
+    assert request.request_id == "req-1"
+    assert result.response_id == "resp-1"
 
 
 def test_fadereach_handoff_validates_bounds_and_evidence() -> None:
