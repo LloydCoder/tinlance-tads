@@ -1,4 +1,4 @@
-"""Stable M0 enumerations. Values are API/storage identifiers."""
+"""Stable TADS enumerations. Values are API/storage identifiers."""
 
 from enum import StrEnum
 
@@ -23,14 +23,14 @@ class SignalType(StrEnum):
 
 
 class RecommendationAction(StrEnum):
-    IGNORE = "ignore"
-    MONITOR = "monitor"
-    RESEARCH = "research"
-    ENRICH = "enrich"
-    QUEUE_FOR_FADEREACH = "queue_for_fadereach"
-    REQUEST_HUMAN_REVIEW = "request_human_review"
-    CREATE_OPPORTUNITY = "create_opportunity"
-    EXPAND_RESEARCH = "expand_research"
+    IGNORE = "IGNORE"
+    MONITOR = "MONITOR"
+    RESEARCH = "RESEARCH"
+    ENRICH = "ENRICH"
+    QUEUE_FOR_FADEREACH = "QUEUE_FOR_FADEREACH"
+    REQUEST_HUMAN_REVIEW = "REQUEST_HUMAN_REVIEW"
+    CREATE_OPPORTUNITY = "CREATE_OPPORTUNITY"
+    EXPAND_RESEARCH = "EXPAND_RESEARCH"
 
 
 class ResolutionState(StrEnum):

@@ -65,23 +65,38 @@ def test_score_without_evidence_fails() -> None:
         ScoreComponent("fit", 0.8, 1.0, ()).validate()
 
 
+def test_score_must_match_components() -> None:
+    component = ScoreComponent("fit", 0.8, 1.0, ("ev-1",))
+    with pytest.raises(ValueError, match="does not match"):
+        ScoreContract("m0.1", (component,), 0.7, 0.9).validate()
+
+
 def test_fadereach_handoff_is_evidence_backed() -> None:
     handoff = FadeReachHandoff(
         "h-1",
-        "t-1",
         "a-1",
-        "o-1",
+        0.8,
+        0.7,
         "documented change",
         ("ev-1",),
         None,
         None,
+        None,
+        datetime(2026, 12, 31, tzinfo=UTC),
+        "handoff-1",
     )
     assert handoff.evidence_ids == ("ev-1",)
 
 
-def test_reconos_request_is_tenant_scoped() -> None:
-    request = ReconOSRequest("r-1", "t-1", "a-1", ("technology",), "account_research")
-    assert request.tenant_id == "t-1"
+def test_reconos_request_is_server_scoped() -> None:
+    request = ReconOSRequest(
+        "a-1",
+        "account_research",
+        ("technology",),
+        request_id="req-1",
+    )
+    assert request.account_id == "a-1"
+    assert request.request_id == "req-1"
 
 
 def test_score_recomputation_is_deterministic() -> None:
@@ -98,5 +113,5 @@ def test_score_recomputation_is_deterministic() -> None:
 
 
 def test_taxonomy_values_are_stable() -> None:
-    assert RecommendationAction.QUEUE_FOR_FADEREACH.value == "queue_for_fadereach"
+    assert RecommendationAction.QUEUE_FOR_FADEREACH.value == "QUEUE_FOR_FADEREACH"
     assert ResolutionState.AMBIGUOUS.value == "ambiguous"

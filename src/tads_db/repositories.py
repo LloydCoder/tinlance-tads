@@ -290,7 +290,10 @@ class CorrelationRepository:
         momentum: float,
         contradiction: float,
         rule_version: str,
+        evidence_ids: Sequence[str],
     ) -> str:
+        if not evidence_ids:
+            raise ValueError("signal correlation requires evidence")
         row = self.conn.execute(
             """INSERT INTO signal_correlations(
                    tenant_id,account_id,window_start,window_end,count,density,diversity,
@@ -312,7 +315,14 @@ class CorrelationRepository:
             ),
         ).fetchone()
         assert row is not None
-        return str(row[0])
+        correlation_id = str(row[0])
+        for evidence_id in evidence_ids:
+            self.conn.execute(
+                "INSERT INTO signal_correlation_evidence(tenant_id,correlation_id,evidence_id) "
+                "VALUES (tads_tenant_id(),%s,%s)",
+                (correlation_id, evidence_id),
+            )
+        return correlation_id
 
 
 class AccountStateRepository:
@@ -332,7 +342,10 @@ class AccountStateRepository:
         active_signal_count: int,
         state_version: str,
         drivers: Sequence[str],
+        evidence_ids: Sequence[str],
     ) -> str:
+        if not evidence_ids:
+            raise ValueError("account state requires evidence")
         row = self.conn.execute(
             """INSERT INTO account_states(
                    tenant_id,account_id,signal_strength,signal_diversity,momentum,
@@ -352,7 +365,14 @@ class AccountStateRepository:
             ),
         ).fetchone()
         assert row is not None
-        return str(row[0])
+        state_id = str(row[0])
+        for evidence_id in evidence_ids:
+            self.conn.execute(
+                "INSERT INTO account_state_evidence(tenant_id,account_state_id,evidence_id) "
+                "VALUES (tads_tenant_id(),%s,%s)",
+                (state_id, evidence_id),
+            )
+        return state_id
 
 
 class OpportunityRepository:
@@ -375,7 +395,10 @@ class OpportunityRepository:
         recommendation: str,
         reasons: Sequence[str],
         unknowns: Sequence[str],
+        evidence_ids: Sequence[str],
     ) -> str:
+        if not evidence_ids:
+            raise ValueError("opportunity requires evidence")
         row = self.conn.execute(
             """INSERT INTO opportunities(
                    tenant_id,account_id,score,confidence,icp_fit,evidence_strength,timing,
@@ -398,7 +421,14 @@ class OpportunityRepository:
             ),
         ).fetchone()
         assert row is not None
-        return str(row[0])
+        opportunity_id = str(row[0])
+        for evidence_id in evidence_ids:
+            self.conn.execute(
+                "INSERT INTO opportunity_evidence(tenant_id,opportunity_id,evidence_id) "
+                "VALUES (tads_tenant_id(),%s,%s)",
+                (opportunity_id, evidence_id),
+            )
+        return opportunity_id
 
 
 class AgentSpecRepository:

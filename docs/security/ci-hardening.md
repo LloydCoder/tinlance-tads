@@ -8,7 +8,7 @@ TADS CI follows a least-privilege, reproducible workflow model.
 - Third-party GitHub Actions are pinned to full commit SHAs.
 - Checkout disables credential persistence.
 - PostgreSQL integration tests run against a dedicated ephemeral service.
-- Static formatting, linting, strict mypy and pytest are mandatory.
+- Static formatting, linting, strict mypy, pip-audit and pytest are mandatory.
 - CI is required on pull requests and pushes to main.
 - Security-sensitive workflow changes must be reviewed like application code.
 

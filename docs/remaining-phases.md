@@ -1,9 +1,9 @@
 # TADS M11–M18 Completion Contract
 
-The remaining milestones are implemented as explicit, testable contracts before external runtime deployment. This prevents documentation from claiming production capabilities that require infrastructure or verified external-provider APIs.
+The remaining milestones are implemented as explicit, testable contracts before external runtime deployment. The repository now also hardens the M9/M10 persistence boundary with append-only historical records and deferred equality checks between portable evidence snapshots and normalized lineage. This prevents documentation from claiming production capabilities that require infrastructure or verified external-provider APIs.
 
 ## M11 — Feedback & Learning
-Outcome records are append-only inputs. Precision, recall and confidence calibration are deterministic evaluation primitives. Historical scoring inputs are never mutated by future outcomes.
+Outcome records are append-only inputs. Precision, recall and confidence calibration are deterministic evaluation primitives. Historical scoring inputs are never mutated by future outcomes. Precision, recall and confidence calibration are deterministic evaluation primitives. Historical scoring inputs are never mutated by future outcomes.
 
 ## M12 — Console
 The console must consume the existing evidence lineage and expose account timeline, why-now, score decomposition, recommendation rationale and audit history. The domain contract is intentionally UI-neutral; presentation belongs to the future application surface.

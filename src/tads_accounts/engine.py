@@ -28,10 +28,13 @@ class AccountIntelligenceEngine:
                 self.state_version,
                 ("no active signals",),
             )
-        quality = sum(max(0.0, min(1.0, s.quality)) for s in signals) / len(signals)
+        quality = sum(s.quality for s in signals) / len(signals)
         kinds = {s.kind for s in signals}
         negative = sum(1 for s in signals if s.direction < 0) / len(signals)
-        confidence = sum(max(0.0, min(1.0, s.freshness)) for s in signals) / len(signals)
+        confidence = sum(s.freshness for s in signals) / len(signals)
+        evidence_ids = tuple(
+            sorted({evidence_id for signal in signals for evidence_id in signal.evidence_ids})
+        )
         drivers = tuple(
             sorted(
                 {f"{s.kind}:quality={s.quality:.2f}" for s in signals if s.direction > 0},
@@ -48,4 +51,5 @@ class AccountIntelligenceEngine:
             len(signals),
             self.state_version,
             drivers,
+            evidence_ids,
         )
