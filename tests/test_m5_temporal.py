@@ -16,9 +16,36 @@ def test_empty_window_is_deterministic() -> None:
 def test_temporal_features_measure_diversity_independence_and_contradiction() -> None:
     start = datetime(2026, 1, 1, tzinfo=UTC)
     signals = [
-        SignalPoint("s1", "a1", "hiring", start + timedelta(days=1), 0.8, "greenhouse", 1, ("ev-1",)),
-        SignalPoint("s2", "a1", "security", start + timedelta(days=3), 0.9, "press", 1, ("ev-2",)),
-        SignalPoint("s3", "a1", "security", start + timedelta(days=5), 0.7, "press", -1, ("ev-3",)),
+        SignalPoint(
+            "s1",
+            "a1",
+            "hiring",
+            start + timedelta(days=1),
+            0.8,
+            "greenhouse",
+            1,
+            ("ev-1",),
+        ),
+        SignalPoint(
+            "s2",
+            "a1",
+            "security",
+            start + timedelta(days=3),
+            0.9,
+            "press",
+            1,
+            ("ev-2",),
+        ),
+        SignalPoint(
+            "s3",
+            "a1",
+            "security",
+            start + timedelta(days=5),
+            0.7,
+            "press",
+            -1,
+            ("ev-3",),
+        ),
     ]
     result = CorrelationEngine().features(signals, start=start, end=start + timedelta(days=7))
     assert result.count == 3
