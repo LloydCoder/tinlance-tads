@@ -18,7 +18,7 @@ class RetryPolicy:
     def delay(self, attempt: int) -> float:
         if attempt < 1:
             raise ValueError("attempt must be positive")
-        return min(self.max_delay_seconds, self.base_delay_seconds * (2 ** (attempt - 1)))
+        return float(min(self.max_delay_seconds, self.base_delay_seconds * (2 ** (attempt - 1))))
 
     def should_retry(self, attempt: int) -> bool:
         return 1 <= attempt < self.max_attempts
