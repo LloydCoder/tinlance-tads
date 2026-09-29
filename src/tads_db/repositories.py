@@ -429,4 +429,3 @@ class OpportunityRepository:
                 (opportunity_id, evidence_id),
             )
         return opportunity_id
-
