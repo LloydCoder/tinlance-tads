@@ -353,3 +353,49 @@ class AccountStateRepository:
         ).fetchone()
         assert row is not None
         return str(row[0])
+
+
+class OpportunityRepository:
+    """Tenant-scoped persistence for explainable opportunity evaluations."""
+
+    def __init__(self, conn: Connection[Any]):
+        self.conn = conn
+
+    def create(
+        self,
+        account_id: str,
+        score: float,
+        confidence: float,
+        icp_fit: float,
+        evidence_strength: float,
+        timing: float,
+        negative_factor: float,
+        score_version: str,
+        hypothesis: str,
+        recommendation: str,
+        reasons: Sequence[str],
+        unknowns: Sequence[str],
+    ) -> str:
+        row = self.conn.execute(
+            """INSERT INTO opportunities(
+                   tenant_id,account_id,score,confidence,icp_fit,evidence_strength,timing,
+                   negative_factor,score_version,hypothesis,recommendation,reasons,unknowns
+               ) VALUES (tads_tenant_id(),%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+               RETURNING id""",
+            (
+                account_id,
+                score,
+                confidence,
+                icp_fit,
+                evidence_strength,
+                timing,
+                negative_factor,
+                score_version,
+                hypothesis,
+                recommendation,
+                Jsonb(list(reasons)),
+                Jsonb(list(unknowns)),
+            ),
+        ).fetchone()
+        assert row is not None
+        return str(row[0])

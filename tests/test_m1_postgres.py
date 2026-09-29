@@ -13,6 +13,7 @@ from tads_db import (
     EventRepository,
     EvidenceRepository,
     ObservationRepository,
+    OpportunityRepository,
     SignalDetectionRepository,
     SignalRepository,
     SourceRepository,
@@ -296,3 +297,27 @@ def test_m6_account_state_persistence(dsn: str, tenant: str) -> None:
             (state_id,),
         ).fetchone()
         assert row == (4, "m6-v1")
+
+
+def test_m7_opportunity_persistence(dsn: str, tenant: str) -> None:
+    with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
+        account_id = AccountRepository(conn).create("Opportunity Account")
+        opportunity_id = OpportunityRepository(conn).create(
+            account_id,
+            0.8,
+            0.75,
+            1.0,
+            0.9,
+            0.8,
+            0.0,
+            "m7-v1",
+            "Evidence-backed attention hypothesis.",
+            "CREATE_OPPORTUNITY",
+            ("ICP industry match",),
+            ("employee count",),
+        )
+        row = conn.execute(
+            "SELECT recommendation, score_version FROM opportunities WHERE id=%s",
+            (opportunity_id,),
+        ).fetchone()
+        assert row == ("CREATE_OPPORTUNITY", "m7-v1")
