@@ -141,7 +141,11 @@ Outcome data must not retroactively alter what TADS knew at the time of the deci
 
 Normalized evidence-link tables are authoritative for lineage; JSON evidence identifiers are retained as a portable snapshot of the handoff/enrichment payload.
 
-## Materialized intelligence lineage\n\nTemporal correlations, account states and opportunities retain explicit normalized evidence links in addition to their derived numeric values. Their repository contracts reject evidence-free materialized intelligence. This prevents an aggregate score or state from becoming a self-authenticating fact.\n\n## Outcome and governance contracts
+## Materialized intelligence lineage
+
+Temporal correlations, account states and opportunities retain explicit normalized evidence links in addition to their derived numeric values. Their repository contracts reject evidence-free materialized intelligence. This prevents an aggregate score or state from becoming a self-authenticating fact.
+
+## Outcome and governance contracts
 
 M11 outcomes are appended after the decision. They never mutate historical signals, scores or recommendations. Evaluation joins outcomes to the frozen decision-time policy/version.
 
