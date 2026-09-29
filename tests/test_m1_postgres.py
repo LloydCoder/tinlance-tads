@@ -292,7 +292,7 @@ def test_m5_correlation_persistence_is_tenant_scoped(dsn: str, tenant: str) -> N
             "SELECT count, rule_version FROM signal_correlations WHERE id=%s",
             (correlation_id,),
         ).fetchone()
-        assert row == (3, "m5-v1")
+        assert row == (3, "m5-v1")\n        assert conn.execute(\n            "SELECT count(*) FROM signal_correlation_evidence WHERE correlation_id=%s",\n            (correlation_id,),\n        ).fetchone() == (1,)
 
 
 def test_m6_account_state_persistence(dsn: str, tenant: str) -> None:
@@ -312,7 +312,7 @@ def test_m6_account_state_persistence(dsn: str, tenant: str) -> None:
             "SELECT active_signal_count, state_version FROM account_states WHERE id=%s",
             (state_id,),
         ).fetchone()
-        assert row == (4, "m6-v1")
+        assert row == (4, "m6-v1")\n        assert conn.execute(\n            "SELECT count(*) FROM account_state_evidence WHERE account_state_id=%s",\n            (state_id,),\n        ).fetchone() == (1,)
 
 
 def test_m7_opportunity_persistence(dsn: str, tenant: str) -> None:
@@ -344,7 +344,7 @@ def test_m7_opportunity_persistence(dsn: str, tenant: str) -> None:
             "SELECT recommendation, score_version FROM opportunities WHERE id=%s",
             (opportunity_id,),
         ).fetchone()
-        assert row == ("CREATE_OPPORTUNITY", "m7-v1")
+        assert row == ("CREATE_OPPORTUNITY", "m7-v1")\n        assert conn.execute(\n            "SELECT count(*) FROM opportunity_evidence WHERE opportunity_id=%s",\n            (opportunity_id,),\n        ).fetchone() == (1,)
 
 
 def test_m8_agent_spec_persistence(dsn: str, tenant: str) -> None:
