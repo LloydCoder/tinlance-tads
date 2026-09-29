@@ -8,7 +8,11 @@ def spec() -> AgentSpec:
         "signal_researcher",
         "Verify public evidence supporting a TADS signal.",
         AgentRisk.MEDIUM,
-        (AgentTool("source_reader", "Read permitted source evidence.", True, frozenset({"public"})),),
+        (
+            AgentTool(
+                "source_reader", "Read permitted source evidence.", True, frozenset({"public"})
+            ),
+        ),
         True,
         12,
         True,
