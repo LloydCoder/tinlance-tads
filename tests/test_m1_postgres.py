@@ -268,9 +268,7 @@ def test_m4_signal_detection_has_rls(dsn: str) -> None:
 def test_m5_correlation_persistence_is_tenant_scoped(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         account_id = AccountRepository(conn).create("Correlation Account")
-        source_id = SourceRepository(conn).create(
-            "test", "m5", "public_structured", "api", "terms"
-        )
+        source_id = SourceRepository(conn).create("test", "m5", "public_structured", "api", "terms")
         snapshot_id = SourceRepository(conn).create_snapshot(
             source_id, datetime.now(UTC), "sha256:m5"
         )
