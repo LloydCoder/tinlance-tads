@@ -201,6 +201,16 @@ def test_signal_detection_is_idempotent_and_tenant_scoped(dsn: str, tenant: str)
             "sha256:m4-observation",
             {"provider": "greenhouse", "title": "Security Engineer"},
         )
+        evidence_id = EvidenceRepository(conn).create(
+            source_id,
+            snapshot_id,
+            datetime.now(UTC),
+            "sha256:m4-evidence",
+            "m4",
+            "1",
+            0.95,
+            observation_id,
+        )
         repo = SignalDetectionRepository(conn)
         first = repo.create(
             observation_id,
@@ -212,6 +222,7 @@ def test_signal_detection_is_idempotent_and_tenant_scoped(dsn: str, tenant: str)
             1.0,
             0.9,
             ("structured hiring source",),
+            (evidence_id,),
         )
         second = repo.create(
             observation_id,
@@ -223,14 +234,20 @@ def test_signal_detection_is_idempotent_and_tenant_scoped(dsn: str, tenant: str)
             1.0,
             0.9,
             ("structured hiring source",),
+            (evidence_id,),
         )
         assert first is not None
         assert second is None
         row = conn.execute(
-            "SELECT quality FROM signal_detections WHERE id=%s", (first,)
+            """SELECT sd.quality, sde.evidence_id
+               FROM signal_detections sd
+               JOIN signal_detection_evidence sde ON sde.detection_id=sd.id
+               WHERE sd.id=%s""",
+            (first,),
         ).fetchone()
         assert row is not None
         assert float(row[0]) == pytest.approx(0.72)
+        assert str(row[1]) == evidence_id
 
 
 def test_m4_signal_detection_has_rls(dsn: str) -> None:
