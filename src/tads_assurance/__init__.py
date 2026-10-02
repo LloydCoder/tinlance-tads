@@ -1,6 +1,6 @@
 """Cross-cutting contracts for TADS M11-M18 assurance."""
 
-from .feedback import CalibrationRecord, OutcomeRecord, PrecisionRecall
+from .feedback import CalibrationRecord, OutcomeRecord, PrecisionRecall, TemporalEvaluation
 from .governance import GovernanceRecord, RetentionPolicy
 from .reliability import RetryPolicy
 from .security import SecurityPolicy
@@ -18,4 +18,5 @@ __all__ = [
     "RetentionPolicy",
     "RetryPolicy",
     "SecurityPolicy",
+    "TemporalEvaluation",
 ]
