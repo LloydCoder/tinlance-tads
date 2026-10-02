@@ -14,7 +14,6 @@ import json
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from http.client import HTTPResponse
 from typing import IO, Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
