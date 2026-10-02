@@ -42,9 +42,7 @@ def tenant(dsn: str) -> str:
 
 def _opportunity(conn: psycopg.Connection[object]) -> str:
     account_id = AccountRepository(conn).create("M11 Evaluation Account")
-    source_id = SourceRepository(conn).create(
-        "test", "m11", "public_structured", "api", "terms"
-    )
+    source_id = SourceRepository(conn).create("test", "m11", "public_structured", "api", "terms")
     snapshot_id = SourceRepository(conn).create_snapshot(
         source_id, datetime(2026, 1, 1, tzinfo=UTC), "sha256:m11-snapshot"
     )
@@ -134,9 +132,7 @@ def test_database_rejects_temporal_leakage(dsn: str, tenant: str) -> None:
             )
 
 
-def test_evaluation_outcomes_are_append_only_for_application_role(
-    dsn: str, tenant: str
-) -> None:
+def test_evaluation_outcomes_are_append_only_for_application_role(dsn: str, tenant: str) -> None:
     with TenantConnection(dsn, tenant, "tads_app").transaction() as conn:
         opportunity_id = _opportunity(conn)
         outcome_id = EvaluationOutcomeRepository(conn).create(
