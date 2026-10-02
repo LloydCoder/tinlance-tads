@@ -62,10 +62,11 @@ Production gate: authenticated UI, tenant-aware authorization, audit-history int
 
 ## M13 — Productionization
 
-**Status: CONTRACT-COMPLETE.**
+**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
 
 Delivered:
 - explicit runtime readiness model
+- fail-closed production configuration
 - independent database, migration, ingestion and integration health dimensions
 
 Production gate:
@@ -81,7 +82,7 @@ Production gate:
 
 ## M14 — Security & Privacy
 
-**Status: CONTRACT-COMPLETE.**
+**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
 
 Delivered fail-closed security policy covering trusted tenant context, hostile external content, untrusted model output, restricted egress, secret redaction, personal-data minimization and auditability.
 
@@ -96,9 +97,9 @@ Production gate:
 
 ## M15 — Reliability & Scale
 
-**Status: CONTRACT-COMPLETE.**
+**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
 
-Delivered bounded exponential retry policy.
+Delivered bounded exponential retry policy, bounded capacity and idempotency policies.
 
 Production gate:
 - idempotency keys at every retryable boundary
@@ -110,9 +111,9 @@ Production gate:
 
 ## M16 — Governance & Compliance
 
-**Status: CONTRACT-COMPLETE.**
+**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
 
-Delivered governance record and retention contracts.
+Delivered governance record, review cadence and retention contracts.
 
 Production gate:
 - control owners and review cadence
@@ -124,7 +125,7 @@ Production gate:
 
 ## M17 — End-to-end adversarial validation
 
-**Status: CONTRACT-COMPLETE.**
+**Status: CONTRACT-HARDENED; EXECUTABLE ADVERSARIAL GATE REMAINS.**
 
 The canonical chain is a closed validation set:
 
@@ -134,9 +135,9 @@ Production gate: executable E2E fixtures, poisoning/prompt-injection/tenant-esca
 
 ## M18 — Enterprise GA
 
-**Status: CONTRACT-COMPLETE.**
+**Status: FAIL-CLOSED ENTERPRISE GATE IMPLEMENTED; GA EVIDENCE REMAINS.**
 
-The enterprise gate is fail-closed and requires CI, security, tenant isolation, documentation, E2E validation, rollback testing and governance review.
+The enterprise gate now additionally requires provider verification, production deployment, backup/restore, observability, adversarial validation, load testing, disaster recovery, privacy review and supply-chain verification.
 
 **M18 is not declared deployed GA until those environment-dependent gates have real evidence.**
 
