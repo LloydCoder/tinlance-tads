@@ -87,9 +87,9 @@ def test_adapter_sends_auth_idempotency_and_returns_validated_result(
 
     class _Opener:
         def open(self, request: object, **_: object) -> _FakeResponse:
-            captured["authorization"] = request.headers["Authorization"]
-            captured["idempotency"] = request.headers["Idempotency-Key"]
-            captured["schema"] = request.headers["X-tads-schema-version"]
+            captured["authorization"] = request.get_header("Authorization") or ""
+            captured["idempotency"] = request.get_header("Idempotency-Key") or ""
+            captured["schema"] = request.get_header("X-tads-schema-version") or ""
             return _FakeResponse(payload)
 
     monkeypatch.setattr(reconos_http, "build_opener", lambda *_: _Opener())
