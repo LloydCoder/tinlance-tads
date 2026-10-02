@@ -1,6 +1,7 @@
 """PostgreSQL persistence primitives for TADS."""
 
 from .connection import TenantConnection
+from .feedback_repositories import EvaluationOutcomeRepository
 from .integration_repositories import EnrichmentRunRepository, OpportunityHandoffRepository
 from .migrate import apply_migrations
 from .repositories import (
@@ -23,6 +24,7 @@ __all__ = [
     "AgentSpecRepository",
     "CorrelationRepository",
     "EnrichmentRunRepository",
+    "EvaluationOutcomeRepository",
     "EvidenceRepository",
     "EventRepository",
     "ObservationRepository",
