@@ -38,10 +38,6 @@ class EnrichmentRequest:
             raise ValueError("enrichment fields must be normalized")
         if self.request_id is not None and not self.request_id.strip():
             raise ValueError("request_id cannot be blank")
-        if self.expires_at is None or self.expires_at.tzinfo is None:
-            raise ValueError("handoff requires a timezone-aware expiry")
-        if self.expires_at <= datetime.now(UTC):
-            raise ValueError("handoff expiry must be in the future")
         if not self.schema_version.strip():
             raise ValueError("schema_version is required")
         for value, name in (
