@@ -130,8 +130,10 @@ class ReconOSHttpAdapter:
             raise ReconOSAdapterError("ReconOS response request_id does not match request")
 
         raw_evidence = document.get("evidence_ids")
-        if not isinstance(raw_evidence, list) or not raw_evidence or not all(
-            isinstance(value, str) and value.strip() for value in raw_evidence
+        if (
+            not isinstance(raw_evidence, list)
+            or not raw_evidence
+            or not all(isinstance(value, str) and value.strip() for value in raw_evidence)
         ):
             raise ReconOSAdapterError("ReconOS response requires non-empty evidence_ids")
 
