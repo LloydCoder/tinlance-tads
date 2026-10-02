@@ -15,7 +15,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from http.client import HTTPResponse
-from typing import Any
+from typing import IO, Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -31,7 +31,7 @@ class _RejectRedirects(HTTPRedirectHandler):
     def redirect_request(
         self,
         req: Request,
-        fp: HTTPResponse,
+        fp: IO[bytes],
         code: int,
         msg: str,
         headers: Any,
