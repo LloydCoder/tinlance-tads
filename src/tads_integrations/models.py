@@ -115,3 +115,7 @@ class OpportunityHandoff:
             raise ValueError("handoff requires a timezone-aware expiry")
         if self.expires_at <= datetime.now(UTC):
             raise ValueError("handoff expiry must be in the future")
+        if self.expires_at is None or self.expires_at.tzinfo is None:
+            raise ValueError("handoff requires a timezone-aware expiry")
+        if self.expires_at <= datetime.now(UTC):
+            raise ValueError("handoff expiry must be in the future")
