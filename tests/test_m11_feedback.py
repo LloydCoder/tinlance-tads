@@ -1,3 +1,5 @@
+import pytest
+
 from tads_assurance import TemporalEvaluation
 
 
@@ -10,7 +12,7 @@ def test_temporal_evaluation_rejects_future_label_leakage() -> None:
     )
     assert evaluation.available_at("2026-01-01T12:00:00Z") is False
     assert evaluation.available_at("2026-01-02T00:00:00Z") is True
-    assert evaluation.absolute_error == 0.2
+    assert evaluation.absolute_error == pytest.approx(0.2)
 
 
 def test_temporal_evaluation_rejects_naive_or_reversed_timestamps() -> None:
