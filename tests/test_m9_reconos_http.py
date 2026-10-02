@@ -35,13 +35,9 @@ def test_adapter_requires_https_and_exact_host() -> None:
     with pytest.raises(ValueError):
         ReconOSHttpAdapter("http://reconos.internal/enrich", "token", "reconos.internal")
     with pytest.raises(ValueError):
-        ReconOSHttpAdapter(
-            "https://evil.example/enrich", "token", "reconos.internal"
-        )
+        ReconOSHttpAdapter("https://evil.example/enrich", "token", "reconos.internal")
     with pytest.raises(ValueError):
-        ReconOSHttpAdapter(
-            "https://reconos.internal:8443/enrich", "token", "reconos.internal"
-        )
+        ReconOSHttpAdapter("https://reconos.internal:8443/enrich", "token", "reconos.internal")
 
 
 def test_adapter_rejects_mismatched_request_id(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -60,9 +56,7 @@ def test_adapter_rejects_mismatched_request_id(monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setattr(
         reconos_http,
         "build_opener",
-        lambda *_: SimpleNamespace(
-            open=lambda *_args, **_kwargs: _FakeResponse(payload)
-        ),
+        lambda *_: SimpleNamespace(open=lambda *_args, **_kwargs: _FakeResponse(payload)),
     )
     with pytest.raises(ReconOSAdapterError, match="request_id"):
         adapter.enrich(
