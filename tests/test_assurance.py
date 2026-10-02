@@ -53,5 +53,24 @@ def test_e2e_and_enterprise_gate() -> None:
     e2e.validate()
     trace = E2ETrace(tuple(E2EStage), ("ev-e2e",))
     trace.validate()
-    gate = EnterpriseGate(True, True, True, True, True, True, True)
+    blocked_gate = EnterpriseGate(True, True, True, True, True, True, True)
+    assert blocked_gate.readiness is Readiness.BLOCKED
+    gate = EnterpriseGate(
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+    )
     assert gate.readiness is Readiness.READY
