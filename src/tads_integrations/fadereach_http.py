@@ -87,32 +87,32 @@ class FadeReachHttpAdapter:
         try:
             with build_opener(_RejectRedirects()).open(request, timeout=10) as response:
                 if response.status not in (200, 201, 202):
-                    raise ReconOSAdapterError(
+                    raise IntegrationAdapterError(
                         f"FadeReach returned unexpected HTTP status {response.status}"
                     )
                 content_length = response.headers.get("Content-Length")
                 if content_length is not None and int(content_length) > self.max_response_bytes:
-                    raise ReconOSAdapterError("FadeReach response exceeds configured byte budget")
+                    raise IntegrationAdapterError("FadeReach response exceeds configured byte budget")
                 raw = response.read(self.max_response_bytes + 1)
         except HTTPError as exc:
-            raise ReconOSAdapterError(
+            raise IntegrationAdapterError(
                 f"FadeReach request failed with HTTP status {exc.code}"
             ) from exc
         except (URLError, TimeoutError, OSError) as exc:
-            raise ReconOSAdapterError("FadeReach request failed") from exc
+            raise IntegrationAdapterError("FadeReach request failed") from exc
 
         if len(raw) > self.max_response_bytes:
-            raise ReconOSAdapterError("FadeReach response exceeds configured byte budget")
+            raise IntegrationAdapterError("FadeReach response exceeds configured byte budget")
         try:
             document = json.loads(raw)
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise ReconOSAdapterError("FadeReach response is not valid JSON") from exc
+            raise IntegrationAdapterError("FadeReach response is not valid JSON") from exc
         if not isinstance(document, dict):
-            raise ReconOSAdapterError("FadeReach response must be a JSON object")
+            raise IntegrationAdapterError("FadeReach response must be a JSON object")
         response_schema = document.get("schema_version")
         response_id = document.get("handoff_id")
         if response_schema != handoff.schema_version:
-            raise ReconOSAdapterError("FadeReach response schema_version does not match handoff")
+            raise IntegrationAdapterError("FadeReach response schema_version does not match handoff")
         if not isinstance(response_id, str) or not response_id.strip():
-            raise ReconOSAdapterError("FadeReach response requires a handoff_id")
+            raise IntegrationAdapterError("FadeReach response requires a handoff_id")
         return response_id
