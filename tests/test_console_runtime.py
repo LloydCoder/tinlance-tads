@@ -1,7 +1,7 @@
 import pytest
 
 from tads_console import AccountIntelligenceView
-from tads_runtime import ComponentHealth, RuntimeReadiness
+from tads_runtime import ComponentHealth, ProductionConfig, RuntimeReadiness
 
 
 def test_console_projection_is_evidence_first() -> None:
@@ -67,3 +67,18 @@ def test_console_view_rejects_missing_score_decomposition() -> None:
             ("ev-1",),
             (),
         )
+
+
+def test_production_config_requires_secure_endpoints() -> None:
+    config = ProductionConfig(
+        "postgresql://db",
+        "https://objects.example",
+        "https://otel.example",
+    )
+    config.validate()
+    with pytest.raises(ValueError):
+        ProductionConfig(
+            "postgresql://db",
+            "http://objects.example",
+            "https://otel.example",
+        ).validate()
