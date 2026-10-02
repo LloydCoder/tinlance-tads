@@ -166,12 +166,12 @@ Engagement execution. TADS can publish a versioned, evidence-backed opportunity 
 | M10 | 🚧 Adapter-complete | Authenticated fail-closed FadeReach handoff adapter; external capability verification remains |
 | M11 | 🚧 Evaluation-complete | Immutable outcome ingestion, temporal leakage controls and evaluation primitives; operational corpus/monitoring remains |
 | M12 | 🚧 Projection-complete | Versioned evidence-first console projection; authenticated UI/deployment remains |
-| M13 | 🚧 Contract-complete | Runtime readiness contract |
-| M14 | 🚧 Contract-complete | Fail-closed security/privacy contract |
-| M15 | 🚧 Contract-complete | Bounded deterministic retry contract |
-| M16 | 🚧 Contract-complete | Governance and retention contracts |
-| M17 | 🚧 Contract-complete | Closed canonical E2E validation contract |
-| M18 | 🚧 Contract-complete | Fail-closed enterprise GA gate |
+| M13 | 🚧 Contract-hardened | Fail-closed production configuration and runtime readiness; deployment evidence remains |
+| M14 | 🚧 Contract-hardened | Fail-closed security/privacy controls; enforcement/review evidence remains |
+| M15 | 🚧 Contract-hardened | Retry, bounded capacity and idempotency contracts; load/DR evidence remains |
+| M16 | 🚧 Contract-hardened | Governance ownership/review and retention contracts; compliance evidence remains |
+| M17 | 🚧 Contract-hardened | Ordered evidence-backed E2E trace; adversarial/provider execution remains |
+| M18 | 🚧 Gate-implemented | Fail-closed GA gate now requires explicit production evidence across all enterprise controls |
 
 **Contract-complete is intentionally not called production-deployed.** Real ReconOS/FadeReach adapters, production infrastructure, network enforcement, backup/restore evidence, load testing, disaster recovery, legal/privacy review, operational telemetry and other environment-dependent controls remain release gates.
 
@@ -389,7 +389,7 @@ The modular-monolith shape remains the default until measured workload, isolatio
 
 ## Project maturity
 
-The current repository is a **production-oriented intelligence kernel with M0–M8 implemented and M9–M18 contract-complete**.
+The current repository is a **production-oriented intelligence kernel with M0–M8 implemented, M9–M17 contract-hardened, and M18 fail-closed GA gating implemented**.
 
 That distinction is deliberate. TADS does not claim external-provider integration, production deployment, legal approval, disaster recovery or enterprise GA merely because a type or test exists.
 
