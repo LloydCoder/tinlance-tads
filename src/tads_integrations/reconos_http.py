@@ -141,8 +141,10 @@ class ReconOSHttpAdapter:
             raise ReconOSAdapterError("ReconOS response facts must be an array")
         facts: list[tuple[str, str]] = []
         for fact in raw_facts:
-            if not isinstance(fact, dict) or not isinstance(fact.get("key"), str) or not isinstance(
-                fact.get("value"), str
+            if (
+                not isinstance(fact, dict)
+                or not isinstance(fact.get("key"), str)
+                or not isinstance(fact.get("value"), str)
             ):
                 raise ReconOSAdapterError("ReconOS facts must contain string key/value objects")
             facts.append((fact["key"], fact["value"]))
