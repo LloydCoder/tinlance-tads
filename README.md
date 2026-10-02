@@ -162,8 +162,8 @@ Engagement execution. TADS can publish a versioned, evidence-backed opportunity 
 | M6 | ✅ Complete | Explainable, evidence-preserving account-state derivation |
 | M7 | ✅ Complete | Deterministic ICP/opportunity scoring and recommendations |
 | M8 | ✅ Complete | Governed agent specifications; execution remains Agent Platform-owned |
-| M9 | 🚧 Contract-complete | ReconOS request/result contract and evidence-backed persistence |
-| M10 | 🚧 Contract-complete | FadeReach intelligence handoff and normalized evidence lineage |
+| M9 | 🚧 Adapter-complete | Authenticated fail-closed ReconOS adapter; external capability verification remains |
+| M10 | 🚧 Adapter-complete | Authenticated fail-closed FadeReach handoff adapter; external capability verification remains |
 | M11 | 🚧 Contract-complete | Append-only outcome/evaluation and calibration primitives |
 | M12 | 🚧 Contract-complete | UI-neutral account-intelligence projection contract |
 | M13 | 🚧 Contract-complete | Runtime readiness contract |
@@ -355,6 +355,7 @@ GitHub Actions uses least-privilege repository permissions, immutable commit-SHA
 | `docs/architecture/README.md` | System architecture and ownership |
 | `docs/architecture/data-model.md` | Canonical semantic data model |
 | `docs/architecture/integration-boundaries.md` | Agent Platform / ReconOS / FadeReach boundaries |
+| `docs/architecture/provider-capability-contracts.md` | External provider schemas, authentication and verification gates |
 | `docs/architecture/migration-baseline.md` | Persistence and migration invariants |
 | `docs/data-source-policy.md` | Source authorization and collection policy |
 | `docs/security/threat-model.md` | Threats, trust boundaries and required controls |
