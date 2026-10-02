@@ -1,6 +1,7 @@
 """M11 feedback contracts: outcomes are append-only and never rewrite history."""
 
 from dataclasses import dataclass
+from datetime import datetime
 
 
 def _rate(value: float, name: str) -> float:
@@ -84,9 +85,7 @@ class TemporalEvaluation:
         _rate(self.predicted_confidence, "predicted_confidence")
 
     @staticmethod
-    def _parse_timestamp(value: str):
-        from datetime import datetime
-
+    def _parse_timestamp(value: str) -> datetime:
         normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
         parsed = datetime.fromisoformat(normalized)
         if parsed.tzinfo is None:
