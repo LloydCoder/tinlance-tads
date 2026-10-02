@@ -23,7 +23,10 @@ class GovernanceRecord:
     status: str
     reviewed_at: str
     evidence_ref: str
+    review_interval_days: int = 90
 
     def __post_init__(self) -> None:
         if not all((self.control_id, self.owner, self.status, self.reviewed_at, self.evidence_ref)):
             raise ValueError("governance records require owner, status and evidence")
+        if self.review_interval_days <= 0:
+            raise ValueError("review_interval_days must be positive")
