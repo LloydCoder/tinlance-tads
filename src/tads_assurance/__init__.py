@@ -3,7 +3,7 @@
 from .feedback import CalibrationRecord, OutcomeRecord, PrecisionRecall, TemporalEvaluation
 from .governance import GovernanceRecord, RetentionPolicy
 from .reliability import RetryPolicy
-from .security import SecurityPolicy
+from .security import PrivacyPolicy, SecurityPolicy
 from .validation import E2EStage, E2EValidation, EnterpriseGate, Readiness
 
 __all__ = [
@@ -14,6 +14,7 @@ __all__ = [
     "GovernanceRecord",
     "OutcomeRecord",
     "PrecisionRecall",
+    "PrivacyPolicy",
     "Readiness",
     "RetentionPolicy",
     "RetryPolicy",
