@@ -27,7 +27,9 @@ class AccountIntelligenceView:
             raise ValueError("console intelligence views require evidence")
         if not self.score_components:
             raise ValueError("console intelligence views require score decomposition")
-        if any(not name.strip() or not 0.0 <= value <= 1.0 for name, value in self.score_components):
+        if any(
+            not name.strip() or not 0.0 <= value <= 1.0 for name, value in self.score_components
+        ):
             raise ValueError("score components must contain bounded named values")
         if len({name for name, _ in self.score_components}) != len(self.score_components):
             raise ValueError("score component names must be unique")
