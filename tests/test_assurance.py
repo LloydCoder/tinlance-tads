@@ -3,6 +3,7 @@ import pytest
 from tads_assurance import (
     CalibrationRecord,
     E2EStage,
+    E2ETrace,
     E2EValidation,
     EnterpriseGate,
     GovernanceRecord,
@@ -50,5 +51,7 @@ def test_reliability_security_and_governance_contracts() -> None:
 def test_e2e_and_enterprise_gate() -> None:
     e2e = E2EValidation(frozenset(E2EStage))
     e2e.validate()
+    trace = E2ETrace(tuple(E2EStage), ("ev-e2e",))
+    trace.validate()
     gate = EnterpriseGate(True, True, True, True, True, True, True)
     assert gate.readiness is Readiness.READY
