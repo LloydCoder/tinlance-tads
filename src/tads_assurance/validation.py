@@ -47,6 +47,15 @@ class EnterpriseGate:
     e2e_validated: bool
     rollback_tested: bool
     governance_reviewed: bool
+    provider_contracts_verified: bool = False
+    production_deployed: bool = False
+    backup_restore_verified: bool = False
+    observability_verified: bool = False
+    adversarial_validated: bool = False
+    load_tested: bool = False
+    disaster_recovery_tested: bool = False
+    privacy_reviewed: bool = False
+    supply_chain_verified: bool = False
 
     @property
     def readiness(self) -> Readiness:
@@ -61,6 +70,15 @@ class EnterpriseGate:
                     self.e2e_validated,
                     self.rollback_tested,
                     self.governance_reviewed,
+                    self.provider_contracts_verified,
+                    self.production_deployed,
+                    self.backup_restore_verified,
+                    self.observability_verified,
+                    self.adversarial_validated,
+                    self.load_tested,
+                    self.disaster_recovery_tested,
+                    self.privacy_reviewed,
+                    self.supply_chain_verified,
                 )
             )
             else Readiness.BLOCKED
