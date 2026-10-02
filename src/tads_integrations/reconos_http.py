@@ -19,11 +19,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
+from .errors import IntegrationAdapterError
 from .models import EnrichmentRequest, EnrichmentResult
 
-
-class ReconOSAdapterError(RuntimeError):
-    """Raised when the ReconOS boundary cannot safely produce a validated result."""
+ReconOSAdapterError = IntegrationAdapterError
 
 
 class _RejectRedirects(HTTPRedirectHandler):
