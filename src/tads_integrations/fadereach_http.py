@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from http.client import HTTPMessage
 from typing import IO
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
@@ -24,7 +25,7 @@ class _RejectRedirects(HTTPRedirectHandler):
         fp: IO[bytes],
         code: int,
         msg: str,
-        headers: object,
+        headers: HTTPMessage,
         newurl: str,
     ) -> Request | None:
         raise IntegrationAdapterError("FadeReach redirects are forbidden")
