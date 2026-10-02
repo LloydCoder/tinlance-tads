@@ -25,3 +25,19 @@ class SecurityPolicy:
         )
         if not all(controls):
             raise ValueError("all mandatory TADS security controls must be enabled")
+
+
+@dataclass(frozen=True, slots=True)
+class PrivacyPolicy:
+    personal_data_allowed: bool = False
+    retention_days: int = 365
+    deletion_requires_audit: bool = True
+    sensitive_data_requires_explicit_purpose: bool = True
+
+    def validate(self) -> None:
+        if self.retention_days <= 0:
+            raise ValueError("retention_days must be positive")
+        if not self.deletion_requires_audit:
+            raise ValueError("privacy deletion must remain auditable")
+        if not self.sensitive_data_requires_explicit_purpose:
+            raise ValueError("sensitive-data purpose checks are mandatory")
