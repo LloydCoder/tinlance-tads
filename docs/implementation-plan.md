@@ -39,15 +39,18 @@ Remaining environment gate: verify the actual FadeReach service against `docs/ar
 
 ## M11 — Feedback & Learning
 
-**Status: CONTRACT-COMPLETE.**
+**Status: EVALUATION-COMPLETE; OPERATIONAL EVALUATION GATE REMAINS.**
 
 Delivered:
-- append-only outcome model
+- append-only tenant-scoped evaluation outcome persistence
+- idempotent outcome ingestion
 - precision/recall primitive
 - confidence calibration primitive
-- explicit separation of decision-time state from later outcome data
+- temporal prediction/label ordering invariant
+- as-of evaluation eligibility to prevent future-label leakage
+- PostgreSQL RLS and append-only regression coverage
 
-Production gate: outcome ingestion, calibration corpus, temporal leakage tests and monitored evaluation.
+Production gate: representative outcome corpus, monitored calibration, drift/error monitoring and production evaluation telemetry.
 
 ## M12 — Console
 

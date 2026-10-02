@@ -164,7 +164,7 @@ Engagement execution. TADS can publish a versioned, evidence-backed opportunity 
 | M8 | ✅ Complete | Governed agent specifications; execution remains Agent Platform-owned |
 | M9 | 🚧 Adapter-complete | Authenticated fail-closed ReconOS adapter; external capability verification remains |
 | M10 | 🚧 Adapter-complete | Authenticated fail-closed FadeReach handoff adapter; external capability verification remains |
-| M11 | 🚧 Contract-complete | Append-only outcome/evaluation and calibration primitives |
+| M11 | 🚧 Evaluation-complete | Immutable outcome ingestion, temporal leakage controls and evaluation primitives; operational corpus/monitoring remains |
 | M12 | 🚧 Contract-complete | UI-neutral account-intelligence projection contract |
 | M13 | 🚧 Contract-complete | Runtime readiness contract |
 | M14 | 🚧 Contract-complete | Fail-closed security/privacy contract |
