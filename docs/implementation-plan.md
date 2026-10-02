@@ -54,9 +54,11 @@ Production gate: representative outcome corpus, monitored calibration, drift/err
 
 ## M12 — Console
 
-**Status: CONTRACT-COMPLETE.**
+**Status: PROJECTION-COMPLETE; UI/DEPLOYMENT GATE REMAINS.**
 
-The domain contract is ready for a separate console surface exposing evidence, timeline, why-now, score decomposition, recommendation rationale and audit history. UI implementation is intentionally separate from the intelligence kernel.
+The versioned console projection now requires evidence, explicit score decomposition, unknowns and optional audit references and exposes a bounded public serialization surface. UI implementation remains intentionally separate from the intelligence kernel.
+
+Production gate: authenticated UI, tenant-aware authorization, audit-history integration, accessibility, browser security controls and production deployment verification.
 
 ## M13 — Productionization
 
