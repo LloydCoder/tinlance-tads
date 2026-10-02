@@ -92,7 +92,9 @@ class FadeReachHttpAdapter:
                     )
                 content_length = response.headers.get("Content-Length")
                 if content_length is not None and int(content_length) > self.max_response_bytes:
-                    raise IntegrationAdapterError("FadeReach response exceeds configured byte budget")
+                    raise IntegrationAdapterError(
+                        "FadeReach response exceeds configured byte budget"
+                    )
                 raw = response.read(self.max_response_bytes + 1)
         except HTTPError as exc:
             raise IntegrationAdapterError(
@@ -112,7 +114,9 @@ class FadeReachHttpAdapter:
         response_schema = document.get("schema_version")
         response_id = document.get("handoff_id")
         if response_schema != handoff.schema_version:
-            raise IntegrationAdapterError("FadeReach response schema_version does not match handoff")
+            raise IntegrationAdapterError(
+                "FadeReach response schema_version does not match handoff"
+            )
         if not isinstance(response_id, str) or not response_id.strip():
             raise IntegrationAdapterError("FadeReach response requires a handoff_id")
         return response_id
