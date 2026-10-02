@@ -63,3 +63,40 @@ class CalibrationRecord:
     @property
     def absolute_error(self) -> float:
         return abs(self.predicted_confidence - self.observed_success_rate)
+
+
+@dataclass(frozen=True, slots=True)
+class TemporalEvaluation:
+    """A prediction/label pair whose evaluation cannot use future information."""
+
+    prediction_at: str
+    label_at: str
+    predicted_confidence: float
+    observed_success: bool
+
+    def __post_init__(self) -> None:
+        if not self.prediction_at or not self.label_at:
+            raise ValueError("prediction_at and label_at are required")
+        prediction = self._parse_timestamp(self.prediction_at)
+        label = self._parse_timestamp(self.label_at)
+        if label < prediction:
+            raise ValueError("label_at cannot precede prediction_at")
+        _rate(self.predicted_confidence, "predicted_confidence")
+
+    @staticmethod
+    def _parse_timestamp(value: str):
+        from datetime import datetime
+
+        normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
+        parsed = datetime.fromisoformat(normalized)
+        if parsed.tzinfo is None:
+            raise ValueError("evaluation timestamps must be timezone-aware")
+        return parsed
+
+    def available_at(self, as_of: str) -> bool:
+        return self._parse_timestamp(self.label_at) <= self._parse_timestamp(as_of)
+
+    @property
+    def absolute_error(self) -> float:
+        observed = 1.0 if self.observed_success else 0.0
+        return abs(self.predicted_confidence - observed)
