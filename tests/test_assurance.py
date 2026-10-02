@@ -6,10 +6,12 @@ from tads_assurance import (
     E2EValidation,
     EnterpriseGate,
     GovernanceRecord,
+    IdempotencyPolicy,
     OutcomeRecord,
     PrecisionRecall,
     PrivacyPolicy,
     Readiness,
+    ReliabilityPolicy,
     RetentionPolicy,
     RetryPolicy,
     SecurityPolicy,
@@ -29,6 +31,10 @@ def test_feedback_metrics_and_outcome_are_deterministic() -> None:
 def test_reliability_security_and_governance_contracts() -> None:
     retry = RetryPolicy(4, 2.0, 10.0)
     assert retry.delay(1) == 2.0
+    reliability = ReliabilityPolicy()
+    reliability.validate()
+    idempotency = IdempotencyPolicy()
+    idempotency.validate("handoff-1")
     assert retry.delay(4) == 10.0
     assert retry.should_retry(3) is True
     policy = SecurityPolicy()
