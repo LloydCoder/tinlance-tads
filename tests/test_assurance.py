@@ -8,6 +8,7 @@ from tads_assurance import (
     GovernanceRecord,
     OutcomeRecord,
     PrecisionRecall,
+    PrivacyPolicy,
     Readiness,
     RetentionPolicy,
     RetryPolicy,
@@ -32,6 +33,8 @@ def test_reliability_security_and_governance_contracts() -> None:
     assert retry.should_retry(3) is True
     policy = SecurityPolicy()
     policy.validate()
+    privacy = PrivacyPolicy()
+    privacy.validate()
     retention = RetentionPolicy(365, 90, 730)
     record = GovernanceRecord("M16-ACCESS", "security", "approved", "2026-09-29", "audit-1")
     assert retention.personal_data_days < retention.evidence_days
