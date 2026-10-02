@@ -8,17 +8,26 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from typing import IO
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
+from .errors import IntegrationAdapterError
 from .models import OpportunityHandoff
-from .reconos_http import ReconOSAdapterError
 
 
 class _RejectRedirects(HTTPRedirectHandler):
-    def redirect_request(self, *args: object, **kwargs: object) -> None:
-        raise ReconOSAdapterError("FadeReach redirects are forbidden")
+    def redirect_request(
+        self,
+        req: Request,
+        fp: IO[bytes],
+        code: int,
+        msg: str,
+        headers: object,
+        newurl: str,
+    ) -> Request | None:
+        raise IntegrationAdapterError("FadeReach redirects are forbidden")
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,7 +56,7 @@ class FadeReachHttpAdapter:
 
     def publish(self, handoff: OpportunityHandoff) -> str:
         if handoff.expires_at is None:
-            raise ReconOSAdapterError("FadeReach handoff requires an expiry")
+            raise IntegrationAdapterError("FadeReach handoff requires an expiry")
         payload = {
             "schema_version": handoff.schema_version,
             "handoff_id": handoff.opportunity_id,
