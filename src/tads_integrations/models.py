@@ -96,6 +96,8 @@ class OpportunityHandoff:
     timing: str | None
     expires_at: datetime | None = None
     idempotency_key: str | None = None
+    schema_version: str = "tads.fadereach.v1"
+    audit_correlation_id: str | None = None
 
     def __post_init__(self) -> None:
         if not self.opportunity_id or not self.account_id or not self.hypothesis.strip():
@@ -105,3 +107,7 @@ class OpportunityHandoff:
         _identifiers(self.evidence_ids, "handoff evidence")
         if self.idempotency_key is None or not self.idempotency_key.strip():
             raise ValueError("handoff requires an idempotency key")
+        if not self.schema_version.strip():
+            raise ValueError("schema_version is required")
+        if self.audit_correlation_id is not None and not self.audit_correlation_id.strip():
+            raise ValueError("audit_correlation_id cannot be blank")
