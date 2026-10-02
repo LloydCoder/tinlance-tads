@@ -10,7 +10,7 @@ A milestone is complete only when implementation, tests, security controls, docu
 
 ## M9 — ReconOS integration
 
-**Status: CONTRACT-COMPLETE.**
+**Status: ADAPTER-COMPLETE; EXTERNAL-VERIFICATION GATE REMAINS.**
 
 Delivered:
 - purpose-limited `EnrichmentRequest`
@@ -21,11 +21,11 @@ Delivered:
 - cross-tenant parent checks
 - no assumed external ReconOS API
 
-Remaining environment gate: implement and verify the actual ReconOS adapter only after its authenticated capability contract, scopes, rate limits, provenance and failure semantics are documented.
+Remaining environment gate: verify the actual ReconOS service against `docs/architecture/provider-capability-contracts.md`, including authenticated capability, scopes, schema/version, rate limits, provenance and failure semantics.
 
 ## M10 — FadeReach integration
 
-**Status: CONTRACT-COMPLETE.**
+**Status: ADAPTER-COMPLETE; EXTERNAL-VERIFICATION GATE REMAINS.**
 
 Delivered:
 - bounded `OpportunityHandoff`
@@ -35,7 +35,7 @@ Delivered:
 - explicit no-outreach invariant
 - provider-neutral port
 
-Remaining environment gate: verify the actual FadeReach capability contract before connecting a provider.
+Remaining environment gate: verify the actual FadeReach service against `docs/architecture/provider-capability-contracts.md`, including authenticated capability, scopes, schema/version, idempotency, expiry, rate limits and failure semantics.
 
 ## M11 — Feedback & Learning
 
