@@ -165,7 +165,7 @@ Engagement execution. TADS can publish a versioned, evidence-backed opportunity 
 | M9 | 🚧 Adapter-complete | Authenticated fail-closed ReconOS adapter; external capability verification remains |
 | M10 | 🚧 Adapter-complete | Authenticated fail-closed FadeReach handoff adapter; external capability verification remains |
 | M11 | 🚧 Evaluation-complete | Immutable outcome ingestion, temporal leakage controls and evaluation primitives; operational corpus/monitoring remains |
-| M12 | 🚧 Contract-complete | UI-neutral account-intelligence projection contract |
+| M12 | 🚧 Projection-complete | Versioned evidence-first console projection; authenticated UI/deployment remains |
 | M13 | 🚧 Contract-complete | Runtime readiness contract |
 | M14 | 🚧 Contract-complete | Fail-closed security/privacy contract |
 | M15 | 🚧 Contract-complete | Bounded deterministic retry contract |
