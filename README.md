@@ -154,25 +154,25 @@ Engagement execution. TADS can publish a versioned, evidence-backed opportunity 
 
 | Milestone | Current state | What exists |
 |---|---|---|
-| M0 | ✅ Complete | Architecture, governance, boundaries and typed domain contracts |
-| M1 | ✅ Complete | PostgreSQL evidence-first kernel, RLS, tenant isolation and immutable evidence |
-| M2 | ✅ Complete | Controlled ingestion, source policy and provenance |
-| M3 | ✅ Complete | Conservative entity resolution with ambiguity preservation |
-| M4 | ✅ Complete | Deterministic signal taxonomy/detection and evidence lineage |
-| M5 | ✅ Complete | Temporal/correlation feature kernel with evidence propagation |
-| M6 | ✅ Complete | Explainable, evidence-preserving account-state derivation |
-| M7 | ✅ Complete | Deterministic ICP/opportunity scoring and recommendations |
-| M8 | ✅ Complete | Governed agent specifications; execution remains Agent Platform-owned |
+| M0–M8 | ✅ Complete | Intelligence foundation, evidence-first database, ingestion, resolution, signals, temporal/account intelligence, opportunity reasoning and governed agent specifications |
 | M9 | 🚧 Adapter-complete | Authenticated fail-closed ReconOS adapter; external capability verification remains |
 | M10 | 🚧 Adapter-complete | Authenticated fail-closed FadeReach handoff adapter; external capability verification remains |
-| M11 | 🚧 Evaluation-complete | Immutable outcome ingestion, temporal leakage controls and evaluation primitives; operational corpus/monitoring remains |
+| M11 | 🚧 Evaluation-complete | Immutable outcomes, temporal leakage controls and evaluation primitives; operational corpus/monitoring remains |
 | M12 | 🚧 Projection-complete | Versioned evidence-first console projection; authenticated UI/deployment remains |
-| M13 | 🚧 Contract-hardened | Fail-closed production configuration and runtime readiness; deployment evidence remains |
-| M14 | 🚧 Contract-hardened | Fail-closed security/privacy controls; enforcement/review evidence remains |
-| M15 | 🚧 Contract-hardened | Retry, bounded capacity and idempotency contracts; load/DR evidence remains |
-| M16 | 🚧 Contract-hardened | Governance ownership/review and retention contracts; compliance evidence remains |
-| M17 | 🚧 Contract-hardened | Ordered evidence-backed E2E trace; adversarial/provider execution remains |
-| M18 | 🚧 Gate-implemented | Fail-closed GA gate now requires explicit production evidence across all enterprise controls |
+| M13 | 🚧 Contract-hardened | Production configuration/readiness; deployment evidence remains |
+| M14 | 🚧 Contract-hardened | Security/privacy contracts; enforcement/review evidence remains |
+| M15 | 🚧 Contract-hardened | Reliability/idempotency contracts; load/DR evidence remains |
+| M16 | 🚧 Contract-hardened | Governance/retention contracts; compliance evidence remains |
+| M17 | 🚧 Contract-hardened | Ordered E2E trace; adversarial/provider execution remains |
+| M18 | 🚧 Gate-implemented | Fail-closed Enterprise GA gate |
+| X1 | ✅ Implementation-complete | Source lifecycle, health and fail-closed eligibility |
+| X2 | ✅ Implementation-complete | Independent evidence/data-quality trust dimensions |
+| X3 | ✅ Implementation-complete | Signal lifecycle and drift primitives |
+| X4 | ✅ Implementation-complete | Evidence-backed account state-change detection |
+| X5 | ✅ Implementation-complete | Evidence/intelligence graph abstraction |
+| X6 | ✅ Implementation-complete | Bounded buying-window lifecycle |
+| X7 | ✅ Implementation-complete | Tenant-scoped intelligence watches and material alerts |
+| X8 | ✅ Implementation-complete | Detection/ranking/calibration/drift evaluation platform |
 
 **Contract-complete is intentionally not called production-deployed.** Real ReconOS/FadeReach adapters, production infrastructure, network enforcement, backup/restore evidence, load testing, disaster recovery, legal/privacy review, operational telemetry and other environment-dependent controls remain release gates.
 
