@@ -5,7 +5,7 @@ fetch data and therefore does not duplicate tads_ingest.
 """
 
 from dataclasses import dataclass, replace
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 
 from tads_contracts.source import SourceContract
@@ -41,9 +41,10 @@ class SourceRecord:
         for value in (self.last_success_at, self.last_failure_at):
             if value is not None and value.tzinfo is None:
                 raise ValueError("source health timestamps must be timezone-aware")
-        if self.lifecycle is SourceLifecycle.ACTIVE:
-            if not self.contract.enabled or not self.contract.legal_reviewed:
-                raise ValueError("an active source must be enabled and legally reviewed")
+        if self.lifecycle is SourceLifecycle.ACTIVE and (
+            not self.contract.enabled or not self.contract.legal_reviewed
+        ):
+            raise ValueError("an active source must be enabled and legally reviewed")
         if self.lifecycle is SourceLifecycle.RETIRED and self.contract.enabled:
             raise ValueError("a retired source cannot remain enabled")
 
@@ -121,7 +122,7 @@ class SourceRegistry:
 
     @staticmethod
     def _timestamp(value: datetime | None) -> datetime:
-        timestamp = value or datetime.now(timezone.utc)
+        timestamp = value or datetime.now(UTC)
         if timestamp.tzinfo is None:
             raise ValueError("source health timestamp must be timezone-aware")
         return timestamp
