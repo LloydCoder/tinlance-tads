@@ -4,148 +4,85 @@
 
 A milestone is complete only when implementation, tests, security controls, documentation, CI and post-merge main validation agree. A contract is not represented as a deployed capability.
 
-## M0–M8 — Intelligence foundation
+## M0–M18
 
-**Status: COMPLETE.** The repository contains the architecture/governance foundation, evidence-first PostgreSQL kernel, controlled ingestion, deterministic entity resolution, signal engine, temporal correlation, account intelligence, ICP/opportunity scoring and governed agent specifications.
+The original M0–M18 intelligence and enterprise-assurance sequence is implemented/hardened. M9–M18 retain environment-dependent operational gates; M18 remains fail-closed until those gates have real evidence.
 
-## M9 — ReconOS integration
+## X1 — Source Control Plane
 
-**Status: ADAPTER-COMPLETE; EXTERNAL-VERIFICATION GATE REMAINS.**
-
-Delivered:
-- purpose-limited `EnrichmentRequest`
-- evidence-required `EnrichmentResult`
-- provider/version attribution
-- tenant-scoped enrichment persistence
-- normalized evidence-link table
-- cross-tenant parent checks
-- no assumed external ReconOS API
-
-Remaining environment gate: verify the actual ReconOS service against `docs/architecture/provider-capability-contracts.md`, including authenticated capability, scopes, schema/version, rate limits, provenance and failure semantics.
-
-## M10 — FadeReach integration
-
-**Status: ADAPTER-COMPLETE; EXTERNAL-VERIFICATION GATE REMAINS.**
+**Status: IMPLEMENTATION-COMPLETE; OPERATIONAL PERSISTENCE/ONBOARDING GATE REMAINS.**
 
 Delivered:
-- bounded `OpportunityHandoff`
-- evidence-required handoff
-- tenant-scoped immutable persistence boundary
-- normalized evidence-link table
-- explicit no-outreach invariant
-- provider-neutral port
+- fail-closed source registration;
+- lifecycle states: registered, active, suspended and retired;
+- activation requires enabled contract plus legal/provider review;
+- retirement disables the source contract and is terminal;
+- independent source health state;
+- timezone-aware health timestamps;
+- connector-version attribution;
+- deterministic ingestion-allowed decision;
+- duplicate-registration protection;
+- unit regression coverage.
 
-Remaining environment gate: verify the actual FadeReach service against `docs/architecture/provider-capability-contracts.md`, including authenticated capability, scopes, schema/version, idempotency, expiry, rate limits and failure semantics.
+Boundary:
+- tads_sources governs source eligibility;
+- tads_ingest fetches and normalizes;
+- tads_contracts owns the stable source policy contract;
+- tads_db remains the eventual durable source-registry owner.
 
-## M11 — Feedback & Learning
+Operational gate:
+- persist the registry in PostgreSQL;
+- enforce tenant/vendor/source ownership;
+- connect source onboarding approvals;
+- verify production rate-limit and terms controls.
 
-**Status: EVALUATION-COMPLETE; OPERATIONAL EVALUATION GATE REMAINS.**
+## X2 — Data Quality & Evidence Trust
 
-Delivered:
-- append-only tenant-scoped evaluation outcome persistence
-- idempotent outcome ingestion
-- precision/recall primitive
-- confidence calibration primitive
-- temporal prediction/label ordering invariant
-- as-of evaluation eligibility to prevent future-label leakage
-- PostgreSQL RLS and append-only regression coverage
+**Status: PLANNED.**
 
-Production gate: representative outcome corpus, monitored calibration, drift/error monitoring and production evaluation telemetry.
+Add independent quality dimensions for freshness, completeness, consistency, source reliability, identity confidence, temporal validity, corroboration and contradiction. Quality must remain separate from intelligence/opportunity scores.
 
-## M12 — Console
+## X3 — Signal Operations & Drift
 
-**Status: PROJECTION-COMPLETE; UI/DEPLOYMENT GATE REMAINS.**
+**Status: PLANNED.**
 
-The versioned console projection now requires evidence, explicit score decomposition, unknowns and optional audit references and exposes a bounded public serialization surface. UI implementation remains intentionally separate from the intelligence kernel.
+Add signal lifecycle, source-specific reliability, false-positive/false-negative monitoring, taxonomy drift and detection drift. Connect production outcomes to signal evaluation without mutating historical evidence.
 
-Production gate: authenticated UI, tenant-aware authorization, audit-history integration, accessibility, browser security controls and production deployment verification.
+## X4 — Change Intelligence
 
-## M13 — Productionization
+**Status: PLANNED.**
 
-**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
+Add deterministic account-state transitions, emergence, acceleration, deceleration, reversal, disappearance and sustained-change semantics over the existing temporal and account layers.
 
-Delivered:
-- explicit runtime readiness model
-- fail-closed production configuration
-- independent database, migration, ingestion and integration health dimensions
+## X5 — Intelligence Graph
 
-Production gate:
-- API/worker runtime
-- object storage
-- telemetry
-- deployment manifests
-- secret manager
-- backup/restore
-- migration rollback
-- quotas/rate limits
-- resource budgets
+**Status: PLANNED.**
 
-## M14 — Security & Privacy
+Add a graph abstraction over PostgreSQL for evidence, events, entities, capabilities, signals and opportunities. Do not introduce a graph database until measured workload requires it.
 
-**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
+## X6 — Buying Windows
 
-Delivered fail-closed security policy covering trusted tenant context, hostile external content, untrusted model output, restricted egress, secret redaction, personal-data minimization and auditability.
+**Status: PLANNED.**
 
-Production gate:
-- network enforcement
-- authorization verification
-- privacy/legal review
-- deletion/retention automation
-- SSRF/resource-exhaustion corpus
-- prompt-injection fixtures
-- supply-chain/SBOM/provenance controls
+Add bounded buying-window lifecycle semantics derived from evidence-backed combinations of account state, signals and changes. TADS must never represent a buying window as certainty of purchase intent.
 
-## M15 — Reliability & Scale
+## X7 — Intelligence Subscriptions & Alerts
 
-**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
+**Status: PLANNED.**
 
-Delivered bounded exponential retry policy, bounded capacity and idempotency policies.
+Add account/segment/signal/opportunity watches and material-change events. Downstream delivery remains outside TADS's outreach boundary.
 
-Production gate:
-- idempotency keys at every retryable boundary
-- queue/DLQ semantics
-- backpressure
-- circuit breakers
-- load/capacity tests
-- RPO/RTO and disaster-recovery exercises
+## X8 — Evaluation & Experimentation
 
-## M16 — Governance & Compliance
+**Status: PLANNED.**
 
-**Status: CONTRACT-HARDENED; OPERATIONAL GATE REMAINS.**
+Elevate M11 evaluation primitives into an operational evaluation platform covering detection, ranking, temporal leakage, calibration, drift and production monitoring.
 
-Delivered governance record, review cadence and retention contracts.
+## Enterprise GA gates
 
-Production gate:
-- control owners and review cadence
-- vendor/source governance
-- access reviews
-- incident/change management
-- data residency decisions
-- documented legal/privacy assessments
+After the extension sequence, the existing M18 operational evidence gates remain authoritative: provider contracts verified; production deployed; backup/restore verified; observability verified; adversarial validation complete; load testing complete; disaster recovery tested; privacy review complete; supply chain verified.
 
-## M17 — End-to-end adversarial validation
-
-**Status: CONTRACT-HARDENED; EXECUTABLE ADVERSARIAL GATE REMAINS.**
-
-The canonical chain is a closed validation set:
-
-`source → observation → event → entity → account → signal → temporal → account state → opportunity → ReconOS → FadeReach → outcome → feedback`
-
-Production gate: executable E2E fixtures, poisoning/prompt-injection/tenant-escape tests, failure injection and reproducible audit artifacts.
-
-## M18 — Enterprise GA
-
-**Status: FAIL-CLOSED ENTERPRISE GATE IMPLEMENTED; GA EVIDENCE REMAINS.**
-
-The enterprise gate now additionally requires provider verification, production deployment, backup/restore, observability, adversarial validation, load testing, disaster recovery, privacy review and supply-chain verification.
-
-**M18 is not declared deployed GA until those environment-dependent gates have real evidence.**
-
-## Persistence hardening after M9/M10
-
-Migration 0010 hardens the integration boundary and historical intelligence model. It makes historical artifacts append-only for the application role, enforces exact equality between portable JSON evidence snapshots and normalized evidence-link tables with deferred PostgreSQL constraint triggers, and keeps lifecycle tables explicitly mutable.
-
-This hardening is part of the contract layer; production still requires adversarial validation of role ownership, deployment privileges and operational backup/restore behavior.
+These are evidence gates, not additional architecture modules.
 
 ## Cross-cutting controls
 

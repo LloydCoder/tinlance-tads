@@ -1,29 +1,33 @@
-# TADS M11–M18 Completion Contract
+# TADS Remaining Phases
 
-The remaining milestones are implemented as explicit, testable contracts before external runtime deployment. The repository now also hardens the M9/M10 persistence boundary with append-only historical records and deferred equality checks between portable evidence snapshots and normalized lineage. This prevents documentation from claiming production capabilities that require infrastructure or verified external-provider APIs.
+The M0–M18 implementation sequence is complete/hardened. The project now has a controlled X1–X8 extension sequence plus the existing M18 operational evidence gates.
 
-## M11 — Feedback & Learning
-Outcome records are append-only inputs. Precision, recall and confidence calibration are deterministic evaluation primitives. Historical scoring inputs are never mutated by future outcomes. Temporal evaluation rejects future-label leakage and supports as-of eligibility. Historical scoring inputs are never mutated by future outcomes.
+## X1 — Source Control Plane
+**Implementation-complete.** Source registration, lifecycle, health and fail-closed activation are implemented and tested. Durable PostgreSQL persistence and production source onboarding remain operational gates.
 
-## M12 — Console
-The console must consume the existing evidence lineage and expose account timeline, why-now, score decomposition, recommendation rationale and audit history. The domain contract is intentionally UI-neutral; presentation belongs to the future application surface.
+## X2 — Data Quality & Evidence Trust
+Add freshness, completeness, consistency, source reliability, identity confidence, temporal validity, corroboration and contradiction as independent quality dimensions.
 
-## M13 — Productionization
-Runtime health/readiness is explicit. Database, migrations, source ingestion and integrations are independent readiness signals. Deployment must add object storage, telemetry, backups, migrations/rollback and resource quotas before production activation.
+## X3 — Signal Operations & Drift
+Add signal lifecycle, source reliability, false-positive/false-negative monitoring and drift controls.
 
-## M14 — Security & Privacy
-The security policy contract requires trusted tenant context, hostile-content treatment, untrusted model output, restricted egress, secret redaction, personal-data minimization and auditability. These complement the existing PostgreSQL/RLS and controlled-ingestion controls.
+## X4 — Change Intelligence
+Add deterministic account-state transitions and material-change detection over the existing temporal kernel.
 
-## M15 — Reliability & Scale
-Retries are bounded and deterministic. Idempotency remains a domain requirement for source ingestion and derived persistence. Production workers must add queue semantics, dead-letter handling, backpressure, circuit breakers and load-tested capacity.
+## X5 — Intelligence Graph
+Add a PostgreSQL-backed graph abstraction for evidence and intelligence relationships. A dedicated graph database remains deferred until measured need exists.
 
-## M16 — Governance & Compliance
-Governance records bind a control owner, review state, timestamp and evidence. Retention policy prevents personal-data retention from exceeding the broader evidence window.
+## X6 — Buying Windows
+Add evidence-backed buying-window lifecycle semantics without converting them into claims of purchase intent.
 
-## M17 — E2E + Adversarial Validation
-The canonical E2E chain is represented as a closed set of stages. A validation run is incomplete if any stage is absent.
+## X7 — Intelligence Subscriptions & Alerts
+Add account, segment, signal and opportunity watches with materiality filtering. TADS does not become an outreach engine.
 
-## M18 — Enterprise GA
-The enterprise gate is fail-closed: CI, security, tenant isolation, documentation, E2E validation, rollback testing, governance, provider verification, production deployment, backup/restore, observability, adversarial validation, load testing, disaster recovery, privacy review and supply-chain verification must all have explicit evidence before readiness can become READY.
+## X8 — Evaluation & Experimentation
+Expand M11 into an operational evaluation platform for detection, ranking, temporal leakage, calibration and drift.
 
-These contracts are deliberately not a substitute for deployment infrastructure, verified ReconOS/FadeReach APIs, legal review, load testing or operational evidence. Those remain environment-dependent release gates.
+## Enterprise GA evidence
+
+After X8, M18 remains fail-closed until the following are evidenced: provider contracts verified; production deployment; backup/restore; observability; adversarial validation; load testing; disaster recovery; privacy review; and supply-chain verification.
+
+No documentation may represent an evidence gate as complete merely because a code contract exists.
