@@ -12,7 +12,7 @@ def contract(*, enabled: bool = False, legal_reviewed: bool = False) -> SourceCo
         source_id="greenhouse:example",
         provider="greenhouse",
         name="Example Greenhouse board",
-        source_class=SourceClass.JOBS,
+        source_class=SourceClass.PUBLIC_STRUCTURED,
         access_mechanism="documented_public_api",
         terms_reference="https://example.test/terms",
         permitted_fields=("title", "location"),
