@@ -84,9 +84,11 @@ class ChangeDetector:
         if not fields:
             return None
 
-        kind = ChangeKind.DISAPPEARANCE if all(
-            key not in current.attributes for key in fields
-        ) else ChangeKind.MATERIAL_CHANGE
+        kind = (
+            ChangeKind.DISAPPEARANCE
+            if all(key not in current.attributes for key in fields)
+            else ChangeKind.MATERIAL_CHANGE
+        )
         return StateChange(
             current.account_id,
             kind,
