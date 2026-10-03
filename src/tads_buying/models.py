@@ -42,6 +42,8 @@ class BuyingWindow:
             raise ValueError("transition timestamp must be timezone-aware")
         if at < self.opened_at:
             raise ValueError("transition cannot precede window opening")
+        if self.state is BuyingWindowState.INVALIDATED:
+            raise ValueError("invalidated buying windows are terminal")
         if state is BuyingWindowState.INVALIDATED:
             return replace(self, state=state)
         if at >= self.expires_at:
