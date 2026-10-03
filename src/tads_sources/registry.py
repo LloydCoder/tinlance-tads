@@ -7,6 +7,7 @@ fetch data and therefore does not duplicate tads_ingest.
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from enum import StrEnum
+from typing import Any
 
 from tads_contracts.source import SourceContract
 
@@ -114,7 +115,7 @@ class SourceRegistry:
         record = self.get(source_id)
         return record.lifecycle is SourceLifecycle.ACTIVE and record.contract.enabled
 
-    def _replace(self, current: SourceRecord, **changes: object) -> SourceRecord:
+    def _replace(self, current: SourceRecord, **changes: Any) -> SourceRecord:
         updated = replace(current, **changes)
         updated.validate()
         self._records[current.contract.source_id] = updated
