@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -63,7 +63,7 @@ def test_health_events_require_aware_timestamps() -> None:
     registry = SourceRegistry()
     registry.register(SourceRecord(contract()))
     healthy = registry.record_success(
-        "greenhouse:example", datetime(2026, 10, 3, tzinfo=timezone.utc)
+        "greenhouse:example", datetime(2026, 10, 3, tzinfo=UTC)
     )
     assert healthy.health is SourceHealth.HEALTHY
     assert healthy.last_success_at is not None
