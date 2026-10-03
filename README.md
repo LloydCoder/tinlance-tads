@@ -402,3 +402,21 @@ Proprietary — see [LICENSE](LICENSE).
 ## Tinlance
 
 TADS is part of the Tinlance engineering stack. Ownership and integration boundaries described in this repository are intentional architectural constraints.
+
+
+## Final extension roadmap
+
+X1–X8 are capability extensions to the completed M0–M18 implementation roadmap. They are separate from the Enterprise GA evidence gates.
+
+```text
+X1 Source Control
+→ X2 Data Quality
+→ X3 Signal Operations
+→ X4 Change Intelligence
+→ X5 Intelligence Graph
+→ X6 Buying Windows
+→ X7 Alerts
+→ X8 Evaluation Platform
+```
+
+X1 source control is implemented as a fail-closed boundary between source policy and ingestion. No new major module should be added without an evidence-backed architectural need.
