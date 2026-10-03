@@ -71,9 +71,12 @@ class SignalDrift:
     @property
     def detected(self) -> bool:
         self.validate()
-        return max(
-            self.false_positive_rate,
-            self.false_negative_rate,
-            self.source_reliability_delta,
-            self.taxonomy_change_rate,
-        ) >= self.threshold
+        return (
+            max(
+                self.false_positive_rate,
+                self.false_negative_rate,
+                self.source_reliability_delta,
+                self.taxonomy_change_rate,
+            )
+            >= self.threshold
+        )
