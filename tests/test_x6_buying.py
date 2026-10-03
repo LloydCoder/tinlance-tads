@@ -38,9 +38,7 @@ def test_invalidated_is_terminal_in_this_primitive() -> None:
     )
     assert invalidated.state is BuyingWindowState.INVALIDATED
     with pytest.raises(ValueError, match="terminal"):
-        invalidated.transition(
-            BuyingWindowState.ACTIVE, datetime(2026, 10, 5, 11, 0, tzinfo=UTC)
-        )
+        invalidated.transition(BuyingWindowState.ACTIVE, datetime(2026, 10, 5, 11, 0, tzinfo=UTC))
 
 
 def test_invalid_purchase_intent_claim_is_rejected() -> None:
