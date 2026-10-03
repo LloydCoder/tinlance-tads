@@ -26,13 +26,9 @@ def test_buying_window_is_not_purchase_intent() -> None:
 
 def test_window_can_progress_and_expire() -> None:
     item = window()
-    active = item.transition(
-        BuyingWindowState.ACTIVE, datetime(2026, 10, 4, 11, 0, tzinfo=UTC)
-    )
+    active = item.transition(BuyingWindowState.ACTIVE, datetime(2026, 10, 4, 11, 0, tzinfo=UTC))
     assert active.state is BuyingWindowState.ACTIVE
-    dormant = active.transition(
-        BuyingWindowState.ACTIVE, datetime(2026, 10, 11, 11, 0, tzinfo=UTC)
-    )
+    dormant = active.transition(BuyingWindowState.ACTIVE, datetime(2026, 10, 11, 11, 0, tzinfo=UTC))
     assert dormant.state is BuyingWindowState.DORMANT
 
 
