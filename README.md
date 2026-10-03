@@ -116,6 +116,7 @@ Every material derived artifact must remain reconstructable to its supporting ev
 
 ### TADS owns
 
+- source registry and source lifecycle governance;
 - source policy and source adapters;
 - immutable source snapshots and observations;
 - canonical events;
@@ -180,14 +181,22 @@ Engagement execution. TADS can publish a versioned, evidence-backed opportunity 
 ```text
 src/
 ├── tads_contracts/       # Stable domain, provenance, scoring, source and taxonomy contracts
+├── tads_sources/         # Source lifecycle, eligibility and health control plane
 ├── tads_ingest/          # Safe fetching, source adapters and ingestion orchestration
 ├── tads_resolution/      # Entity normalization and ambiguity-preserving resolution
+├── tads_quality/         # Evidence/data quality trust dimensions
 ├── tads_signals/         # Evidence-first deterministic signal detection
+├── tads_signalops/       # Signal lifecycle and drift controls
 ├── tads_temporal/        # Time-window and correlation features
+├── tads_change/          # Deterministic account state-change intelligence
 ├── tads_accounts/        # Explainable account-state derivation
+├── tads_graph/           # Evidence/intelligence graph abstraction
 ├── tads_opportunities/   # ICP and opportunity reasoning
+├── tads_buying/          # Evidence-backed buying-window lifecycle
 ├── tads_agents/          # Governed agent specifications; no runtime execution
 ├── tads_integrations/    # Canonical ReconOS/FadeReach contracts and ports
+├── tads_eval/            # Reproducible evaluation and experimentation
+├── tads_alerts/          # Intelligence subscriptions and material alerts
 ├── tads_assurance/       # M11–M18 security, reliability, governance and readiness contracts
 ├── tads_console/         # UI-neutral evidence-preserving console projection
 ├── tads_runtime/         # Runtime health/readiness contract
@@ -356,12 +365,21 @@ GitHub Actions uses least-privilege repository permissions, immutable commit-SHA
 | `docs/architecture/data-model.md` | Canonical semantic data model |
 | `docs/architecture/integration-boundaries.md` | Agent Platform / ReconOS / FadeReach boundaries |
 | `docs/architecture/provider-capability-contracts.md` | External provider schemas, authentication and verification gates |
+| `docs/architecture/source-control-plane.md` | Source lifecycle and eligibility control |
+| `docs/architecture/data-quality.md` | Evidence quality dimensions and eligibility |
+| `docs/architecture/signal-operations.md` | Signal lifecycle and drift |
+| `docs/architecture/change-intelligence.md` | Account state-change semantics |
+| `docs/architecture/intelligence-graph.md` | Evidence/intelligence graph abstraction |
+| `docs/architecture/buying-windows.md` | Bounded buying-window lifecycle |
+| `docs/architecture/alerts.md` | Intelligence watches and material alerts |
+| `docs/architecture/evaluation-platform.md` | Evaluation metrics and reproducibility |
 | `docs/architecture/migration-baseline.md` | Persistence and migration invariants |
 | `docs/data-source-policy.md` | Source authorization and collection policy |
 | `docs/security/threat-model.md` | Threats, trust boundaries and required controls |
 | `docs/security/ci-hardening.md` | CI supply-chain and permission controls |
 | `docs/implementation-plan.md` | Authoritative M0–M18 milestone plan |
-| `docs/remaining-phases.md` | M11–M18 completion and production gates |
+| `docs/remaining-phases.md` | X1–X8 completion and Enterprise GA evidence gates |
+| `docs/final-forensic-audit.md` | Final repository/code/documentation audit evidence |
 
 The implementation plan is authoritative for milestone status; the README is the developer-facing summary.
 
@@ -389,11 +407,11 @@ The modular-monolith shape remains the default until measured workload, isolatio
 
 ## Project maturity
 
-The current repository is a **production-oriented intelligence kernel with M0–M8 implemented, M9–M17 contract-hardened, and M18 fail-closed GA gating implemented**.
+The repository now contains the complete **M0–M18 implementation/hardening sequence plus X1–X8 capability extensions**. X1–X8 are implementation-complete and covered by the same CI quality bar. The remaining work is environment-dependent Enterprise GA evidence, not another speculative software roadmap.
 
-That distinction is deliberate. TADS does not claim external-provider integration, production deployment, legal approval, disaster recovery or enterprise GA merely because a type or test exists.
+That distinction is deliberate. TADS does not claim external-provider integration, production deployment, legal approval, disaster recovery or Enterprise GA merely because a type or test exists.
 
-The next implementation layer is therefore environment-specific productionization: connect verified provider capabilities, deploy the runtime, enforce network and identity controls, execute adversarial E2E tests, validate recovery/scale, and collect the evidence required by the M18 gate.
+The remaining operational work is to verify real ReconOS/FadeReach capabilities, deploy production infrastructure, prove observability and recovery, execute adversarial/load/DR exercises, complete privacy/compliance review and establish supply-chain evidence. The M18 gate remains fail-closed until those facts are proven.
 
 ## License
 
