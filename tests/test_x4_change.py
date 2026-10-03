@@ -41,18 +41,13 @@ def test_disappearance_is_distinguished() -> None:
 
 
 def test_identical_state_has_no_change() -> None:
-    assert (
-        ChangeDetector.compare(
-            snapshot({"hiring": True}, 0), snapshot({"hiring": True}, 1)
-        )
-        is None
-    )
+    assert ChangeDetector.compare(
+        snapshot({"hiring": True}, 0), snapshot({"hiring": True}, 1)
+    ) is None
 
 
 def test_cross_account_comparison_is_rejected() -> None:
     first = snapshot({"hiring": True}, 0)
-    second = AccountStateSnapshot(
-        "acct-2", first.observed_at, first.attributes, first.evidence_ids
-    )
+    second = AccountStateSnapshot("acct-2", first.observed_at, first.attributes, first.evidence_ids)
     with pytest.raises(ValueError, match="same account"):
         ChangeDetector.compare(first, second)
