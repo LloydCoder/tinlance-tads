@@ -41,7 +41,9 @@ def test_disappearance_is_distinguished() -> None:
 
 
 def test_identical_state_has_no_change() -> None:
-    assert ChangeDetector.compare(snapshot({"hiring": True}, 0), snapshot({"hiring": True}, 1)) is None
+    assert (
+        ChangeDetector.compare(snapshot({"hiring": True}, 0), snapshot({"hiring": True}, 1)) is None
+    )
 
 
 def test_cross_account_comparison_is_rejected() -> None:
