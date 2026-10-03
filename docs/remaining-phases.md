@@ -1,33 +1,34 @@
 # TADS Remaining Phases
 
-The M0–M18 implementation sequence is complete/hardened. The project now has a controlled X1–X8 extension sequence plus the existing M18 operational evidence gates.
+## Software roadmap
 
-## X1 — Source Control Plane
-**Implementation-complete.** Source registration, lifecycle, health and fail-closed activation are implemented and tested. Durable PostgreSQL persistence and production source onboarding remain operational gates.
+**No X1–X8 implementation phases remain.** X1–X8 are implementation-complete, with tests, typing, lint, documentation and CI coverage.
 
-## X2 — Data Quality & Evidence Trust
-Add freshness, completeness, consistency, source reliability, identity confidence, temporal validity, corroboration and contradiction as independent quality dimensions.
+The M0–M18 implementation/hardening roadmap is also complete. The project should not acquire another major module without new evidence demonstrating a real architectural need.
 
-## X3 — Signal Operations & Drift
-Add signal lifecycle, source reliability, false-positive/false-negative monitoring and drift controls.
+## Operational Enterprise GA evidence
 
-## X4 — Change Intelligence
-Add deterministic account-state transitions and material-change detection over the existing temporal kernel.
+M18 remains fail-closed. The remaining work is evidence collection and production verification:
 
-## X5 — Intelligence Graph
-Add a PostgreSQL-backed graph abstraction for evidence and intelligence relationships. A dedicated graph database remains deferred until measured need exists.
+1. **Provider contracts** — verify the real authenticated ReconOS and FadeReach capabilities, scopes, schemas, rate limits, provenance and failure semantics.
+2. **Production deployment** — deploy TADS with production secrets, migrations, rollback and resource controls.
+3. **Backup/restore** — execute and verify real backup and restore procedures.
+4. **Observability** — prove production traces, metrics, logs, alerts and operational dashboards.
+5. **Adversarial validation** — execute tenant-escape, poisoning, prompt-injection, replay, malformed-provider and dependency-failure scenarios.
+6. **Load/capacity** — measure throughput, latency, concurrency, backpressure and provider/database limits.
+7. **Disaster recovery** — exercise service recovery and record measured RPO/RTO.
+8. **Privacy/compliance** — complete retention/deletion enforcement and the appropriate privacy/legal review.
+9. **Supply chain** — produce SBOM/provenance/dependency and release-integrity evidence.
 
-## X6 — Buying Windows
-Add evidence-backed buying-window lifecycle semantics without converting them into claims of purchase intent.
+No operational evidence gate may be marked complete merely because a code contract exists.
 
-## X7 — Intelligence Subscriptions & Alerts
-Add account, segment, signal and opportunity watches with materiality filtering. TADS does not become an outreach engine.
+## Final state
 
-## X8 — Evaluation & Experimentation
-Expand M11 into an operational evaluation platform for detection, ranking, temporal leakage, calibration and drift.
+The intended endpoint is:
 
-## Enterprise GA evidence
+M0–M18 hardened
+→ X1–X8 implementation-complete
+→ operational Enterprise GA evidence complete
+→ M18 EnterpriseGate = READY
+→ continuous production evaluation and monitoring.
 
-After X8, M18 remains fail-closed until the following are evidenced: provider contracts verified; production deployment; backup/restore; observability; adversarial validation; load testing; disaster recovery; privacy review; and supply-chain verification.
-
-No documentation may represent an evidence gate as complete merely because a code contract exists.
