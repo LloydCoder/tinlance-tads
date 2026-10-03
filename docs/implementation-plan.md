@@ -6,7 +6,7 @@ A milestone is complete only when implementation, tests, security controls, docu
 
 ## M0–M18
 
-The original M0–M18 intelligence and enterprise-assurance sequence is implemented/hardened. M9–M18 retain environment-dependent operational gates; M18 remains fail-closed until those gates have real evidence.
+**Status: IMPLEMENTED/HARDENED.** The original intelligence and enterprise-assurance sequence is implemented. M9–M18 retain environment-dependent operational gates; M18 remains fail-closed until those gates have real evidence.
 
 ## X1 — Source Control Plane
 
@@ -14,73 +14,89 @@ The original M0–M18 intelligence and enterprise-assurance sequence is implemen
 
 Delivered:
 - fail-closed source registration;
-- lifecycle states: registered, active, suspended and retired;
+- registered/active/suspended/retired lifecycle;
 - activation requires enabled contract plus legal/provider review;
-- retirement disables the source contract and is terminal;
-- independent source health state;
-- timezone-aware health timestamps;
+- terminal retirement disables the source contract;
+- independent health state and timezone-aware timestamps;
 - connector-version attribution;
-- deterministic ingestion-allowed decision;
-- duplicate-registration protection;
-- unit regression coverage.
-
-Boundary:
-- tads_sources governs source eligibility;
-- tads_ingest fetches and normalizes;
-- tads_contracts owns the stable source policy contract;
-- tads_db remains the eventual durable source-registry owner.
+- deterministic ingestion eligibility;
+- duplicate-registration protection.
 
 Operational gate:
-- persist the registry in PostgreSQL;
-- enforce tenant/vendor/source ownership;
-- connect source onboarding approvals;
-- verify production rate-limit and terms controls.
+- durable PostgreSQL registry persistence;
+- tenant/vendor/source ownership;
+- production onboarding approvals;
+- terms/rate-limit enforcement.
 
 ## X2 — Data Quality & Evidence Trust
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; PRODUCTION CALIBRATION GATE REMAINS.**
 
-Add independent quality dimensions for freshness, completeness, consistency, source reliability, identity confidence, temporal validity, corroboration and contradiction. Quality must remain separate from intelligence/opportunity scores.
+Delivered independent dimensions for freshness, completeness, consistency, source reliability, identity confidence, temporal validity, corroboration and contradiction, plus deterministic eligibility thresholds. Quality is not an intelligence/opportunity score.
+
+Operational gate: representative production corpus, source-specific calibration and monitored quality thresholds.
 
 ## X3 — Signal Operations & Drift
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; PRODUCTION MONITORING GATE REMAINS.**
 
-Add signal lifecycle, source-specific reliability, false-positive/false-negative monitoring, taxonomy drift and detection drift. Connect production outcomes to signal evaluation without mutating historical evidence.
+Delivered append-only signal lifecycle events, chronological/evidence invariants and deterministic drift metrics covering false positives, false negatives, source reliability and taxonomy change.
+
+Operational gate: representative labels, production monitoring and remediation workflow.
 
 ## X4 — Change Intelligence
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; CORPUS-DEPENDENT HIGHER-ORDER INTERPRETATION GATE REMAINS.**
 
-Add deterministic account-state transitions, emergence, acceleration, deceleration, reversal, disappearance and sustained-change semantics over the existing temporal and account layers.
+Delivered evidence-backed account-state snapshots, emergence, material-change and disappearance semantics. Acceleration, deceleration and reversal are deliberately not fabricated without sufficient temporal corpus evidence.
+
+Operational gate: representative longitudinal corpus and validated higher-order transition logic.
 
 ## X5 — Intelligence Graph
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; SCALE/PERFORMANCE GATE REMAINS.**
 
-Add a graph abstraction over PostgreSQL for evidence, events, entities, capabilities, signals and opportunities. Do not introduce a graph database until measured workload requires it.
+Delivered a PostgreSQL-compatible evidence/intelligence graph abstraction with evidence-backed edges and deterministic traversal.
+
+Operational gate: measure traversal depth, latency, volume and storage before considering a dedicated graph database.
 
 ## X6 — Buying Windows
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; PRODUCTION VALIDATION GATE REMAINS.**
 
-Add bounded buying-window lifecycle semantics derived from evidence-backed combinations of account state, signals and changes. TADS must never represent a buying window as certainty of purchase intent.
+Delivered bounded EMERGING/ACTIVE/COOLING/DORMANT/INVALIDATED lifecycle semantics with explicit expiry, triggers and evidence. Buying windows cannot claim purchase intent.
+
+Operational gate: validate lifecycle quality against representative outcomes without collapsing the distinction between evidence and intent.
 
 ## X7 — Intelligence Subscriptions & Alerts
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; APPLICATION DELIVERY GATE REMAINS.**
 
-Add account/segment/signal/opportunity watches and material-change events. Downstream delivery remains outside TADS's outreach boundary.
+Delivered tenant-scoped watch contracts, materiality filtering and deterministic alert deduplication.
+
+Operational gate: authenticated application surface, tenant authorization and downstream channel delivery.
 
 ## X8 — Evaluation & Experimentation
 
-**Status: PLANNED.**
+**Status: IMPLEMENTATION-COMPLETE; OPERATIONAL EVALUATION GATE REMAINS.**
 
-Elevate M11 evaluation primitives into an operational evaluation platform covering detection, ranking, temporal leakage, calibration, drift and production monitoring.
+Delivered deterministic detection, ranking, calibration and drift metrics plus reproducible evaluation-run controls for corpus, as-of time, code version, taxonomy version and leakage status.
+
+Operational gate: representative outcome corpus, monitored calibration, drift/error telemetry and production evaluation cadence.
 
 ## Enterprise GA gates
 
-After the extension sequence, the existing M18 operational evidence gates remain authoritative: provider contracts verified; production deployed; backup/restore verified; observability verified; adversarial validation complete; load testing complete; disaster recovery tested; privacy review complete; supply chain verified.
+After X8, the existing M18 operational evidence gates remain authoritative:
+
+1. provider contracts verified;
+2. production deployed;
+3. backup/restore verified;
+4. observability verified;
+5. adversarial validation complete;
+6. load testing complete;
+7. disaster recovery tested;
+8. privacy review complete;
+9. supply chain verified.
 
 These are evidence gates, not additional architecture modules.
 
