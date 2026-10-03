@@ -71,9 +71,10 @@ class QualityThresholds:
 
 def is_eligible(
     assessment: QualityAssessment,
-    thresholds: QualityThresholds = QualityThresholds(),
+    thresholds: QualityThresholds | None = None,
 ) -> bool:
     assessment.validate()
+    thresholds = thresholds or QualityThresholds()
     thresholds.validate()
     dimensions = (
         assessment.freshness,
