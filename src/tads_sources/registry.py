@@ -74,12 +74,12 @@ class SourceRegistry:
 
     def activate(self, source_id: str) -> SourceRecord:
         current = self.get(source_id)
+        if current.lifecycle in (SourceLifecycle.RETIRED, SourceLifecycle.SUSPENDED):
+            raise ValueError(f"source cannot be activated from {current.lifecycle.value}")
         if not current.contract.legal_reviewed:
             raise ValueError("source cannot be activated before legal/provider review")
         if not current.contract.enabled:
             raise ValueError("source contract must be enabled before activation")
-        if current.lifecycle in (SourceLifecycle.RETIRED, SourceLifecycle.SUSPENDED):
-            raise ValueError(f"source cannot be activated from {current.lifecycle.value}")
         return self._replace(current, lifecycle=SourceLifecycle.ACTIVE)
 
     def suspend(self, source_id: str) -> SourceRecord:
