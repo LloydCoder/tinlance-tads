@@ -44,9 +44,7 @@ class RankingMetrics:
             raise ValueError("k must be positive")
         selected = self.ranked_ids[:k]
         return (
-            sum(item in self.relevant_ids for item in selected) / len(selected)
-            if selected
-            else 0.0
+            sum(item in self.relevant_ids for item in selected) / len(selected) if selected else 0.0
         )
 
     def recall_at_k(self, k: int) -> float:
