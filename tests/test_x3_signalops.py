@@ -33,9 +33,19 @@ def test_out_of_order_signal_event_is_rejected() -> None:
 
 def test_signal_events_require_evidence_and_aware_time() -> None:
     with pytest.raises(ValueError, match="evidence"):
-        SignalEvent("sig-1", SignalLifecycle.DETECTED, datetime(2026, 10, 3, tzinfo=UTC), ()).validate()
+        SignalEvent(
+            "sig-1",
+            SignalLifecycle.DETECTED,
+            datetime(2026, 10, 3, tzinfo=UTC),
+            (),
+        ).validate()
     with pytest.raises(ValueError, match="timezone-aware"):
-        SignalEvent("sig-1", SignalLifecycle.DETECTED, datetime(2026, 10, 3), ("ev-1",)).validate()
+        SignalEvent(
+            "sig-1",
+            SignalLifecycle.DETECTED,
+            datetime(2026, 10, 3),
+            ("ev-1",),
+        ).validate()
 
 
 def test_drift_is_detected_when_any_material_metric_crosses_threshold() -> None:
