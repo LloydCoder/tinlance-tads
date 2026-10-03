@@ -43,7 +43,11 @@ class RankingMetrics:
         if k <= 0:
             raise ValueError("k must be positive")
         selected = self.ranked_ids[:k]
-        return sum(item in self.relevant_ids for item in selected) / len(selected) if selected else 0.0
+        return (
+            sum(item in self.relevant_ids for item in selected) / len(selected)
+            if selected
+            else 0.0
+        )
 
     def recall_at_k(self, k: int) -> float:
         if k <= 0:
@@ -120,7 +124,12 @@ class EvaluationRun:
     representative_corpus: bool
 
     def validate(self) -> None:
-        if not self.run_id or not self.corpus_id or not self.code_version or not self.taxonomy_version:
+        if (
+            not self.run_id
+            or not self.corpus_id
+            or not self.code_version
+            or not self.taxonomy_version
+        ):
             raise ValueError("evaluation run identity/version fields are required")
         if self.as_of.tzinfo is None:
             raise ValueError("evaluation as_of must be timezone-aware")
