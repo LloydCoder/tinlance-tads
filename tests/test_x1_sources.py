@@ -62,9 +62,7 @@ def test_retirement_disables_contract_and_is_terminal() -> None:
 def test_health_events_require_aware_timestamps() -> None:
     registry = SourceRegistry()
     registry.register(SourceRecord(contract()))
-    healthy = registry.record_success(
-        "greenhouse:example", datetime(2026, 10, 3, tzinfo=UTC)
-    )
+    healthy = registry.record_success("greenhouse:example", datetime(2026, 10, 3, tzinfo=UTC))
     assert healthy.health is SourceHealth.HEALTHY
     assert healthy.last_success_at is not None
     with pytest.raises(ValueError, match="timezone-aware"):
