@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: mailto:hello@tinlance.com?subject=%5BTADS%20SECURITY%5D
+    about: Report security vulnerabilities privately. Do not disclose exploit details in a public issue.
+  - name: General support
+    url: https://github.com/LloydCoder/tinlance-tads/blob/main/SUPPORT.md
+    about: Review support guidance before opening a general issue.

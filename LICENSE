@@ -1,3 +1,5 @@
+SPDX-License-Identifier: LicenseRef-Tinlance-Proprietary
+
 Copyright (c) 2026 Tinlance Limited.
 
 All rights reserved.
@@ -8,3 +10,6 @@ distribute, sublicense, publish, sell, or create derivative works from this soft
 documentation.
 
 Public visibility of this repository does not grant a license to use the contents.
+
+There is no dual-license or open-source license granted by this file. Any separate commercial,
+partner, evaluation, or contributor rights must be established by a written agreement.

@@ -46,4 +46,5 @@ jobs:
       - run: python -m ruff format --check src tests
       - run: python -m ruff check src tests
       - run: python -m mypy
+      - run: python -m pip_audit --strict -r requirements-audit.txt
       - run: python -m pytest

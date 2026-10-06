@@ -1,0 +1,49 @@
+name: Bug report
+description: Report a reproducible defect in TADS.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include credentials, customer data, or security-sensitive exploit details.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Give the smallest reproducible command, fixture, or test case.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit or version
+      placeholder: main / commit SHA / release tag
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Python version, PostgreSQL version, OS
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Remove secrets and personal/customer data before posting.

@@ -1,86 +1,191 @@
+<div align="center">
+
 # Tinlance TADS
 
 **Target / Account / Demand Signal Intelligence**
 
+Evidence-first account intelligence for engineering-led acquisition teams that need traceable signals, temporal context, bounded opportunity hypotheses, and explainable recommendations.
+
 [![CI](https://github.com/LloydCoder/tinlance-tads/actions/workflows/ci.yml/badge.svg)](https://github.com/LloydCoder/tinlance-tads/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB)](https://www.python.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17%2B-4169E1)](https://www.postgresql.org/)
 
-TADS is Tinlance's **evidence-first account-intelligence substrate**. It turns permitted source observations into traceable signals, temporal context, account state, bounded opportunity hypotheses and explainable recommendations.
+</div>
 
-> **Who matters? What changed? Why does it matter? Why now? What evidence supports the conclusion? What remains unknown?**
+> [!NOTE]
+> TADS is proprietary Tinlance software. Public repository visibility does not grant reuse rights. See [LICENSE](LICENSE).
 
-TADS is designed to produce **reconstructable intelligence**, not opaque lead scores.
+## Visual overview
 
-## What TADS is — and is not
+```mermaid
+flowchart LR
+    A[Permitted source] --> B[Snapshot]
+    B --> C[Observation]
+    C --> D[Canonical event]
+    D --> E[Entity / account]
+    E --> F[Signal]
+    F --> G[Temporal context]
+    G --> H[Account state]
+    H --> I[Opportunity hypothesis]
+    I --> J[Bounded recommendation]
+    J --> K[ReconOS enrichment]
+    J --> L[FadeReach handoff]
+    K --> M[Outcome]
+    L --> M
+    M --> N[Feedback / evaluation]
+```
 
-TADS is:
+The diagram reflects the implemented ownership boundary: TADS produces intelligence and bounded handoffs; downstream systems perform their own responsibilities. A real product demo is not currently published, so no fabricated GIF or screenshot is presented as proof.
 
-- an account-intelligence and demand-signal kernel;
-- evidence- and provenance-first;
-- conservative about identity resolution;
-- deterministic at its core;
-- explicit about uncertainty and unknowns;
-- multi-tenant with database-enforced isolation;
-- provider-neutral at integration boundaries;
-- designed to feed Tinlance's wider agent and product stack.
+## Why TADS
 
-TADS is **not**:
+TADS is built around reconstructability rather than opaque lead scoring.
 
-- a CRM;
-- a generic lead database;
-- a universal crawler;
-- a LinkedIn scraper;
-- an intent oracle;
-- an outreach engine;
-- a replacement for ReconOS deep enrichment;
-- a replacement for Agent Platform execution controls;
-- a purchase-probability predictor.
+| TADS | Boundary |
+|---|---|
+| Evidence-first | Every material derived result retains evidence lineage. |
+| Deterministic core | Core detection, scoring, lifecycle, and evaluation primitives are replayable. |
+| Uncertainty-preserving | Unknown, contradictory, ambiguous, and unresolved states remain explicit. |
+| Temporal | Publication, effective, observation, detection, first-seen, last-seen, and expiry semantics are distinct. |
+| Tenant-aware | PostgreSQL RLS and server-side tenant context provide database-level isolation. |
+| Provider-neutral | ReconOS, FadeReach, and Agent Platform remain separately owned systems. |
+| Fail-closed | Missing provider evidence or release-gate evidence blocks readiness instead of being inferred. |
 
-## Core intelligence chain
+TADS is **not** a CRM, universal crawler, LinkedIn scraper, intent oracle, outreach engine, purchase-probability predictor, or second OSINT platform.
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.12+
+- PostgreSQL 17+
+- Git
+
+Have PostgreSQL running locally and create a database named `tads_test`.
+
+### Five commands
+
+```bash
+git clone https://github.com/LloydCoder/tinlance-tads.git && cd tinlance-tads
+python -m venv .venv && source .venv/bin/activate
+python -m pip install -e '.[dev]'
+export DATABASE_URL='postgresql://postgres:postgres@127.0.0.1:5432/tads_test'
+python -m tads_db.migrate && python -m pytest
+```
+
+For a CI-equivalent run, also execute the formatting, lint, type-check, and dependency-audit commands in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Installation
+
+### Editable development install
+
+```bash
+python -m pip install -e '.[dev]'
+```
+
+### Standard source install
+
+```bash
+python -m pip install .
+```
+
+### Optional: uv
+
+If you already use [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv pip install -e '.[dev]'
+```
+
+TADS is currently documented as a source-installable proprietary project; this repository does not claim a public PyPI distribution.
+
+## Usage
+
+TADS is a Python domain library and persistence layer rather than a standalone CLI. The following examples use public package contracts.
+
+### Source-governance example
+
+```python
+from tads_contracts import SourceClass, SourceContract
+from tads_sources import SourceRecord, SourceRegistry
+
+contract = SourceContract(
+    source_id="greenhouse-public-jobs",
+    provider="Greenhouse",
+    name="Public Job Board",
+    source_class=SourceClass.PUBLIC_STRUCTURED,
+    access_mechanism="documented public API",
+    terms_reference="provider documentation / approved policy",
+    permitted_fields=("job_id", "title", "location"),
+    geographic_constraints=(),
+    retention_days=30,
+    rate_limit_per_minute=30,
+    authentication_required=False,
+    legal_reviewed=True,
+    enabled=True,
+)
+
+registry = SourceRegistry()
+registry.register(SourceRecord(contract=contract))
+registry.activate(contract.source_id)
+
+assert registry.ingestion_allowed(contract.source_id)
+```
+
+### Deterministic scoring example
+
+```python
+from tads_contracts import ScoreComponent, ScoreContract
+
+score = ScoreContract(
+    policy_version="demo-v1",
+    components=(
+        ScoreComponent("signal_strength", 0.8, 0.6, ("evidence-1",)),
+        ScoreComponent("timing", 0.7, 0.4, ("evidence-2",)),
+    ),
+    score=0.76,
+    confidence=0.9,
+)
+
+score.validate()
+assert score.recompute() == 0.76
+```
+
+The examples intentionally stop at domain contracts. TADS does not expose an outreach command.
+
+## Configuration
+
+| Setting | Default | Purpose |
+|---|---|---|
+| Python | 3.12+ | Supported interpreter range |
+| PostgreSQL | 17+ | System-of-record and integration-test database |
+| `DATABASE_URL` | none | PostgreSQL DSN used by the migration runner and integration tests |
+| Install mode | source | Editable or standard local package installation |
+| Integration readiness | fail-closed | Unverified ReconOS/FadeReach capabilities do not become active |
+
+Production configuration remains an M13–M18 operational concern. Do not treat local defaults as production configuration.
+
+## Features
+
+| Capability | Status |
+|---|---|
+| Evidence-first domain contracts | Implemented |
+| PostgreSQL migrations and tenant isolation | Implemented |
+| Controlled source ingestion | Implemented |
+| Ambiguity-preserving entity resolution | Implemented |
+| Deterministic signal detection | Implemented |
+| Temporal correlation and account intelligence | Implemented |
+| Opportunity hypotheses and bounded recommendations | Implemented |
+| Governed agent specifications | Implemented |
+| ReconOS / FadeReach provider-neutral adapters | Contract-complete; external verification required |
+| Alerts, buying windows, graph abstraction, evaluation platform | Implementation-complete |
+| Enterprise GA | **Not claimed**; evidence gates remain fail-closed |
+
+## Architecture
+
+The core semantic chain is:
 
 ```text
-permitted source
-    │
-    ▼
-source policy → fetch → snapshot → observation
-    │
-    ▼
-canonical event
-    │
-    ▼
-entity resolution ──► organization / tenant account
-    │
-    ▼
-signal detection → evidence / quality / lifecycle
-    │
-    ▼
-temporal correlation
-    │
-    ▼
-account state
-    │
-    ▼
-ICP + opportunity hypothesis
-    │
-    ▼
-score + rationale + unknowns
-    │
-    ▼
-bounded recommendation
-    │
-    ├──────────────► ReconOS enrichment
-    │
-    └──────────────► FadeReach intelligence handoff
-                              │
-                              ▼
-                           outcomes
-                              │
-                              ▼
-                           feedback
-```
-
-The canonical evidence chain is:
-
-```
 source
 → snapshot
 → observation
@@ -95,346 +200,85 @@ source
 → feedback
 ```
 
-Every material derived artifact must remain reconstructable to its supporting evidence and the policy/taxonomy/version that produced it.
+Ownership is intentionally split:
 
-## Non-negotiable invariants
+- **TADS** — source governance, ingestion, evidence, events, identity resolution, signals, temporal/account intelligence, opportunities, recommendations, alerts, evaluation, and integration contracts.
+- **Tinlance Agent Platform** — generic agent runtime, model routing, tool authorization, sandboxing, approvals, generic audit/provenance, memory, budgets, and telemetry.
+- **ReconOS** — deep OSINT/enrichment.
+- **FadeReach** — engagement execution.
+- **SDEA** — acquisition strategy and signal-driven engineering acquisition.
 
-1. **Observation ≠ signal.**
-2. **Signal ≠ intent.**
-3. **Intent ≠ opportunity.**
-4. **Opportunity ≠ customer.**
-5. **Evidence ≠ interpretation.**
-6. **Unknown beats fabrication.**
-7. **Ambiguity beats a false entity merge.**
-8. **Scores must be reproducible from their declared components.**
-9. **Material intelligence must retain evidence lineage.**
-10. **Tenant identity comes from trusted server-side context.**
-11. **External content and model output are untrusted data, never authorization.**
-12. **TADS never executes outreach.**
+See [architecture](docs/architecture/README.md) for trust boundaries and deployment design.
 
-## Architecture and ownership
+## Documentation
 
-### TADS owns
+| Guide | Purpose |
+|---|---|
+| [Architecture](docs/architecture/README.md) | System planes, trust boundaries, ownership, and deployment |
+| [Canonical data model](docs/architecture/data-model.md) | Domain entities and evidence lineage |
+| [Integration boundaries](docs/architecture/integration-boundaries.md) | Agent Platform, ReconOS, and FadeReach contracts |
+| [Provider capability contracts](docs/architecture/provider-capability-contracts.md) | External verification requirements |
+| [Source control plane](docs/architecture/source-control-plane.md) | Source lifecycle and fail-closed eligibility |
+| [Data-source policy](docs/data-source-policy.md) | Authorized access, privacy, and prohibited collection |
+| [Threat model](docs/security/threat-model.md) | Security threats and required controls |
+| [CI hardening](docs/security/ci-hardening.md) | Supply-chain and workflow controls |
+| [Implementation plan](docs/implementation-plan.md) | M0–M18 and X1–X8 |
+| [Remaining phases](docs/remaining-phases.md) | Operational Enterprise GA gates |
+| [llms.txt](llms.txt) | Compact machine-readable documentation map |
+| [llms-full.txt](llms-full.txt) | Expanded AI/LLM context pack |
 
-- source registry and source lifecycle governance;
-- source policy and source adapters;
-- immutable source snapshots and observations;
-- canonical events;
-- conservative entity resolution;
-- signal taxonomy and deterministic detection;
-- temporal correlation;
-- account intelligence;
-- ICP and opportunity hypotheses;
-- scoring and recommendation contracts;
-- outcome/evaluation primitives;
-- TADS-specific feedback and research workflows.
+## Contributing
 
-### Tinlance Agent Platform owns
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing changes. Security reports must follow [SECURITY.md](SECURITY.md).
 
-- generic agent runtime/orchestration;
-- model routing;
-- tool authorization;
-- sandboxing;
-- approvals;
-- generic audit/provenance;
-- memory/retrieval;
-- platform budgets, eventing and telemetry.
+## License and acknowledgements
 
-TADS consumes these capabilities through explicit, versioned contracts. It does not duplicate them.
+TADS is proprietary software owned by Tinlance Limited. See [LICENSE](LICENSE).
 
-### ReconOS owns
+The project uses Python, PostgreSQL, Ruff, mypy, pytest, pip-audit, and GitHub Actions. Their respective licenses and terms remain separate from TADS.
 
-Deep enrichment / OSINT. TADS requests purpose-limited enrichment and consumes evidence-backed results; it does not embed a second OSINT engine.
+<details>
+<summary>Release readiness</summary>
 
-### FadeReach owns
+M0–M18 implementation/hardening and X1–X8 capability extensions are represented in the repository. That does **not** mean Enterprise GA is deployed.
 
-Engagement execution. TADS can publish a versioned, evidence-backed opportunity handoff; it **does not send email, create outreach sequences, automate social activity or manage follow-ups**.
+The remaining release gates include real ReconOS/FadeReach capability verification, production deployment, backup/restore, observability, adversarial validation, load/capacity testing, disaster recovery, privacy/compliance review, and software supply-chain evidence.
 
-## Milestone status
+See [remaining phases](docs/remaining-phases.md).
 
-| Milestone | Current state | What exists |
-|---|---|---|
-| M0–M8 | ✅ Complete | Intelligence foundation, evidence-first database, ingestion, resolution, signals, temporal/account intelligence, opportunity reasoning and governed agent specifications |
-| M9 | 🚧 Adapter-complete | Authenticated fail-closed ReconOS adapter; external capability verification remains |
-| M10 | 🚧 Adapter-complete | Authenticated fail-closed FadeReach handoff adapter; external capability verification remains |
-| M11 | 🚧 Evaluation-complete | Immutable outcomes, temporal leakage controls and evaluation primitives; operational corpus/monitoring remains |
-| M12 | 🚧 Projection-complete | Versioned evidence-first console projection; authenticated UI/deployment remains |
-| M13 | 🚧 Contract-hardened | Production configuration/readiness; deployment evidence remains |
-| M14 | 🚧 Contract-hardened | Security/privacy contracts; enforcement/review evidence remains |
-| M15 | 🚧 Contract-hardened | Reliability/idempotency contracts; load/DR evidence remains |
-| M16 | 🚧 Contract-hardened | Governance/retention contracts; compliance evidence remains |
-| M17 | 🚧 Contract-hardened | Ordered E2E trace; adversarial/provider execution remains |
-| M18 | 🚧 Gate-implemented | Fail-closed Enterprise GA gate |
-| X1 | ✅ Implementation-complete | Source lifecycle, health and fail-closed eligibility |
-| X2 | ✅ Implementation-complete | Independent evidence/data-quality trust dimensions |
-| X3 | ✅ Implementation-complete | Signal lifecycle and drift primitives |
-| X4 | ✅ Implementation-complete | Evidence-backed account state-change detection |
-| X5 | ✅ Implementation-complete | Evidence/intelligence graph abstraction |
-| X6 | ✅ Implementation-complete | Bounded buying-window lifecycle |
-| X7 | ✅ Implementation-complete | Tenant-scoped intelligence watches and material alerts |
-| X8 | ✅ Implementation-complete | Detection/ranking/calibration/drift evaluation platform |
+</details>
 
-**Contract-complete is intentionally not called production-deployed.** Real ReconOS/FadeReach adapters, production infrastructure, network enforcement, backup/restore evidence, load testing, disaster recovery, legal/privacy review, operational telemetry and other environment-dependent controls remain release gates.
+<details>
+<summary>Troubleshooting</summary>
 
-## Repository map
+**PostgreSQL connection fails**
 
-```text
-src/
-├── tads_contracts/       # Stable domain, provenance, scoring, source and taxonomy contracts
-├── tads_sources/         # Source lifecycle, eligibility and health control plane
-├── tads_ingest/          # Safe fetching, source adapters and ingestion orchestration
-├── tads_resolution/      # Entity normalization and ambiguity-preserving resolution
-├── tads_quality/         # Evidence/data quality trust dimensions
-├── tads_signals/         # Evidence-first deterministic signal detection
-├── tads_signalops/       # Signal lifecycle and drift controls
-├── tads_temporal/        # Time-window and correlation features
-├── tads_change/          # Deterministic account state-change intelligence
-├── tads_accounts/        # Explainable account-state derivation
-├── tads_graph/           # Evidence/intelligence graph abstraction
-├── tads_opportunities/   # ICP and opportunity reasoning
-├── tads_buying/          # Evidence-backed buying-window lifecycle
-├── tads_agents/          # Governed agent specifications; no runtime execution
-├── tads_integrations/    # Canonical ReconOS/FadeReach contracts and ports
-├── tads_eval/            # Reproducible evaluation and experimentation
-├── tads_alerts/          # Intelligence subscriptions and material alerts
-├── tads_assurance/       # M11–M18 security, reliability, governance and readiness contracts
-├── tads_console/         # UI-neutral evidence-preserving console projection
-├── tads_runtime/         # Runtime health/readiness contract
-└── tads_db/              # PostgreSQL connection, repositories and migrations
+Confirm PostgreSQL 17+ is running, the `tads_test` database exists, and `DATABASE_URL` points to the correct DSN.
 
-database/                 # Human-facing migration documentation
-docs/                     # Architecture, security, source policy and milestone contracts
-tests/                    # Unit, architecture and PostgreSQL integration tests
-.github/workflows/        # CI quality and integration gates
-```
+**Integration tests fail locally**
 
-## Evidence-first design
-
-TADS keeps several concepts deliberately separate.
-
-### Observation
-
-A source-level fact captured from a permitted snapshot. It does not imply identity, intent or opportunity.
-
-### Canonical event
-
-A normalized real-world change supported by one or more observations. Multiple observations may support the same event.
-
-### Signal
-
-A deterministic classification derived from observed/canonical facts. Signals carry evidence and quality dimensions such as strength, freshness and reliability.
-
-### Temporal context
-
-TADS distinguishes publication, effective, observation, detection, first-seen, last-seen and expiry times. A disappearance is absence evidence, not proof of the opposite event.
-
-### Account state
-
-A versioned materialized view of evidence and context, including signal strength/diversity, momentum, negative evidence and data confidence.
-
-### Opportunity hypothesis
-
-A bounded interpretation that keeps **observed facts, interpretation, potential problem, capability fit, confidence, unknowns and evidence** separate.
-
-### Recommendation
-
-A bounded next-step proposal such as `MONITOR`, `RESEARCH`, `ENRICH`, `REQUEST_HUMAN_REVIEW` or `CREATE_OPPORTUNITY`. It is not a claim that an account will buy.
-
-## Integration boundaries
-
-M9/M10 use one canonical integration model under `tads_integrations`.
-
-- `EnrichmentRequest` — purpose-limited ReconOS request.
-- `EnrichmentResult` — provider/version-attributed result requiring evidence.
-- `OpportunityHandoff` — evidence-backed intelligence handoff toward FadeReach.
-- `ReconOSPort` / `FadeReachPort` — provider-neutral adapter boundaries.
-
-The older M0 import names in `tads_contracts.integration` are compatibility aliases to these canonical models; they are not a second contract implementation.
-
-## Multi-tenancy and database security
-
-PostgreSQL is the system of record.
-
-The database uses:
-
-- tenant-scoped relations;
-- Row-Level Security;
-- trusted transaction-local tenant context;
-- cross-tenant parent-reference triggers;
-- least-privileged `tads_app` role;
-- immutable evidence;
-- append-only historical intelligence boundaries;
-- migration checksums and an advisory transaction lock;
-- normalized evidence-link tables;
-- deferred consistency checks between portable evidence snapshots and authoritative lineage.
-
-RLS is defense in depth, not the only tenant boundary. PostgreSQL documents that table owners and roles with `BYPASSRLS` can bypass row security, and referential-integrity checks have special behavior. The application therefore combines RLS with least privilege and explicit tenant-parent validation.
-
-## Source policy
-
-Public reachability is **not** authorization.
-
-TADS permits documented, licensed, customer-authorized or otherwise lawful access and prohibits:
-
-- bypassing authentication or access controls;
-- bypassing CAPTCHAs or rate limits;
-- LinkedIn scraping or automated activity without explicit authorization;
-- leaked/stolen/unlawfully disclosed datasets;
-- unnecessary sensitive personal-data collection.
-
-Initial structured adapters cover documented Greenhouse public Job Board access and authenticated Lever access. Source activation remains subject to terms, purpose, geography, retention, privacy and rate-limit review.
-
-## Security posture
-
-The ingestion boundary treats URLs and retrieved content as hostile input. Application controls include:
-
-- HTTPS-only URLs;
-- explicit source host allowlists;
-- rejection of URL userinfo and non-standard ports;
-- public-address validation;
-- redirect rejection;
-- response byte/time/content-type budgets;
-- secret-safe handling;
-- tenant isolation;
-- evidence provenance;
-- fail-closed readiness.
-
-Production network-layer egress enforcement remains mandatory because application-layer URL validation alone cannot eliminate DNS/network race conditions.
-
-The security program is aligned with current OWASP application-security guidance, including access control, security misconfiguration, software supply-chain integrity, injection, insecure design, data/software integrity, logging/alerting and exceptional-condition handling.
-
-## Quick start
-
-### Requirements
-
-- Python **3.12+**
-- PostgreSQL **17+**
-- Git
-
-### Install
+Run migrations first:
 
 ```bash
-git clone https://github.com/LloydCoder/tinlance-tads.git
-cd tinlance-tads
-
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e '.[dev]'
-```
-
-### Run migrations
-
-```bash
-export DATABASE_URL='postgresql://postgres:postgres@127.0.0.1:5432/tads_test'
 python -m tads_db.migrate
-```
-
-### Run quality gates
-
-```python -m ruff format --check src tests
-python -m ruff check src tests
-python -m mypy
 python -m pytest
 ```
 
-PostgreSQL integration tests run automatically when `DATABASE_URL` is present. CI provisions PostgreSQL 17 as an ephemeral service.
+**Dependency audit fails**
 
-## CI quality bar
+Run:
 
-Every change must satisfy:
-
-1. formatting;
-2. lint;
-3. strict mypy;
-4. unit/contract tests;
-5. PostgreSQL integration tests;
-6. architecture-boundary tests;
-7. documentation contract tests;
-8. migration integrity checks.
-
-GitHub Actions uses least-privilege repository permissions, immutable commit-SHA-pinned actions and disabled checkout credential persistence.
-
-**CI green is necessary, not sufficient for enterprise GA.** M13–M18 contain explicit environment-dependent release gates.
-
-## Documentation map
-
-| Document | Purpose |
-|---|---|
-| `docs/architecture/README.md` | System architecture and ownership |
-| `docs/architecture/data-model.md` | Canonical semantic data model |
-| `docs/architecture/integration-boundaries.md` | Agent Platform / ReconOS / FadeReach boundaries |
-| `docs/architecture/provider-capability-contracts.md` | External provider schemas, authentication and verification gates |
-| `docs/architecture/source-control-plane.md` | Source lifecycle and eligibility control |
-| `docs/architecture/data-quality.md` | Evidence quality dimensions and eligibility |
-| `docs/architecture/signal-operations.md` | Signal lifecycle and drift |
-| `docs/architecture/change-intelligence.md` | Account state-change semantics |
-| `docs/architecture/intelligence-graph.md` | Evidence/intelligence graph abstraction |
-| `docs/architecture/buying-windows.md` | Bounded buying-window lifecycle |
-| `docs/architecture/alerts.md` | Intelligence watches and material alerts |
-| `docs/architecture/evaluation-platform.md` | Evaluation metrics and reproducibility |
-| `docs/architecture/migration-baseline.md` | Persistence and migration invariants |
-| `docs/data-source-policy.md` | Source authorization and collection policy |
-| `docs/security/threat-model.md` | Threats, trust boundaries and required controls |
-| `docs/security/ci-hardening.md` | CI supply-chain and permission controls |
-| `docs/implementation-plan.md` | Authoritative M0–M18 milestone plan |
-| `docs/remaining-phases.md` | X1–X8 completion and Enterprise GA evidence gates |
-| `docs/final-forensic-audit.md` | Final repository/code/documentation audit evidence |
-
-The implementation plan is authoritative for milestone status; the README is the developer-facing summary.
-
-## Development principles
-
-### Prefer deterministic primitives
-
-Core intelligence should be replayable from frozen inputs. LLMs may summarize or assist research but cannot manufacture facts or grant authorization.
-
-### Preserve uncertainty
-
-Unknown, ambiguous and contradictory states are first-class. TADS should lose precision before it invents certainty.
-
-### Keep boundaries explicit
-
-Integration contracts do not silently become product implementations. Agent Platform, ReconOS and FadeReach remain separately owned systems.
-
-### Make security structural
-
-Tenant isolation, evidence lineage, source policy, append-only history and fail-closed readiness belong in code and database controls, not only in documentation.
-
-### Avoid premature infrastructure
-
-The modular-monolith shape remains the default until measured workload, isolation, recovery or integration requirements justify queues, brokers, additional services or a graph database.
-
-## Project maturity
-
-The repository now contains the complete **M0–M18 implementation/hardening sequence plus X1–X8 capability extensions**. X1–X8 are implementation-complete and covered by the same CI quality bar. The remaining work is environment-dependent Enterprise GA evidence, not another speculative software roadmap.
-
-That distinction is deliberate. TADS does not claim external-provider integration, production deployment, legal approval, disaster recovery or Enterprise GA merely because a type or test exists.
-
-The remaining operational work is to verify real ReconOS/FadeReach capabilities, deploy production infrastructure, prove observability and recovery, execute adversarial/load/DR exercises, complete privacy/compliance review and establish supply-chain evidence. The M18 gate remains fail-closed until those facts are proven.
-
-## License
-
-Proprietary — see [LICENSE](LICENSE).
-
-## Tinlance
-
-TADS is part of the Tinlance engineering stack. Ownership and integration boundaries described in this repository are intentional architectural constraints.
-
-
-## Final extension roadmap
-
-X1–X8 are capability extensions to the completed M0–M18 implementation roadmap. They are separate from the Enterprise GA evidence gates.
-
-```text
-X1 Source Control
-→ X2 Data Quality
-→ X3 Signal Operations
-→ X4 Change Intelligence
-→ X5 Intelligence Graph
-→ X6 Buying Windows
-→ X7 Alerts
-→ X8 Evaluation Platform
+```bash
+python -m pip_audit --strict
 ```
 
-X1 source control is implemented as a fail-closed boundary between source policy and ingestion. No new major module should be added without an evidence-backed architectural need.
+Then review the affected dependency and update the project constraints only after compatibility has been verified.
+
+</details>
+
+<details>
+<summary>Support</summary>
+
+See [SUPPORT.md](SUPPORT.md) for issue and commercial support guidance. Vulnerabilities must be reported privately according to [SECURITY.md](SECURITY.md).
+
+</details>
