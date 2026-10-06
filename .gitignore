@@ -1,12 +1,67 @@
+# Python
 __pycache__/
 *.py[cod]
+*.pyo
 .venv/
 venv/
+env/
+ENV/
+*.egg-info/
 build/
 dist/
-*.egg-info/
+
+# Test, type-checking and lint caches
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
 htmlcov/
+.pyre/
+.pytype/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+secrets/
+credentials/
+*.secret
+
+# Local databases and runtime state
+*.db
+*.sqlite
+*.sqlite3
+*.log
+*.pid
+
+# Packaging and tooling
+pip-wheel-metadata/
+.pyproject-build/
+.tox/
+.nox/
+.coverage.*
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local test/report output
+reports/
+artifacts/
+tmp/
+temp/
