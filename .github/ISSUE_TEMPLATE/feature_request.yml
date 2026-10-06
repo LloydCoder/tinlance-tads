@@ -1,0 +1,41 @@
+name: Feature request
+description: Propose a focused, evidence-backed improvement to TADS.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Explain why the capability belongs in TADS rather than Agent Platform, ReconOS, FadeReach, or SDEA.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What concrete problem or unmet requirement does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the smallest viable change and affected contracts.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Provide usage evidence, failure data, or a documented requirement.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Architectural boundary
+      description: Explain ownership and integration implications.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What existing TADS capability or external system was considered instead?
