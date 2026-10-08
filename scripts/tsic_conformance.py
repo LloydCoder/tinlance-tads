@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Fail-closed TADS verification against the canonical TSIC adapter."""
 
+# TSIC-21 reviewed integration gate
+
 from __future__ import annotations
 
 import json
