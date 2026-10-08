@@ -48,3 +48,4 @@ jobs:
       - run: python -m mypy
       - run: python -m pip_audit --strict -r requirements-audit.txt
       - run: python -m pytest
+      - run: python scripts/tsic_conformance.py
