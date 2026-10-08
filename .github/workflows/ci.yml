@@ -50,4 +50,3 @@ jobs:
       - run: python -m pytest
       - name: Verify TSIC integration contract
         run: python scripts/tsic_conformance.py
-      - run: python scripts/tsic_conformance.py
